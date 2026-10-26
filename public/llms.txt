@@ -1,0 +1,30 @@
+# Robtic
+
+> Robtic hosts Discord bots and small apps. Upload your code or deploy it from GitHub, then run it from the
+> browser with a live console, a code editor, databases, backups and teams. First month free.
+
+## What it does
+
+- Host Discord bots (discord.js, discord.py, TypeScript), websites and APIs.
+- Run them from the browser: start/stop/restart, a live console, and a code editor.
+- Add an app by uploading files, starting from a ready Discord bot, or cloning a GitHub repository.
+- MongoDB databases and a Redis cache in one click, wired into the app's environment.
+- Backups and schedules, Discord alerts for crashes/restarts/backups, encrypted environment variables.
+- Teams with roles (owner, admin, manager, member) and live collaboration.
+- Your own domain for an app, with HTTPS.
+
+## Plans
+
+- Personal — free for the first month. 1 app, 256 MB memory, 0.15 vCPU, 512 MB storage, SFTP, private cache.
+- Developers — 2 apps, 512 MB memory, 0.5 vCPU, 2 GB storage, 1 MongoDB database, Redis, GitHub, alerts, encrypted variables.
+- Servers — 5 apps, 2 GB memory, 1.5 vCPU, 8 GB storage, 3 databases, 2 backups per app, live teamwork.
+- Communities — 8 apps, 4 GB memory, 3 vCPU, 16 GB storage, 5 databases, 3 backups per app, schedules.
+- Team — unlimited apps and resources across up to 3 workspaces, unlimited backups, schedules, live teamwork.
+- Org — custom, priced for you; ask for an offer.
+
+## Links
+
+- Home: https://robtic.org/
+- Plans: https://robtic.org/plans
+- Panel (sign in / sign up): https://robtic.org/panel
+- Contact: contact@robtic.org
