@@ -1,0 +1,9 @@
+.git
+.github
+node_modules
+.next
+out
+npm-debug.log*
+README.md
+.gitignore
+.env*.local

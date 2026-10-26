@@ -1,0 +1,37 @@
+# Robtic landing stack. Deployed as a Portainer git-stack pointing at this file, with an auto-update webhook
+# (forcePullImage) called by the build workflow — the same pattern as the other robticorg services.
+#
+# Public-facing, so it joins the external `proxy` network where Nginx Proxy Manager lives; NPM forwards
+# robtic.org to http://robtic-landing:3000.
+name: robtic-landing
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  robtic-landing:
+    image: ghcr.io/robticorg/robtic-landing:${ROBTIC_LANDING_IMAGE_TAG:-production}
+    container_name: robtic-landing
+    restart: unless-stopped
+    stop_grace_period: 20s
+    logging: *logging
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_SITE_ORIGIN: ${NEXT_PUBLIC_SITE_ORIGIN:-https://robtic.org}
+      NEXT_PUBLIC_PANEL_URL: ${NEXT_PUBLIC_PANEL_URL:-https://robtic.org/panel}
+      NEXT_PUBLIC_CONTACT: ${NEXT_PUBLIC_CONTACT:-contact@robtic.org}
+      NEXT_PUBLIC_SOCIAL_GITHUB: ${NEXT_PUBLIC_SOCIAL_GITHUB:-https://github.com/robticorg}
+    networks: [proxy]
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+networks:
+  proxy:
+    external: true
