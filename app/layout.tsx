@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 import { ORIGIN, PANEL_URL, CONTACT, activeSocials, SOCIAL_ICONS } from '@/lib/site';
+import AuthActions from './AuthActions';
 
 const DESCRIPTION =
     'Robtic hosts Discord bots and small apps: upload your code or deploy it from GitHub, then run it from the ' +
@@ -76,8 +77,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                         <a href="/plans">Plans</a>
                     </nav>
                     <div className="actions">
-                        <a className="btn btn-ghost" href={`${PANEL_URL.replace(/\/panel$/, '')}/auth/login`}>Sign in</a>
-                        <a className="btn btn-primary" href={`${PANEL_URL.replace(/\/panel$/, '')}/auth/register`}>Get started</a>
+                        <AuthActions panelRoot={PANEL_URL.replace(/\/panel$/, '')} />
                     </div>
                 </header>
 
