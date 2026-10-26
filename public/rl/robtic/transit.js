@@ -45,7 +45,7 @@
             boot.setAttribute('aria-hidden', 'true');
             boot.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:#000;transition:opacity .4s ease';
             boot.innerHTML = '<video autoplay muted playsinline disablepictureinpicture preload="auto" style="width:min(72vw,440px);height:auto">' +
-                '<source src="/robtic/loading.webm" type="video/webm"><source src="/robtic/loading.mp4" type="video/mp4"></video>';
+                '<source src="/rl/robtic/loading.webm" type="video/webm"><source src="/rl/robtic/loading.mp4" type="video/mp4"></video>';
             document.body.insertBefore(boot, document.body.firstChild);
             html.style.overflow = 'hidden';
             var video = boot.querySelector('video');
@@ -129,7 +129,7 @@
         cover.id = 'robtic-leave';
         cover.setAttribute('aria-hidden', 'true');
         cover.style.cssText = 'position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;background:#000;opacity:0;transition:opacity .25s ease';
-        cover.innerHTML = '<img src="/robtic/loading.jpg" alt="" style="width:min(72vw,440px);height:auto;transition:opacity .2s ease">';
+        cover.innerHTML = '<img src="/rl/robtic/loading.jpg" alt="" style="width:min(72vw,440px);height:auto;transition:opacity .2s ease">';
         document.body.appendChild(cover);
         html.style.overflow = 'hidden';
         // The eyes open over the page...

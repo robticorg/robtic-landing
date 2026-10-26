@@ -5,7 +5,7 @@ import { ORIGIN, PANEL_URL, CONTACT, activeSocials, SOCIAL_ICONS } from '@/lib/s
 const DESCRIPTION =
     'Robtic hosts Discord bots and small apps: upload your code or deploy it from GitHub, then run it from the ' +
     'browser with a live console, a code editor, databases, backups and teams.';
-const IMAGE = `${ORIGIN}/robtic/icon-512.png`;
+const IMAGE = `${ORIGIN}/rl/robtic/icon-512.png`;
 
 export const metadata: Metadata = {
     metadataBase: new URL(ORIGIN),
@@ -14,8 +14,8 @@ export const metadata: Metadata = {
     alternates: { canonical: '/' },
     robots: { index: true, follow: true, 'max-image-preview': 'large' } as Metadata['robots'],
     icons: {
-        icon: [{ url: '/favicons/favicon-32x32.png?v=r2', sizes: '32x32', type: 'image/png' }],
-        apple: [{ url: '/favicons/apple-touch-icon.png?v=r2', sizes: '180x180' }],
+        icon: [{ url: '/rl/favicons/favicon-32x32.png?v=r2', sizes: '32x32', type: 'image/png' }],
+        apple: [{ url: '/rl/favicons/apple-touch-icon.png?v=r2', sizes: '180x180' }],
     },
     openGraph: {
         type: 'website', siteName: 'Robtic', locale: 'en_US', title: 'Robtic', description: DESCRIPTION,
@@ -48,7 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <head>
                 <link
                     rel="stylesheet"
-                    href="/robtic/site/site.css"
+                    href="/rl/robtic/site/site.css"
                     // eslint-disable-next-line @next/next/no-css-tags
                 />
                 <script
@@ -59,15 +59,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <body>
                 {/* The eyes while the page loads: they blink once, then fade out once the page is there. */}
                 <div id="robtic-boot" aria-hidden="true">
-                    <video autoPlay muted loop playsInline disablePictureInPicture preload="auto" poster="/robtic/loading.jpg">
-                        <source src="/robtic/loading.webm" type="video/webm" />
-                        <source src="/robtic/loading.mp4" type="video/mp4" />
+                    <video autoPlay muted loop playsInline disablePictureInPicture preload="auto" poster="/rl/robtic/loading.jpg">
+                        <source src="/rl/robtic/loading.webm" type="video/webm" />
+                        <source src="/rl/robtic/loading.mp4" type="video/mp4" />
                     </video>
                 </div>
 
                 <header className="bar" id="bar">
                     <a href="/" className="brand" aria-label="Robtic home">
-                        <img src="/robtic/icon-128.png" alt="" />
+                        <img src="/rl/robtic/icon-128.png" alt="" />
                         <span>Robtic</span>
                     </a>
                     <nav className="nav-links" aria-label="Site">
@@ -90,7 +90,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <footer className="foot">
                     <div className="wrap foot-cols">
                         <div className="foot-brand">
-                            <a href="/" className="logo"><img src="/robtic/icon-128.png" alt="" /> Robtic</a>
+                            <a href="/" className="logo"><img src="/rl/robtic/icon-128.png" alt="" /> Robtic</a>
                             <h4>Social</h4>
                             <div className="socials">
                                 {socials.map(([key, url]) => (
@@ -125,7 +125,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                         </div>
                     </div>
                     <div className="mark-wrap" aria-hidden="true">
-                        <span className="mark">Rob<span className="t">T<img className="sitter" src="/robtic/site/robot-sitting.webp" alt="" /></span>ic</span>
+                        <span className="mark">Rob<span className="t">T<img className="sitter" src="/rl/robtic/site/robot-sitting.webp" alt="" /></span>ic</span>
                     </div>
                 </footer>
 
@@ -134,9 +134,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     <svg className="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M12 19V5m-6 6l6-6 6 6" /></svg>
                 </button>
 
-                <Script src="/robtic/site/landing-boot.js" strategy="afterInteractive" />
-                <Script src="/robtic/transit.js" strategy="afterInteractive" />
-                <Script src="/robtic/site/landing-ui.js" strategy="afterInteractive" />
+                <Script src="/rl/robtic/site/landing-boot.js" strategy="afterInteractive" />
+                <Script src="/rl/robtic/transit.js" strategy="afterInteractive" />
+                <Script src="/rl/robtic/site/landing-ui.js" strategy="afterInteractive" />
             </body>
         </html>
     );

@@ -1,7 +1,7 @@
 /* Robtic public site: landing page, features, plans, terms, privacy. Plain CSS (the panel's own styles are built with it). */
 @font-face {
     font-family: 'Assistant';
-    src: url('/robtic/fonts/assistant.ttf') format('truetype');
+    src: url('/rl/robtic/fonts/assistant.ttf') format('truetype');
     font-weight: 1 999;
     font-display: swap;
 }

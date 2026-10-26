@@ -55,9 +55,9 @@ export default function Home() {
                             <span className="rope left" aria-hidden="true" />
                             <span className="rope right" aria-hidden="true" />
                             <div className="shot">
-                                <img className="peek" src="/robtic/site/robot-peek.webp" alt="" aria-hidden="true" />
+                                <img className="peek" src="/rl/robtic/site/robot-peek.webp" alt="" aria-hidden="true" />
                                 <div className="dots" aria-hidden="true"><i /><i /><i /></div>
-                                <img className="screen" src="/robtic/site/panel.webp" alt="A Robtic workspace: three Discord bot apps on a canvas, with backups and SFTP linked to them" width={1600} height={645} fetchPriority="high" />
+                                <img className="screen" src="/rl/robtic/site/panel.webp" alt="A Robtic workspace: three Discord bot apps on a canvas, with backups and SFTP linked to them" width={1600} height={645} fetchPriority="high" />
                             </div>
                         </div>
                     </div>
@@ -84,7 +84,7 @@ export default function Home() {
                             <figure className="dk" tabIndex={0} key={file}>
                                 <div className="dk-in">
                                     <img
-                                        src={`/robtic/site/features/${file}.webp`}
+                                        src={`/rl/robtic/site/features/${file}.webp`}
                                         alt={SHOTS.includes(file) ? `${title}: a screenshot of the Robtic panel` : `${title}: an illustration`}
                                         width={640} height={440} loading={i < 4 ? 'eager' : 'lazy'} decoding="async"
                                     />
@@ -106,8 +106,8 @@ export default function Home() {
                 <span className="bars" aria-hidden="true"><i /><i /><i /></span>
             </button>
 
-            <Script src="/robtic/site/landing-deck.js" strategy="afterInteractive" />
-            <Script src="/robtic/site/sky.js" strategy="afterInteractive" />
+            <Script src="/rl/robtic/site/landing-deck.js" strategy="afterInteractive" />
+            <Script src="/rl/robtic/site/sky.js" strategy="afterInteractive" />
         </>
     );
 }

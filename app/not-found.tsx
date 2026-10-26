@@ -5,7 +5,7 @@ export default function NotFound() {
     return (
         <section className="notfound">
             <div className="wrap">
-                <img src="/robtic/404.webp" alt="The Robtic robot, lost" width={520} height={520} />
+                <img src="/rl/robtic/404.webp" alt="The Robtic robot, lost" width={520} height={520} />
                 <h1>This page wandered off.</h1>
                 <p>Taking you back to Robtic…</p>
                 <a className="btn btn-primary btn-lg" href="/">Go home now</a>
