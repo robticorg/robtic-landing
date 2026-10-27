@@ -16,7 +16,7 @@ function cta(plan: Plan): string {
     return `Choose ${plan.name}`;
 }
 
-export default function PlansView() {
+export default function PlansView({ prices = {} }: { prices?: Record<string, string> }) {
     const [group, setGroup] = useState<'individual' | 'business'>('individual');
     const wrapRef = useRef<HTMLDivElement>(null);
 
@@ -57,15 +57,15 @@ export default function PlansView() {
                                     {recommended && <span className="ribbon">Recommended</span>}
                                     <h3>{plan.name}</h3>
                                     <p className="price">
-                                        {plan.key === 'org' ? (
-                                            <>Custom <small>priced for you</small></>
-                                        ) : plan.trialDays ? (
-                                            <>Free <small>first {plan.trialDays} days</small></>
-                                        ) : plan.price ? (
-                                            <>{plan.price.split(' / ')[0]} <small>/ month</small></>
-                                        ) : (
-                                            <small>Price soon</small>
-                                        )}
+                                        {(() => {
+                                            // Live price from the panel (prices[key]) wins over the static snapshot.
+                                            const priceText = prices[plan.key] || plan.price;
+                                            if (plan.key === 'org') return <>Custom <small>priced for you</small></>;
+                                            if (plan.trialDays) return <>Free <small>first {plan.trialDays} days</small></>;
+                                            if (priceText && priceText.toLowerCase() === 'free') return <>Free</>;
+                                            if (priceText) return <>{priceText.split(' / ')[0]} <small>/ month</small></>;
+                                            return <small>Price soon</small>;
+                                        })()}
                                     </p>
                                     <div className="limits">
                                         <div><span>Apps</span>{plan.limits.apps ?? 'Unlimited'}</div>

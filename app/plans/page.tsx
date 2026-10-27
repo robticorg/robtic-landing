@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { ORIGIN } from '@/lib/site';
+import { getSiteData, priceMap } from '@/lib/site-data';
 import PlansView from './PlansView';
 
 export const metadata: Metadata = {
@@ -19,11 +20,12 @@ const serviceLd = {
     provider: { '@id': `${ORIGIN}/#organization` },
 };
 
-export default function PlansPage() {
+export default async function PlansPage() {
+    const prices = priceMap(await getSiteData());
     return (
         <>
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceLd) }} />
-            <PlansView />
+            <PlansView prices={prices} />
         </>
     );
 }
