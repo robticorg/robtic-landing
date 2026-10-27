@@ -31,6 +31,27 @@ function read(slug: string): string | null {
     }
 }
 
+function slugify(s: string): string {
+    return s.toLowerCase().replace(/<[^>]+>/g, '').replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '-');
+}
+
+// Render the Markdown, give every section heading an id, and collect those headings for the table of contents
+// on the right of the page.
+function renderLegal(md: string): { html: string; toc: Array<{ id: string; text: string }> } {
+    const raw = marked.parse(md, { async: false }) as string;
+    const toc: Array<{ id: string; text: string }> = [];
+    const seen = new Set<string>();
+    const html = raw.replace(/<h2>([\s\S]*?)<\/h2>/g, (_m, inner) => {
+        const text = inner.replace(/<[^>]+>/g, '').trim();
+        let id = slugify(text) || `section-${toc.length + 1}`;
+        while (seen.has(id)) id = `${id}-${toc.length + 1}`;
+        seen.add(id);
+        toc.push({ id, text });
+        return `<h2 id="${id}">${inner}</h2>`;
+    });
+    return { html, toc };
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
     if (!LEGAL[slug]) return {};
@@ -46,15 +67,35 @@ export default async function LegalPage({ params }: { params: Promise<{ slug: st
     // build-time date only if the panel API is unreachable.
     const site = await getSiteData();
     const updated = site?.legal_updated?.[slug]?.trim() || UPDATED;
+    const { html, toc } = renderLegal(md);
 
-    const html = marked.parse(md, { async: false }) as string;
     return (
-        <div className="page-head">
-            <div className="wrap">
-                <h1>{LEGAL[slug]}</h1>
-                <p>Last updated {updated}</p>
-                <article className="legal" dangerouslySetInnerHTML={{ __html: html }} />
+        <>
+            <div className="page-head">
+                <div className="wrap">
+                    <h1>{LEGAL[slug]}</h1>
+                    <p>Last updated {updated}</p>
+                    <nav className="legal-tabs" aria-label="Legal pages">
+                        {Object.entries(LEGAL).map(([s, label]) => (
+                            <a key={s} href={`/${s}`} className={s === slug ? 'on' : ''}>{label}</a>
+                        ))}
+                    </nav>
+                </div>
             </div>
-        </div>
+
+            <div className="legal-wrap">
+                <article className="legal" dangerouslySetInnerHTML={{ __html: html }} />
+                {toc.length > 0 ? (
+                    <aside className="legal-toc" aria-label="On this page">
+                        <h2>On this page</h2>
+                        <nav>
+                            {toc.map((h) => (
+                                <a key={h.id} href={`#${h.id}`}>{h.text}</a>
+                            ))}
+                        </nav>
+                    </aside>
+                ) : null}
+            </div>
+        </>
     );
 }

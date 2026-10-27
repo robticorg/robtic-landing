@@ -249,10 +249,38 @@ footer.foot { position: relative; overflow: hidden; background: radial-gradient(
 @media (prefers-reduced-motion: reduce) { .marquee { overflow-x: auto; } .marquee .track { animation: none; } }
 
 /* Legal pages: the four of them side by side. */
-.legal-tabs { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 22px; padding: 4px; width: max-content; max-width: 100%; border: 1px solid var(--line); border-radius: 999px; background: var(--glass); }
+.legal-tabs { display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 4px; margin: 22px auto 0; padding: 4px; max-width: 100%; border: 1px solid var(--line); border-radius: 999px; background: var(--glass); }
 .legal-tabs a { padding: 7px 14px; border-radius: 999px; font-size: 14px; color: var(--muted); }
 .legal-tabs a:hover { color: var(--text); }
 .legal-tabs a.on { background: rgba(255, 255, 255, 0.1); color: var(--text); }
+
+/* Legal/privacy pages: plans-style gradient header, a centred readable column, and a sticky table of
+   contents on the right whose links jump to each section. */
+.legal-wrap { display: grid; grid-template-columns: minmax(0, 1fr) 240px; gap: 56px; align-items: start; max-width: 1140px; margin: 0 auto; padding: 48px 20px 72px; }
+.legal { min-width: 0; max-width: 760px; margin: 0 auto; color: var(--muted); font-size: 15.5px; line-height: 1.75; text-align: left; }
+.legal > :first-child { margin-top: 0; }
+.legal h2 { color: var(--text); font-size: 23px; font-weight: 700; letter-spacing: -0.01em; margin: 40px 0 12px; scroll-margin-top: calc(var(--bar) + 24px); }
+.legal h3 { color: var(--text); font-size: 18px; margin: 28px 0 8px; scroll-margin-top: calc(var(--bar) + 24px); }
+.legal p { margin: 0 0 14px; }
+.legal ul, .legal ol { margin: 0 0 16px; padding-left: 22px; }
+.legal li { margin: 6px 0; }
+.legal li::marker { color: var(--blue); }
+.legal a { color: #6cc0ff; text-decoration: underline; text-underline-offset: 2px; }
+.legal a:hover { color: #9ad2ff; }
+.legal strong { color: var(--text); font-weight: 600; }
+.legal hr { border: 0; border-top: 1px solid var(--line); margin: 30px 0; }
+.legal code { background: var(--glass); border: 1px solid var(--line); padding: 1px 6px; border-radius: 6px; font-size: 0.9em; }
+
+.legal-toc { position: sticky; top: calc(var(--bar) + 20px); align-self: start; }
+.legal-toc h2 { margin: 0 0 10px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.legal-toc nav { display: flex; flex-direction: column; border-left: 1px solid var(--line); }
+.legal-toc a { padding: 7px 0 7px 16px; margin-left: -1px; border-left: 2px solid transparent; font-size: 13.5px; line-height: 1.4; color: var(--muted); transition: color 0.15s, border-color 0.15s; }
+.legal-toc a:hover { color: var(--text); border-left-color: var(--blue); }
+
+@media (max-width: 920px) {
+    .legal-wrap { grid-template-columns: 1fr; gap: 0; }
+    .legal-toc { display: none; }
+}
 
 /* Things rise gently into view (only when scripts run; without them everything just shows). */
 .js .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); }
