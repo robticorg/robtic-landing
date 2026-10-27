@@ -3,6 +3,7 @@ import path from 'node:path';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { marked } from 'marked';
+import { getSiteData } from '@/lib/site-data';
 
 // The legal pages (hosting terms, team's terms, account privacy, hosting privacy) live as Markdown in
 // legal-md/, a snapshot of the panel's resources/robtic/legal. Any other single-segment path is unknown and
@@ -41,12 +42,17 @@ export default async function LegalPage({ params }: { params: Promise<{ slug: st
     const md = read(slug);
     if (!md) notFound();
 
+    // The "last updated" date is owned by the panel (bumped when the admin edits a legal page); fall back to the
+    // build-time date only if the panel API is unreachable.
+    const site = await getSiteData();
+    const updated = site?.legal_updated?.[slug]?.trim() || UPDATED;
+
     const html = marked.parse(md, { async: false }) as string;
     return (
         <div className="page-head">
             <div className="wrap">
                 <h1>{LEGAL[slug]}</h1>
-                <p>Last updated {UPDATED}</p>
+                <p>Last updated {updated}</p>
                 <article className="legal" dangerouslySetInnerHTML={{ __html: html }} />
             </div>
         </div>

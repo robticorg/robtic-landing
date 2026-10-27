@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
-import { ORIGIN, PANEL_URL, CONTACT, activeSocials, SOCIAL_ICONS } from '@/lib/site';
+import { ORIGIN, PANEL_URL, SOCIAL_ICONS } from '@/lib/site';
+import { getSiteData, resolveContact, resolveSocials } from '@/lib/site-data';
 import AuthActions from './AuthActions';
 
 const DESCRIPTION =
@@ -27,23 +28,26 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = { themeColor: '#070b14' };
 
-const jsonLd = {
-    '@context': 'https://schema.org',
-    '@graph': [
-        {
-            '@type': 'Organization', '@id': `${ORIGIN}/#organization`, name: 'Robtic', url: `${ORIGIN}/`,
-            logo: IMAGE, email: CONTACT,
-            ...(activeSocials().length ? { sameAs: activeSocials().map(([, url]) => url) } : {}),
-        },
-        {
-            '@type': 'WebSite', '@id': `${ORIGIN}/#website`, name: 'Robtic', url: `${ORIGIN}/`,
-            publisher: { '@id': `${ORIGIN}/#organization` }, inLanguage: 'en',
-        },
-    ],
-};
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-    const socials = activeSocials();
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+    // Contact email and socials are owned by the panel (set in the admin console, stored in the DB); the landing
+    // only reads them. getSiteData is cached (ISR), so this doesn't hit the panel on every render.
+    const site = await getSiteData();
+    const contact = resolveContact(site);
+    const socials = resolveSocials(site);
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@graph': [
+            {
+                '@type': 'Organization', '@id': `${ORIGIN}/#organization`, name: 'Robtic', url: `${ORIGIN}/`,
+                logo: IMAGE, email: contact,
+                ...(socials.length ? { sameAs: socials.map(([, url]) => url) } : {}),
+            },
+            {
+                '@type': 'WebSite', '@id': `${ORIGIN}/#website`, name: 'Robtic', url: `${ORIGIN}/`,
+                publisher: { '@id': `${ORIGIN}/#organization` }, inLanguage: 'en',
+            },
+        ],
+    };
     return (
         <html lang="en" className="js">
             <head>
@@ -103,7 +107,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                                         </span>
                                     ) : null
                                 ))}
-                                <a href={`mailto:${CONTACT}`} aria-label={`Email ${CONTACT}`} title={CONTACT}>
+                                <a href={`mailto:${contact}`} aria-label={`Email ${contact}`} title={contact}>
                                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 5.5A1.5 1.5 0 013.5 4h17A1.5 1.5 0 0122 5.5v13a1.5 1.5 0 01-1.5 1.5h-17A1.5 1.5 0 012 18.5v-13zm2.2.5l7.8 6.1L19.8 6H4.2zM20 7.9l-7.4 5.8a1 1 0 01-1.2 0L4 7.9V18h16V7.9z" /></svg>
                                 </a>
                             </div>

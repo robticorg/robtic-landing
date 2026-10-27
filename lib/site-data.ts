@@ -2,7 +2,7 @@
 // We fetch it from the panel's public endpoint and let Next cache it, revalidating every few minutes — so a price
 // change in the admin shows up without a redeploy, and the panel isn't hit on every page view.
 
-import { ORIGIN } from './site';
+import { ORIGIN, CONTACT, SOCIALS } from './site';
 
 // The panel is reached at its public origin by default; override with PANEL_API_ORIGIN (e.g. the internal
 // http://robtic-panel:80) to skip the round-trip through the proxy.
@@ -53,4 +53,16 @@ export function priceMap(data: SiteData | null): Record<string, string> {
     for (const p of data.plans ?? []) if (p.price) map[p.key] = p.price;
     if (data.team?.price) map['team'] = data.team.price;
     return map;
+}
+
+// The contact email to show. The panel (admin console) owns it; fall back to the built-in only if the API is down.
+export function resolveContact(data: SiteData | null): string {
+    return data?.contact?.trim() || CONTACT;
+}
+
+// Active social links as [key, url] pairs. When the API answered, the panel's saved socials are authoritative
+// (so clearing one in the admin removes it here); only if the API is unreachable do we fall back to the built-ins.
+export function resolveSocials(data: SiteData | null): Array<[string, string]> {
+    const src = data?.socials && Object.keys(data.socials).length ? data.socials : SOCIALS;
+    return Object.entries(src).filter(([, url]) => (url ?? '').trim() !== '');
 }
