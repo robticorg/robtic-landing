@@ -9,6 +9,7 @@ type Me = { username: string; avatarUrl: string | null } | null;
 
 export default function AuthActions({ panelRoot }: { panelRoot: string }) {
     const [me, setMe] = useState<Me>(null);
+    const [avatarFailed, setAvatarFailed] = useState(false);
 
     useEffect(() => {
         let alive = true;
@@ -28,7 +29,11 @@ export default function AuthActions({ panelRoot }: { panelRoot: string }) {
     if (me) {
         return (
             <a className="me" href={`${panelRoot}/panel`} title="Open the panel" aria-label={`Open the panel (${me.username})`}>
-                {me.avatarUrl ? <img src={me.avatarUrl} alt="" /> : <span>{me.username.charAt(0).toUpperCase()}</span>}
+                {me.avatarUrl && !avatarFailed ? (
+                    <img src={me.avatarUrl} alt="" onError={() => setAvatarFailed(true)} />
+                ) : (
+                    <span>{me.username.charAt(0).toUpperCase()}</span>
+                )}
             </a>
         );
     }
