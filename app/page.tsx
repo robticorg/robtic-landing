@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
 import { PANEL_URL } from '@/lib/site';
+import { getSiteData } from '@/lib/site-data';
 
 export const metadata: Metadata = {
     title: 'Robtic: Discord bot and app hosting, free for your first month',
@@ -29,7 +30,19 @@ const FEATURES: Array<[string, string, string]> = [
     ['secrets', 'Encrypted secrets', 'Environment variables encrypted; an uploaded .env is moved into them.'],
 ];
 
-export default function Home() {
+export default async function Home() {
+    // Hero words and the hero picture are owned by the panel (set in the admin console, stored in the DB); the
+    // landing only reads them, cached via ISR. Each falls back to the built-in default when unset.
+    const landing = (await getSiteData())?.landing;
+    const heroTitle = landing?.hero_title?.trim();
+    const heroSubtitle = landing?.hero_subtitle?.trim();
+    const ctaLabel = landing?.cta_label?.trim() || 'Start free for a month';
+    const heroImageUrl = landing?.images?.hero?.url?.trim();
+    const screenSrc = heroImageUrl || '/rl/robtic/site/panel.webp';
+    const screenAlt = heroImageUrl
+        ? (landing?.images?.hero?.alt?.trim() || 'Robtic')
+        : 'A Robtic workspace: three Discord bot apps on a canvas, with backups and SFTP linked to them';
+
     return (
         <>
             <section className="sky">
@@ -39,13 +52,17 @@ export default function Home() {
                 <div className="cloud c3" />
 
                 <div className="wrap hero">
-                    <h1>Run your bots, <span>not the servers</span> under them.</h1>
+                    {heroTitle ? (
+                        <h1>{heroTitle}</h1>
+                    ) : (
+                        <h1>Run your bots, <span>not the servers</span> under them.</h1>
+                    )}
                     <p className="lead">
-                        Robtic keeps your Discord bots and small Node.js or Python apps running. Upload them or bring
-                        them from GitHub, then watch them work from your browser.
+                        {heroSubtitle ||
+                            'Robtic keeps your Discord bots and small Node.js or Python apps running. Upload them or bring them from GitHub, then watch them work from your browser.'}
                     </p>
                     <div className="ctas">
-                        <a className="btn btn-primary btn-lg" href={`${panelRoot}/auth/register`}>Start free for a month</a>
+                        <a className="btn btn-primary btn-lg" href={`${panelRoot}/auth/register`}>{ctaLabel}</a>
                         <a className="btn btn-ghost btn-lg" href="#features">See the features</a>
                     </div>
 
@@ -57,7 +74,7 @@ export default function Home() {
                             <div className="shot">
                                 <img className="peek" src="/rl/robtic/site/robot-peek.webp" alt="" aria-hidden="true" />
                                 <div className="dots" aria-hidden="true"><i /><i /><i /></div>
-                                <img className="screen" src="/rl/robtic/site/panel.webp" alt="A Robtic workspace: three Discord bot apps on a canvas, with backups and SFTP linked to them" width={1600} height={645} fetchPriority="high" />
+                                <img className="screen" src={screenSrc} alt={screenAlt} width={1600} height={645} fetchPriority="high" />
                             </div>
                         </div>
                     </div>
