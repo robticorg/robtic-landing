@@ -18,8 +18,9 @@ function cta(plan: Plan): string {
 
 export default function PlansView({ prices = {} }: { prices?: Record<string, string> }) {
     const [group, setGroup] = useState<'individual' | 'business'>('individual');
-    // The signed-in visitor's current plan (same-origin panel API; null when signed out). Used to mark their card.
-    const [myPlan, setMyPlan] = useState<string | null>(null);
+    // The plan keys the signed-in visitor is on: their own account plan, plus the plan of any team they own.
+    // Empty when signed out. Used to put the "Your plan" tape on the matching card(s).
+    const [myPlans, setMyPlans] = useState<Set<string>>(new Set());
     const wrapRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -29,18 +30,24 @@ export default function PlansView({ prices = {} }: { prices?: Record<string, str
         })
             .then((r) => (r.ok ? r.json() : null))
             .then((d) => {
-                if (d?.plan?.key) setMyPlan(d.plan.key as string);
+                const keys = new Set<string>();
+                if (d?.plan?.key) keys.add(d.plan.key as string);
+                // The team plan is "theirs" too when they own the team.
+                (d?.teams || []).forEach((t: { owner?: boolean; plan?: { key?: string } }) => {
+                    if (t?.owner && t?.plan?.key) keys.add(t.plan.key);
+                });
+                if (keys.size) setMyPlans(keys);
             })
             .catch(() => {
                 // Signed out or offline: just show the plans without a "your plan" mark.
             });
     }, []);
 
-    // When a group is shown, make sure its rise-in cards are visible (the shared reveal observer may not fire
-    // for a list that was hidden when it ran).
+    // Keep the rise-in cards visible. Re-run when myPlans arrives too: marking a card re-renders it, which would
+    // otherwise drop the imperatively-added `is-in` and make the card (with its tape) flicker out.
     useEffect(() => {
-        wrapRef.current?.querySelectorAll(`[data-plans="${group}"] .reveal`).forEach((el) => el.classList.add('is-in'));
-    }, [group]);
+        wrapRef.current?.querySelectorAll(`.reveal`).forEach((el) => el.classList.add('is-in'));
+    }, [group, myPlans]);
 
     return (
         <>
@@ -63,13 +70,16 @@ export default function PlansView({ prices = {} }: { prices?: Record<string, str
                     <div className="plans" data-plans={g} key={g} hidden={g !== group}>
                         {PLANS.filter((p) => p.group === g).map((plan, i) => {
                             const recommended = plan.key === 'developers';
-                            const mine = myPlan !== null && plan.key === myPlan;
+                            const mine = myPlans.has(plan.key);
                             return (
                                 <div
-                                    className={`plan reveal ${recommended ? 'recommended' : ''} ${mine ? 'is-current' : ''}`}
+                                    // `is-current` stays OFF the className on purpose: changing the className when the
+                                    // plan loads would drop the imperatively-added `is-in` and flicker the card out.
+                                    // The white border is applied as an inline style instead, which never touches `is-in`.
+                                    className={`plan reveal ${recommended ? 'recommended' : ''}`}
                                     id={`plan-${plan.key}`}
                                     key={plan.key}
-                                    style={{ transitionDelay: `${i * 70}ms` }}
+                                    style={{ transitionDelay: `${i * 70}ms`, ...(mine ? { borderColor: 'rgba(255, 255, 255, 0.5)' } : {}) }}
                                 >
                                     {/* The visitor's own plan gets the white tape; otherwise the recommended one keeps its blue tape. */}
                                     {mine ? (
