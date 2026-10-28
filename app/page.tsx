@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Script from 'next/script';
 import { PANEL_URL } from '@/lib/site';
 import { getSiteData } from '@/lib/site-data';
+import WaveLoop from './WaveLoop';
 
 export const metadata: Metadata = {
     title: 'Robtic: Discord bot and app hosting, free for your first month',
@@ -45,7 +46,9 @@ export default async function Home() {
 
     return (
         <>
-            <section className="sky">
+            
+            <WaveLoop />
+<section className="sky">
                 <div className="stars" />
                 <div className="cloud c1" />
                 <div className="cloud c2" />

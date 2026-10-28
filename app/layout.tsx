@@ -16,8 +16,8 @@ export const metadata: Metadata = {
     alternates: { canonical: '/' },
     robots: { index: true, follow: true, 'max-image-preview': 'large' } as Metadata['robots'],
     icons: {
-        icon: [{ url: '/rl/favicons/favicon-32x32.png?v=r2', sizes: '32x32', type: 'image/png' }],
-        apple: [{ url: '/rl/favicons/apple-touch-icon.png?v=r2', sizes: '180x180' }],
+        icon: [{ url: '/rl/favicons/favicon-32x32.png?v=r3', sizes: '32x32', type: 'image/png' }],
+        apple: [{ url: '/rl/favicons/apple-touch-icon.png?v=r3', sizes: '180x180' }],
     },
     openGraph: {
         type: 'website', siteName: 'Robtic', locale: 'en_US', title: 'Robtic', description: DESCRIPTION,
