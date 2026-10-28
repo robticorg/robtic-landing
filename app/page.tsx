@@ -3,6 +3,7 @@ import Script from 'next/script';
 import { PANEL_URL } from '@/lib/site';
 import { getSiteData } from '@/lib/site-data';
 import WaveLoop from './WaveLoop';
+import HeroCta from './HeroCta';
 
 export const metadata: Metadata = {
     title: 'Robtic: Discord bot and app hosting, free for your first month',
@@ -65,7 +66,7 @@ export default async function Home() {
                             'Robtic keeps your Discord bots and small Node.js or Python apps running. Upload them or bring them from GitHub, then watch them work from your browser.'}
                     </p>
                     <div className="ctas">
-                        <a className="btn btn-primary btn-lg" href={`${panelRoot}/auth/register`}>{ctaLabel}</a>
+                        <HeroCta label={ctaLabel} />
                         <a className="btn btn-ghost btn-lg" href="#features">See the features</a>
                     </div>
 
