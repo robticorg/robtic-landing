@@ -141,6 +141,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 <Script src="/rl/robtic/site/landing-boot.js" strategy="afterInteractive" />
                 <Script src="/rl/robtic/transit.js" strategy="afterInteractive" />
                 <Script src="/rl/robtic/site/landing-ui.js" strategy="afterInteractive" />
+
+                {/* Google Analytics (gtag.js) */}
+                <Script src="https://www.googletagmanager.com/gtag/js?id=G-MEX3YG8YG3" strategy="afterInteractive" />
+                <Script id="gtag-init" strategy="afterInteractive">
+                    {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-MEX3YG8YG3');`}
+                </Script>
             </body>
         </html>
     );
