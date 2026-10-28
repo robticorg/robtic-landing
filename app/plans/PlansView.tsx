@@ -18,7 +18,23 @@ function cta(plan: Plan): string {
 
 export default function PlansView({ prices = {} }: { prices?: Record<string, string> }) {
     const [group, setGroup] = useState<'individual' | 'business'>('individual');
+    // The signed-in visitor's current plan (same-origin panel API; null when signed out). Used to mark their card.
+    const [myPlan, setMyPlan] = useState<string | null>(null);
     const wrapRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        fetch(`${panelRoot}/api/client/robtic/account/plan`, {
+            credentials: 'include',
+            headers: { Accept: 'application/json' },
+        })
+            .then((r) => (r.ok ? r.json() : null))
+            .then((d) => {
+                if (d?.plan?.key) setMyPlan(d.plan.key as string);
+            })
+            .catch(() => {
+                // Signed out or offline: just show the plans without a "your plan" mark.
+            });
+    }, []);
 
     // When a group is shown, make sure its rise-in cards are visible (the shared reveal observer may not fire
     // for a list that was hidden when it ran).
@@ -47,14 +63,20 @@ export default function PlansView({ prices = {} }: { prices?: Record<string, str
                     <div className="plans" data-plans={g} key={g} hidden={g !== group}>
                         {PLANS.filter((p) => p.group === g).map((plan, i) => {
                             const recommended = plan.key === 'developers';
+                            const mine = myPlan !== null && plan.key === myPlan;
                             return (
                                 <div
-                                    className={`plan reveal ${recommended ? 'recommended' : ''}`}
+                                    className={`plan reveal ${recommended ? 'recommended' : ''} ${mine ? 'is-current' : ''}`}
                                     id={`plan-${plan.key}`}
                                     key={plan.key}
                                     style={{ transitionDelay: `${i * 70}ms` }}
                                 >
-                                    {recommended && <span className="ribbon">Recommended</span>}
+                                    {/* The visitor's own plan gets the white tape; otherwise the recommended one keeps its blue tape. */}
+                                    {mine ? (
+                                        <span className="ribbon mine-ribbon">Your plan</span>
+                                    ) : (
+                                        recommended && <span className="ribbon">Recommended</span>
+                                    )}
                                     <h3>{plan.name}</h3>
                                     <p className="price">
                                         {(() => {
