@@ -116,15 +116,7 @@ export default async function Home() {
                 </div>
             </section>
 
-            {/* The sound of the sky (this page only): wind and far-off birds; the button turns it off and on. */}
-            <button type="button" className="sky-sound" id="sky-sound" aria-label="Sound of the sky" aria-pressed="true">
-                <svg className="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M11 5L6 9H3v6h3l5 4V5zM15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13" /></svg>
-                <svg className="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M11 5L6 9H3v6h3l5 4V5zM16 9l5 6m0-6l-5 6" /></svg>
-                <span className="bars" aria-hidden="true"><i /><i /><i /></span>
-            </button>
-
             <Script src="/rl/robtic/site/landing-deck.js" strategy="afterInteractive" />
-            <Script src="/rl/robtic/site/sky.js" strategy="afterInteractive" />
         </>
     );
 }
