@@ -10,9 +10,10 @@ const GROUPS: Array<['individual' | 'business', string]> = [
     ['business', 'Business'],
 ];
 
-function cta(plan: Plan): string {
+function cta(plan: Plan, signedIn: boolean): string {
     if (plan.key === 'org') return 'Ask for an offer';
-    if (plan.trialDays) return 'Start free';
+    // The free month is for new visitors only.
+    if (plan.trialDays && !signedIn) return 'Start free';
     return `Choose ${plan.name}`;
 }
 
@@ -48,6 +49,9 @@ export default function PlansView({ prices = {} }: { prices?: Record<string, str
     // The plan keys the signed-in visitor is on: their own account plan, plus the plan of any team they own.
     // Empty when signed out. Used to put the "Your plan" tape on the matching card(s).
     const [myPlans, setMyPlans] = useState<Set<string>>(new Set());
+    // Signed in (already has an account): the free-month trial is for new visitors, so hide "Start free" / "Free
+    // first N days" and show the real price and a plain "Choose" instead.
+    const [signedIn, setSignedIn] = useState(false);
     const wrapRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -58,7 +62,10 @@ export default function PlansView({ prices = {} }: { prices?: Record<string, str
             .then((r) => (r.ok ? r.json() : null))
             .then((d) => {
                 const keys = new Set<string>();
-                if (d?.plan?.key) keys.add(d.plan.key as string);
+                if (d?.plan?.key) {
+                    keys.add(d.plan.key as string);
+                    setSignedIn(true);
+                }
                 // The team plan is "theirs" too when they own the team.
                 (d?.teams || []).forEach((t: { owner?: boolean; plan?: { key?: string } }) => {
                     if (t?.owner && t?.plan?.key) keys.add(t.plan.key);
@@ -120,7 +127,8 @@ export default function PlansView({ prices = {} }: { prices?: Record<string, str
                                             // Live price from the panel (prices[key]) wins over the static snapshot.
                                             const priceText = prices[plan.key] || plan.price;
                                             if (plan.key === 'org') return <>Custom <small>priced for you</small></>;
-                                            if (plan.trialDays) return <>Free <small>first {plan.trialDays} days</small></>;
+                                            if (plan.trialDays && !signedIn)
+                                                return <>Free <small>first {plan.trialDays} days</small></>;
                                             if (priceText && priceText.toLowerCase() === 'free') return <>Free</>;
                                             if (priceText) return <>{priceText.split(' / ')[0]} <small>/ month</small></>;
                                             return <small>Price soon</small>;
@@ -158,7 +166,7 @@ export default function PlansView({ prices = {} }: { prices?: Record<string, str
                                             className={`btn ${recommended ? 'btn-primary' : 'btn-ghost'}`}
                                             href={`${panelRoot}/plans?plan=${plan.key}`}
                                         >
-                                            {cta(plan)}
+                                            {cta(plan, signedIn)}
                                         </a>
                                     )}
                                 </div>
