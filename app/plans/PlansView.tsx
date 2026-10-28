@@ -115,9 +115,23 @@ export default function PlansView({ prices = {} }: { prices?: Record<string, str
                                             );
                                         })}
                                     </ul>
-                                    <a className={`btn ${recommended ? 'btn-primary' : 'btn-ghost'}`} href={`${panelRoot}/plans?plan=${plan.key}`}>
-                                        {cta(plan)}
-                                    </a>
+                                    {mine ? (
+                                        // Already on this plan: no "choose" action, just a disabled marker.
+                                        <span
+                                            className="btn btn-ghost"
+                                            aria-disabled="true"
+                                            style={{ opacity: 0.55, cursor: 'default', pointerEvents: 'none' }}
+                                        >
+                                            Current plan
+                                        </span>
+                                    ) : (
+                                        <a
+                                            className={`btn ${recommended ? 'btn-primary' : 'btn-ghost'}`}
+                                            href={`${panelRoot}/plans?plan=${plan.key}`}
+                                        >
+                                            {cta(plan)}
+                                        </a>
+                                    )}
                                 </div>
                             );
                         })}
