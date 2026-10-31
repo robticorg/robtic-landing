@@ -2,6 +2,8 @@
 // We fetch it from the panel's public endpoint and let Next cache it, revalidating every few minutes — so a price
 // change in the admin shows up without a redeploy, and the panel isn't hit on every page view.
 
+import fs from 'node:fs';
+import path from 'node:path';
 import { ORIGIN, CONTACT, SOCIALS } from './site';
 
 // The panel is reached at its public origin by default; override with PANEL_API_ORIGIN (e.g. the internal
@@ -29,9 +31,27 @@ export type SiteData = {
         hero_subtitle: string;
         cta_label: string;
         images: Record<string, { url: string; alt: string }>;
+        features?: LandingFeature[];
     };
     legal_updated: Record<string, string>;
+    legal_pages?: LegalPage[];
 };
+
+export type LandingFeature = { title: string; text: string; image: string; alt: string };
+
+// A legal page: `key` is where the panel stores it, `path` its address here (robtic.org/<path>), both set in the
+// admin console.
+export type LegalPage = { key: string; title: string; path: string; updated?: string };
+
+// What the site starts from, and what it falls back to when the panel can't be reached: the built-in pages, whose
+// Markdown is a snapshot in legal-md/.
+export const BUILTIN_LEGAL: LegalPage[] = [
+    { key: 'terms-hosting', title: 'Hosting Terms', path: 'terms-hosting' },
+    { key: 'terms-teams', title: "Team's Terms", path: 'terms-teams' },
+    { key: 'privacy-account', title: 'Account Privacy', path: 'privacy-account' },
+    { key: 'privacy-hosting', title: 'Hosting Privacy', path: 'privacy-hosting' },
+];
+const BUILTIN_UPDATED = 'October 25, 2026';
 
 export async function getSiteData(): Promise<SiteData | null> {
     try {
@@ -41,6 +61,34 @@ export async function getSiteData(): Promise<SiteData | null> {
         });
         if (!res.ok) return null;
         return (await res.json()) as SiteData;
+    } catch {
+        return null;
+    }
+}
+
+// The legal pages, in the order the admin console set them.
+export function legalPages(data: SiteData | null): LegalPage[] {
+    return data?.legal_pages?.length ? data.legal_pages : BUILTIN_LEGAL;
+}
+
+// One legal page by its address, with its Markdown. Asks the panel; if it can't be reached, a built-in page is
+// read from legal-md/ so the terms never go missing.
+export async function getLegalPage(slug: string): Promise<(LegalPage & { markdown: string; updated: string }) | null> {
+    try {
+        const res = await fetch(`${PANEL_API_ORIGIN}/api/robtic/site/legal/${encodeURIComponent(slug)}`, {
+            headers: { Accept: 'application/json' },
+            next: { revalidate: 300 },
+        });
+        if (res.status === 404) return null;
+        if (res.ok) return await res.json();
+    } catch {
+        // fall through to the snapshot
+    }
+    const page = BUILTIN_LEGAL.find((p) => p.path === slug);
+    if (!page) return null;
+    try {
+        const markdown = fs.readFileSync(path.join(process.cwd(), 'legal-md', `${page.key}.md`), 'utf8');
+        return { ...page, markdown, updated: BUILTIN_UPDATED };
     } catch {
         return null;
     }

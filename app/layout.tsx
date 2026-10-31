@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 import { ORIGIN, PANEL_URL, SOCIAL_ICONS } from '@/lib/site';
-import { getSiteData, resolveContact, resolveSocials } from '@/lib/site-data';
+import { getSiteData, legalPages, resolveContact, resolveSocials } from '@/lib/site-data';
 import AuthActions from './AuthActions';
 
 const DESCRIPTION =
@@ -9,7 +9,7 @@ const DESCRIPTION =
     'browser with a live console, a code editor, databases, backups and teams.';
 const IMAGE = `${ORIGIN}/rl/robtic/icon-512.png`;
 
-export const metadata: Metadata = {
+const BASE_METADATA: Metadata = {
     metadataBase: new URL(ORIGIN),
     title: { default: 'Robtic', template: '%s' },
     description: DESCRIPTION,
@@ -26,6 +26,19 @@ export const metadata: Metadata = {
     twitter: { card: 'summary', title: 'Robtic', description: DESCRIPTION, images: [IMAGE] },
 };
 
+// The share picture can be changed in the admin console (Landing -> Images); the robot is the default.
+export async function generateMetadata(): Promise<Metadata> {
+    const og = (await getSiteData())?.landing?.images?.og;
+    const url = og?.url?.trim();
+    if (!url) return BASE_METADATA;
+    const alt = og?.alt?.trim() || 'Robtic';
+    return {
+        ...BASE_METADATA,
+        openGraph: { ...BASE_METADATA.openGraph, images: [{ url, alt }] },
+        twitter: { card: 'summary_large_image', title: 'Robtic', description: DESCRIPTION, images: [url] },
+    };
+}
+
 export const viewport: Viewport = { themeColor: '#070b14' };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -34,6 +47,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     const site = await getSiteData();
     const contact = resolveContact(site);
     const socials = resolveSocials(site);
+    const legal = legalPages(site);
     const jsonLd = {
         '@context': 'https://schema.org',
         '@graph': [
@@ -115,10 +129,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                         <div className="foot-right">
                             <div className="foot-col">
                                 <h4>Terms &amp; Service</h4>
-                                <a href="/terms-hosting">Hosting Terms</a>
-                                <a href="/terms-teams">Team&apos;s Terms</a>
-                                <a href="/privacy-account">Account Privacy</a>
-                                <a href="/privacy-hosting">Hosting Privacy</a>
+                                {legal.map((p) => (
+                                    <a key={p.key} href={`/${p.path}`}>{p.title}</a>
+                                ))}
                             </div>
                             <div className="foot-col">
                                 <h4>Other</h4>

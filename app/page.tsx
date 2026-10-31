@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
 import { PANEL_URL } from '@/lib/site';
-import { getSiteData } from '@/lib/site-data';
+import { getSiteData, type LandingFeature } from '@/lib/site-data';
 import WaveLoop from './WaveLoop';
 import HeroCta from './HeroCta';
 
@@ -15,9 +15,10 @@ export const metadata: Metadata = {
 
 const panelRoot = PANEL_URL.replace(/\/panel$/, '');
 
-// [image, title, text] — one picture each; the text shows on hover. Screenshots vs. illustrations differ in alt.
+// The built-in features: [image, title, text] — one picture each; the text shows on hover. Screenshots vs.
+// illustrations differ in alt. The admin console can replace the whole list (Landing -> Features).
 const SHOTS = ['workspaces', 'add', 'console', 'editor', 'teams', 'resources'];
-const FEATURES: Array<[string, string, string]> = [
+const BUILTIN_FEATURES: Array<[string, string, string]> = [
     ['workspaces', 'Workspaces', 'Apps, databases, backups, SFTP, schedules and alerts on one canvas, joined to what they belong to.'],
     ['add', 'Add anything', 'Upload your files, start from a ready Discord bot, or clone a repository from GitHub.'],
     ['console', 'Live console', 'Start, stop and restart, type commands and read the logs as they happen.'],
@@ -44,6 +45,14 @@ export default async function Home() {
     const screenAlt = heroImageUrl
         ? (landing?.images?.hero?.alt?.trim() || 'Robtic')
         : 'A Robtic workspace: three Discord bot apps on a canvas, with backups and SFTP linked to them';
+    const features: LandingFeature[] = landing?.features?.length
+        ? landing.features
+        : BUILTIN_FEATURES.map(([file, title, text]) => ({
+            title,
+            text,
+            image: `/rl/robtic/site/features/${file}.webp`,
+            alt: SHOTS.includes(file) ? `${title}: a screenshot of the Robtic panel` : `${title}: an illustration`,
+        }));
 
     return (
         <>
@@ -96,22 +105,22 @@ export default async function Home() {
                     <div className="wrap deck-head">
                         <small>Keep scrolling to see them all</small>
                         <div className="deck-title">
-                            <span className="pill">{FEATURES.length} features</span>
+                            <span className="pill">{features.length} features</span>
                             <h2>Everything it does</h2>
                         </div>
                     </div>
                     <div className="deck-track" id="deck-track">
-                        {FEATURES.map(([file, title, text], i) => (
-                            <figure className="dk" tabIndex={0} key={file}>
+                        {features.map((f, i) => (
+                            <figure className="dk" tabIndex={0} key={`${i}-${f.title}`}>
                                 <div className="dk-in">
                                     <img
-                                        src={`/rl/robtic/site/features/${file}.webp`}
-                                        alt={SHOTS.includes(file) ? `${title}: a screenshot of the Robtic panel` : `${title}: an illustration`}
+                                        src={f.image}
+                                        alt={f.alt || f.title}
                                         width={640} height={440} loading={i < 4 ? 'eager' : 'lazy'} decoding="async"
                                     />
                                     <figcaption>
-                                        <h3>{title}</h3>
-                                        <p>{text}</p>
+                                        <h3>{f.title}</h3>
+                                        <p>{f.text}</p>
                                     </figcaption>
                                 </div>
                             </figure>

@@ -1,35 +1,18 @@
-import fs from 'node:fs';
-import path from 'node:path';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { marked } from 'marked';
-import { getSiteData } from '@/lib/site-data';
+import { BUILTIN_LEGAL, getLegalPage, getSiteData, legalPages } from '@/lib/site-data';
 
-// The legal pages (hosting terms, team's terms, account privacy, hosting privacy) live as Markdown in
-// legal-md/, a snapshot of the panel's resources/robtic/legal. Any other single-segment path is unknown and
-// falls through to the redirect page.
-const LEGAL: Record<string, string> = {
-    'terms-hosting': 'Hosting Terms',
-    'terms-teams': "Team's Terms",
-    'privacy-account': 'Account Privacy',
-    'privacy-hosting': 'Hosting Privacy',
-};
-const UPDATED = 'October 25, 2026';
+// The legal pages (terms, privacy, and any others added in the admin console) at the address the console gives
+// each. Their Markdown comes from the panel; legal-md/ holds a snapshot of the built-in pages for when it's down.
+// Any other single-segment path is unknown and falls through to the redirect page.
 
 export function generateStaticParams() {
-    return Object.keys(LEGAL).map((slug) => ({ slug }));
+    return BUILTIN_LEGAL.map((p) => ({ slug: p.path }));
 }
 
 export const dynamicParams = true;
-
-function read(slug: string): string | null {
-    if (!LEGAL[slug]) return null;
-    try {
-        return fs.readFileSync(path.join(process.cwd(), 'legal-md', `${slug}.md`), 'utf8');
-    } catch {
-        return null;
-    }
-}
+export const revalidate = 300;
 
 function slugify(s: string): string {
     return s.toLowerCase().replace(/<[^>]+>/g, '').replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '-');
@@ -54,30 +37,29 @@ function renderLegal(md: string): { html: string; toc: Array<{ id: string; text:
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
-    if (!LEGAL[slug]) return {};
-    return { title: `${LEGAL[slug]} · Robtic`, alternates: { canonical: `/${slug}` } };
+    const page = await getLegalPage(slug);
+    if (!page) return {};
+    return { title: `${page.title} · Robtic`, alternates: { canonical: `/${page.path}` } };
 }
 
 export default async function LegalPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
-    const md = read(slug);
-    if (!md) notFound();
+    const page = await getLegalPage(slug);
+    if (!page) notFound();
 
-    // The "last updated" date is owned by the panel (bumped when the admin edits a legal page); fall back to the
-    // build-time date only if the panel API is unreachable.
-    const site = await getSiteData();
-    const updated = site?.legal_updated?.[slug]?.trim() || UPDATED;
-    const { html, toc } = renderLegal(md);
+    // The tabs: every legal page, in the order the admin console set them.
+    const pages = legalPages(await getSiteData());
+    const { html, toc } = renderLegal(page.markdown);
 
     return (
         <>
             <div className="page-head">
                 <div className="wrap">
-                    <h1>{LEGAL[slug]}</h1>
-                    <p>Last updated {updated}</p>
+                    <h1>{page.title}</h1>
+                    <p>Last updated {page.updated}</p>
                     <nav className="legal-tabs" aria-label="Legal pages">
-                        {Object.entries(LEGAL).map(([s, label]) => (
-                            <a key={s} href={`/${s}`} className={s === slug ? 'on' : ''}>{label}</a>
+                        {pages.map((p) => (
+                            <a key={p.key} href={`/${p.path}`} className={p.path === page.path ? 'on' : ''}>{p.title}</a>
                         ))}
                     </nav>
                 </div>
