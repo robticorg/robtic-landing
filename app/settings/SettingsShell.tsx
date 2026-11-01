@@ -3,6 +3,8 @@
 // The Settings frame: who you are at the top of a left nav, the sections under it, one page each. Signed-out visitors
 // go to sign in and come back here.
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+
+const BACK_KEY = 'robtic-settings-back';
 import { usePathname } from 'next/navigation';
 import { ApiError, errorText, getProfile, type Profile } from '@/lib/account';
 
@@ -52,6 +54,7 @@ export default function SettingsShell({ children }: { children: React.ReactNode 
     const [profile, setProfile] = useState<Profile | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [message, setMessage] = useState<{ kind: 'ok' | 'err'; text: string } | null>(null);
+    const [back, setBack] = useState('/');
 
     const load = useCallback(async () => {
         try {
@@ -77,6 +80,15 @@ export default function SettingsShell({ children }: { children: React.ReactNode 
 
     const toast = useCallback((kind: 'ok' | 'err', text: string) => setMessage({ kind, text }), []);
 
+    // Back leaves Settings: to the page you came from on the site, however many sections you opened since.
+    useEffect(() => {
+        const from = document.referrer ? new URL(document.referrer) : null;
+        if (from && from.origin === window.location.origin && !from.pathname.startsWith('/settings')) {
+            sessionStorage.setItem(BACK_KEY, from.pathname + from.search);
+        }
+        setBack(sessionStorage.getItem(BACK_KEY) ?? '/');
+    }, []);
+
     if (error) {
         return (
             <div className="st-state">
@@ -92,6 +104,10 @@ export default function SettingsShell({ children }: { children: React.ReactNode 
         <SettingsContext.Provider value={{ profile, setProfile, reload: load, toast }}>
             <div className="st-app">
                 <aside className="st-side">
+                    <a className="st-back" href={back}>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6" /></svg>
+                        Back
+                    </a>
                     <a className="st-me" href={`/u/${profile.username}`} title="View your public profile">
                         {profile.avatar_url ? <img src={profile.avatar_url} alt="" /> : <span>{profile.username.charAt(0).toUpperCase()}</span>}
                         <div>
@@ -103,7 +119,7 @@ export default function SettingsShell({ children }: { children: React.ReactNode 
                         <nav key={g.group} aria-label={g.group}>
                             <h2>{g.group}</h2>
                             {g.items.map((i) => (
-                                <a key={i.href} href={i.href} className={path === i.href ? 'on' : ''}>
+                                <a key={i.href} href={i.href} className={path === i.href || (i.href !== '/settings' && path.startsWith(`${i.href}/`)) ? 'on' : ''}>
                                     {i.label}
                                 </a>
                             ))}

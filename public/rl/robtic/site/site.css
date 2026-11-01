@@ -457,6 +457,8 @@ section.faq { background: var(--bg-2); padding-top: 20px; }
 /* ---------- Public profile ---------- */
 body:has(.pf) .nav-links { display: none; }
 body:has(.pf) .actions { display: flex; }
+body:has(.pf) .foot, body:has(.pf) .foot-wave { display: none; }
+.pf { min-height: 100vh; }
 .pf { padding-bottom: 90px; }
 .pf-banner { height: clamp(190px, 28vw, 340px); background: linear-gradient(115deg, #0c4f9e 0%, #1793ff 55%, #6cc0ff 100%); background-size: cover; background-position: center; }
 .pf-wrap { max-width: 860px; }
@@ -489,8 +491,34 @@ body:has(.pf) .actions { display: flex; }
 @media (max-width: 640px) { .pf-head { margin-top: -50px; } .pf-pic { width: 104px; height: 104px; } }
 
 /* ---------- Settings ---------- */
-.st-app { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 40px; max-width: 1020px; margin: 0 auto; padding: calc(var(--bar) + 30px) 20px 90px; }
-.st-side { position: sticky; top: calc(var(--bar) + 20px); align-self: start; display: flex; flex-direction: column; gap: 14px; }
+/* Its own place: no site bar or footer, only Back. */
+body:has(.st-app) .bar, body:has(.st-state) .bar, body:has(.st-app) .foot, body:has(.st-state) .foot,
+body:has(.st-app) .foot-wave, body:has(.st-state) .foot-wave, body:has(.st-app) .to-top, body:has(.st-state) .to-top { display: none; }
+.st-back { display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; padding: 7px 14px 7px 10px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); font-size: 14px; font-weight: 600; transition: color 0.15s, border-color 0.15s; }
+.st-back:hover { color: var(--text); border-color: rgba(255, 255, 255, 0.25); }
+.st-back svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.st-open { display: flex; align-items: center; justify-content: space-between; gap: 16px; transition: border-color 0.15s, background 0.15s; }
+.st-open:hover { border-color: rgba(255, 255, 255, 0.25); background: rgba(255, 255, 255, 0.06); }
+.st-open h3 { margin: 0; font-size: 15px; font-weight: 600; }
+.st-open p { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
+.st-open svg { flex: none; width: 18px; height: 18px; fill: none; stroke: var(--muted); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.st-crumb { display: inline-block; margin-bottom: 8px; color: var(--muted); font-size: 14px; font-weight: 600; }
+.st-crumb:hover { color: var(--text); }
+.st-devices { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.st-device { display: flex; flex-direction: column; gap: 12px; padding: 18px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--glass); }
+.st-device.me { border-color: rgba(23, 147, 255, 0.5); }
+.st-device-top { display: flex; align-items: center; gap: 12px; }
+.st-device-ico { flex: none; width: 44px; height: 44px; display: grid; place-items: center; border-radius: 12px; background: rgba(23, 147, 255, 0.12); color: #6cc0ff; }
+.st-device-ico svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.st-device b { display: block; font-size: 15px; font-weight: 600; overflow-wrap: anywhere; }
+.st-device small { color: var(--muted); font-size: 13px; }
+.st-device dl { display: grid; grid-template-columns: auto 1fr; gap: 3px 12px; margin: 0; font-size: 13.5px; }
+.st-device dt { color: var(--muted); }
+.st-device dd { margin: 0; overflow-wrap: anywhere; }
+.st-device .btn { align-self: flex-start; }
+.st-pill { display: inline-block; margin-top: 2px; padding: 1px 9px; border-radius: 999px; background: rgba(23, 147, 255, 0.15); color: #6cc0ff; font-size: 12px; font-weight: 700; }
+.st-app { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 40px; max-width: 1020px; margin: 0 auto; padding: 36px 20px 90px; }
+.st-side { position: sticky; top: 36px; align-self: start; display: flex; flex-direction: column; gap: 14px; }
 .st-me { display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: var(--radius); }
 .st-me:hover { background: rgba(255, 255, 255, 0.05); }
 .st-me img, .st-me > span { width: 42px; height: 42px; flex: none; border-radius: 50%; object-fit: cover; display: grid; place-items: center; font-weight: 800; background: linear-gradient(135deg, #3aa3ff, #0c62b3); }

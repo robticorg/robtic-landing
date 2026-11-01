@@ -106,44 +106,24 @@ function TwoFactor() {
     );
 }
 
-type Device = { id: number; device: string; ip: string; current: boolean; last_seen_at: string };
-
 function Devices() {
     const { toast } = useSettings();
-    const { run, pending } = useRun();
-    const [devices, setDevices] = useState<Device[] | null>(null);
+    const [count, setCount] = useState<number | null>(null);
 
-    const load = useCallback(() => {
-        request<{ data: Device[] }>('GET', '/api/client/robtic/account/devices')
-            .then((r) => setDevices(r.data))
+    useEffect(() => {
+        request<{ data: unknown[] }>('GET', '/api/client/robtic/account/devices')
+            .then((r) => setCount(r.data.length))
             .catch((e) => toast('err', errorText(e)));
     }, [toast]);
-    useEffect(load, [load]);
-
-    const signOut = async (id: number) => {
-        if (await run(() => request('DELETE', `/api/client/robtic/account/devices/${id}`), 'Signed out.')) load();
-    };
-    const signOutOthers = async () => {
-        if (await run(() => request('DELETE', '/api/client/robtic/account/devices'), 'Signed out everywhere else.')) load();
-    };
-    const others = (devices ?? []).filter((d) => !d.current).length;
 
     return (
-        <section className="st-card">
-            <Row title="Signed-in devices" desc="Where your account is signed in now.">
-                {others > 0 ? <button type="button" className="st-link danger" disabled={pending} onClick={signOutOthers}>Sign out the others</button> : null}
-            </Row>
-            {!devices ? <div className="st-spin" /> : null}
-            {devices?.map((d) => (
-                <div className="st-item" key={d.id}>
-                    <div>
-                        <b>{d.device}</b>
-                        <small>{d.current ? 'This device' : `${d.ip} · last seen ${new Date(d.last_seen_at).toLocaleDateString()}`}</small>
-                    </div>
-                    {!d.current ? <button type="button" className="st-link" disabled={pending} onClick={() => signOut(d.id)}>Sign out</button> : null}
-                </div>
-            ))}
-        </section>
+        <a className="st-card st-open" href="/settings/security/devices">
+            <div>
+                <h3>Signed-in devices</h3>
+                <p>{count === null ? 'Where your account is signed in.' : `${count} device${count === 1 ? '' : 's'} signed in now.`}</p>
+            </div>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+        </a>
     );
 }
 
