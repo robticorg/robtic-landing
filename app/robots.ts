@@ -1,14 +1,22 @@
 import type { MetadataRoute } from 'next';
 import { ORIGIN } from '@/lib/site';
 
-// The public site is open to every crawler. The panel, sign-in, admin and API live on their own paths/host and
-// are not this site's to index; we list them anyway so a shared robtic.org front door stays tidy.
+// Named as well as covered by '*': a crawler obeys only the group naming it, so they all share these rules.
+// Google-Extended is Gemini, not Google Search. https://developers.google.com/search/docs/crawling-indexing/google-common-crawlers
+const AI_CRAWLERS = [
+    'GPTBot', 'OAI-SearchBot', 'ChatGPT-User',
+    'ClaudeBot', 'Claude-SearchBot', 'Claude-User',
+    'PerplexityBot', 'Perplexity-User',
+    'Google-Extended',
+];
+
+// One file for the whole of robtic.org: the panel and sign-in pages are on this host too.
 export default function robots(): MetadataRoute.Robots {
     return {
         rules: {
-            userAgent: '*',
-            allow: '/',
-            disallow: ['/panel', '/admin', '/auth/', '/api/', '/plans/choose', '/robtic/github/', '/robtic/discord/', '/sanctum/'],
+            userAgent: ['*', ...AI_CRAWLERS],
+            allow: ['/', '/auth/login', '/auth/register', '/auth/llms.txt', '/panel/llms.txt'],
+            disallow: ['/panel', '/settings', '/auth/', '/api/', '/plans/choose', '/robtic/github/', '/robtic/discord/', '/sanctum/'],
         },
         sitemap: `${ORIGIN}/sitemap.xml`,
     };

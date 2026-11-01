@@ -75,6 +75,33 @@ export function coresLabel(cpu: number | null): string {
     return `${parseFloat((cpu / 100).toFixed(2))} vCPU`;
 }
 
+// The headline numbers under each plan. Business plans count workspaces (each holds several apps) rather than
+// apps; the Team plan quotes the pool its workspaces share.
+export function limitRows(plan: Plan): Array<[string, string]> {
+    if (plan.key === 'team') {
+        return [
+            ['Workspaces', '3'],
+            ['Memory', '6 GB per workspace'],
+            ['CPU', '10 vCPU shared'],
+            ['Storage', '48 GB'],
+        ];
+    }
+    if (plan.key === 'org') {
+        return [
+            ['Workspaces', '5 max'],
+            ['Memory', sizeLabel(plan.limits.memory)],
+            ['CPU', coresLabel(plan.limits.cpu)],
+            ['Storage', sizeLabel(plan.limits.disk)],
+        ];
+    }
+    return [
+        ['Apps', String(plan.limits.apps ?? 'Unlimited')],
+        ['Memory', sizeLabel(plan.limits.memory)],
+        ['CPU', coresLabel(plan.limits.cpu)],
+        ['Storage', sizeLabel(plan.limits.disk)],
+    ];
+}
+
 export function featureDetail(plan: Plan, key: keyof Plan['features']): string | null {
     const value = plan.features[key];
     if (value === false || value === 0) return null;

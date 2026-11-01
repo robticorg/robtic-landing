@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { PANEL_URL } from '@/lib/site';
-import { PLANS, PLAN_FEATURE_LABELS, sizeLabel, coresLabel, featureDetail, type Plan } from '@/lib/plans';
+import { PLANS, PLAN_FEATURE_LABELS, limitRows, featureDetail, type Plan } from '@/lib/plans';
 
 const panelRoot = PANEL_URL.replace(/\/panel$/, '');
 const GROUPS: Array<['individual' | 'business', string]> = [
@@ -15,33 +15,6 @@ function cta(plan: Plan, signedIn: boolean): string {
     // The free month is for new visitors only.
     if (plan.trialDays && !signedIn) return 'Start free';
     return `Choose ${plan.name}`;
-}
-
-// The headline numbers under each plan. Business plans count workspaces (each holds several apps) rather than
-// apps; the Team plan quotes the pool its workspaces share.
-function limitRows(plan: Plan): Array<[string, string]> {
-    if (plan.key === 'team') {
-        return [
-            ['Workspaces', '3'],
-            ['Memory', '6 GB per workspace'],
-            ['CPU', '10 vCPU shared'],
-            ['Storage', '48 GB'],
-        ];
-    }
-    if (plan.key === 'org') {
-        return [
-            ['Workspaces', '5 max'],
-            ['Memory', sizeLabel(plan.limits.memory)],
-            ['CPU', coresLabel(plan.limits.cpu)],
-            ['Storage', sizeLabel(plan.limits.disk)],
-        ];
-    }
-    return [
-        ['Apps', String(plan.limits.apps ?? 'Unlimited')],
-        ['Memory', sizeLabel(plan.limits.memory)],
-        ['CPU', coresLabel(plan.limits.cpu)],
-        ['Storage', sizeLabel(plan.limits.disk)],
-    ];
 }
 
 export default function PlansView({ prices = {} }: { prices?: Record<string, string> }) {

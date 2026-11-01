@@ -11,17 +11,22 @@ export const metadata: Metadata = {
     alternates: { canonical: '/plans' },
 };
 
-const serviceLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Service',
-    name: 'Robtic hosting',
-    serviceType: 'Discord bot and application hosting',
-    url: `${ORIGIN}/plans`,
-    provider: { '@id': `${ORIGIN}/#organization` },
-};
-
 export default async function PlansPage() {
-    const prices = priceMap(await getSiteData());
+    const site = await getSiteData();
+    const prices = priceMap(site);
+    // The live prices, so search engines and AI tools quote what the page shows.
+    const priced = [...(site?.plans ?? []), ...(site?.team ? [site.team] : [])].filter((p) => p.amount !== null);
+    const serviceLd = {
+        '@context': 'https://schema.org',
+        '@type': 'Service',
+        name: 'Robtic hosting',
+        serviceType: 'Discord bot and application hosting',
+        url: `${ORIGIN}/plans`,
+        provider: { '@id': `${ORIGIN}/#organization` },
+        offers: priced.map((p) => ({
+            '@type': 'Offer', name: p.name, price: p.amount, priceCurrency: site?.currency, url: `${ORIGIN}/plans`,
+        })),
+    };
     return (
         <>
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceLd) }} />

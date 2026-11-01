@@ -54,7 +54,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         '@graph': [
             {
                 '@type': 'Organization', '@id': `${ORIGIN}/#organization`, name: 'Robtic', url: `${ORIGIN}/`,
-                logo: IMAGE, email: contact,
+                logo: IMAGE, email: contact, description: DESCRIPTION,
                 ...(socials.length ? { sameAs: socials.map(([, url]) => url) } : {}),
             },
             {
@@ -71,6 +71,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                     href={asset('/rl/robtic/site/site.css')}
                     // eslint-disable-next-line @next/next/no-css-tags
                 />
+                <link rel="describedby" type="text/plain" href="/llms.txt" />
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
