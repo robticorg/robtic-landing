@@ -90,7 +90,7 @@ export default function SettingsShell({ children }: { children: React.ReactNode 
 
     return (
         <SettingsContext.Provider value={{ profile, setProfile, reload: load, toast }}>
-            <div className="st">
+            <div className="st-app">
                 <aside className="st-side">
                     <a className="st-me" href={`/u/${profile.username}`} title="View your public profile">
                         {profile.avatar_url ? <img src={profile.avatar_url} alt="" /> : <span>{profile.username.charAt(0).toUpperCase()}</span>}
