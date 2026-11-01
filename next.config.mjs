@@ -18,5 +18,7 @@ export default sentry.withSentryConfig(nextConfig, {
     project: 'robtic-landing',
     silent: true,
     telemetry: false,
+    // Errors go through our own address: ad blockers stop direct calls to Sentry. Under /rl/ because NPM sends that to the landing.
+    tunnelRoute: '/rl/e',
     sourcemaps: { disable: !process.env.SENTRY_AUTH_TOKEN },
 });
