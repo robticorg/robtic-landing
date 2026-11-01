@@ -48,21 +48,32 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  # Portainer re-pulls :production and recreates the stack. Its webhook is reachable on the LAN only (:9443,
-  # self-signed), so this runs on the self-hosted runner on 192.168.1.137 — the same pattern as robtic-admin.
-  # (It used to be a step on the GitHub runner whose `if` read the step's own env, which is always empty there,
-  # so it was always skipped.)
+  # The runner on the server (192.168.1.137) pulls the new private image from ghcr and recreates the container in
+  # the compose project it already runs in (the Portainer stack's), so it starts on the new :production.
   redeploy:
-    name: Redeploy via Portainer
+    name: Redeploy on the server
     needs: build
     runs-on: [self-hosted, robtic-deploy]
     steps:
-      - name: Call the Portainer stack webhook
+      - uses: actions/checkout@v4
+
+      - name: Log in to ghcr
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Pull and recreate
         env:
-          WEBHOOK: ${{ secrets.PORTAINER_WEBHOOK }}
+          CONTAINER: robtic-landing
         run: |
-          if [ -z "$WEBHOOK" ]; then
-            echo "::warning::PORTAINER_WEBHOOK is not set — image pushed, nothing redeployed."
-            exit 0
-          fi
-          curl --fail-with-body -sSk -X POST --max-time 300 "$WEBHOOK"
+          set -eu
+          # Keep the project the container already belongs to (the Portainer stack), else the compose file's own name.
+          project=$(docker inspect "$CONTAINER" --format '{{ index .Config.Labels "com.docker.compose.project" }}' 2>/dev/null || true)
+          echo "Running in project: ${project:-<none>}"
+          args="-f infra/compose.yml"
+          [ -n "$project" ] && args="$args -p $project"
+          docker compose $args pull
+          docker compose $args up -d --remove-orphans
+          docker inspect "$CONTAINER" --format 'Now running {{ .Config.Image }} ({{ .Image }}), started {{ .State.StartedAt }}'
+
+      - name: Log out of ghcr
+        if: always()
+        run: docker logout ghcr.io
