@@ -5,6 +5,7 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 const BACK_KEY = 'robtic-settings-back';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ApiError, errorText, getProfile, type Profile } from '@/lib/account';
 
@@ -84,7 +85,8 @@ export default function SettingsShell({ children }: { children: React.ReactNode 
     useEffect(() => {
         const from = document.referrer ? new URL(document.referrer) : null;
         if (from && from.origin === window.location.origin && !from.pathname.startsWith('/settings')) {
-            sessionStorage.setItem(BACK_KEY, from.pathname + from.search);
+            // The panel's old account pages only redirect here, so going back to them would come straight back.
+            sessionStorage.setItem(BACK_KEY, from.pathname.startsWith('/panel/account') ? '/panel' : from.pathname + from.search);
         }
         setBack(sessionStorage.getItem(BACK_KEY) ?? '/');
     }, []);
@@ -119,15 +121,15 @@ export default function SettingsShell({ children }: { children: React.ReactNode 
                         <nav key={g.group} aria-label={g.group}>
                             <h2>{g.group}</h2>
                             {g.items.map((i) => (
-                                <a key={i.href} href={i.href} className={path === i.href || (i.href !== '/settings' && path.startsWith(`${i.href}/`)) ? 'on' : ''}>
+                                <Link key={i.href} href={i.href} className={path === i.href || (i.href !== '/settings' && path.startsWith(`${i.href}/`)) ? 'on' : ''}>
                                     {i.label}
-                                </a>
+                                </Link>
                             ))}
                         </nav>
                     ))}
                     <nav aria-label="Billing">
                         <h2>Billing</h2>
-                        <a href="/settings/plan" className={path === '/settings/plan' ? 'on' : ''}>Plan</a>
+                        <Link href="/settings/plan" className={path === '/settings/plan' ? 'on' : ''}>Plan</Link>
                     </nav>
                 </aside>
                 <div className="st-main">{children}</div>

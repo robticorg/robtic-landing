@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import Link from 'next/link';
 import QRCode from 'qrcode';
 import { errorText, request } from '@/lib/account';
 import { Field, Row, useRun, useSettings } from '../SettingsShell';
@@ -117,13 +118,13 @@ function Devices() {
     }, [toast]);
 
     return (
-        <a className="st-card st-open" href="/settings/security/devices">
+        <Link className="st-card st-open" href="/settings/security/devices">
             <div>
                 <h3>Signed-in devices</h3>
                 <p>{count === null ? 'Where your account is signed in.' : `${count} device${count === 1 ? '' : 's'} signed in now.`}</p>
             </div>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
-        </a>
+        </Link>
     );
 }
 

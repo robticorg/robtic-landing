@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import Link from 'next/link';
 import { errorText, request } from '@/lib/account';
 import { useRun, useSettings } from '../../SettingsShell';
 
@@ -39,7 +40,7 @@ export default function DevicesPage() {
     return (
         <>
             <header className="st-head">
-                <a className="st-crumb" href="/settings/security">Security</a>
+                <Link className="st-crumb" href="/settings/security">Security</Link>
                 <h1>Signed-in devices</h1>
                 <p>Don’t recognise one? Sign it out, then change your password.</p>
             </header>
