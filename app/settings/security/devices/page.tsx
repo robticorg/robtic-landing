@@ -46,11 +46,11 @@ export default function DevicesPage() {
 
             {!devices ? <div className="st-spin" /> : null}
 
-            <div className="st-devices">
+            <div className="st-dvs">
                 {devices?.map((d) => (
-                    <article key={d.id} className={`st-device${d.current ? ' me' : ''}`}>
-                        <div className="st-device-top">
-                            <span className="st-device-ico" title={KINDS[d.kind]}>
+                    <article key={d.id} className={`st-dv${d.current ? ' me' : ''}`}>
+                        <div className="st-dv-top">
+                            <span className="st-dv-ico" title={KINDS[d.kind]}>
                                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d={ICONS[d.kind]} /></svg>
                             </span>
                             <div>
