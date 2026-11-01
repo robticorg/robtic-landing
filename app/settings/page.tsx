@@ -72,9 +72,8 @@ export default function PublicProfileSettings() {
                     <Row title="Badges" desc="Earned on Robtic or given by the team." />
                     <ul className="pf-badges">
                         {profile.badges.map((b) => (
-                            <li key={b.key} title={b.description ?? b.name} style={{ ['--badge' as string]: b.color }}>
-                                {b.icon ? <span aria-hidden="true">{b.icon}</span> : null}
-                                {b.name}
+                            <li key={b.key} title={b.description ? `${b.name}: ${b.description}` : b.name} aria-label={b.name}>
+                                {b.icon || '🏅'}
                             </li>
                         ))}
                     </ul>

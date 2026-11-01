@@ -5,7 +5,10 @@ const PANEL_API_ORIGIN = (process.env.PANEL_API_ORIGIN || ORIGIN).replace(/\/$/,
 
 export type PublicBadge = { key: string; name: string; icon: string | null; color: string; description: string | null };
 
+export type ActivityDay = { date: string; minutes: number };
+
 export type PublicProfile = {
+    activity: ActivityDay[];
     username: string;
     avatar_url: string | null;
     banner_url: string | null;
