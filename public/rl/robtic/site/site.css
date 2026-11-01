@@ -337,6 +337,20 @@ html { scrollbar-width: thin; scrollbar-color: #1f6fc4 #070b14; }
 .me { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; overflow: hidden; border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.18); background: linear-gradient(135deg, #3aa3ff, #0c62b3); font-weight: 800; color: #fff; transition: transform 0.15s, border-color 0.15s; }
 .me:hover { transform: scale(1.06); border-color: rgba(23, 147, 255, 0.8); }
 .me img { width: 100%; height: 100%; object-fit: cover; }
+.me { padding: 0; cursor: pointer; font: inherit; }
+/* The avatar's menu: the same glass as the nav pill. */
+.me-wrap { position: relative; }
+.me-menu { position: absolute; right: 0; top: calc(100% + 10px); z-index: 50; min-width: 220px; padding: 6px; border: 1px solid var(--line); border-radius: var(--radius); background: rgba(7, 11, 20, 0.88); backdrop-filter: blur(14px); box-shadow: 0 24px 60px -18px rgba(0, 0, 0, 0.8); animation: me-in 0.16s ease; }
+@keyframes me-in { from { opacity: 0; transform: translateY(-6px); } }
+.me-head { padding: 8px 10px 10px; margin-bottom: 4px; border-bottom: 1px solid var(--line); }
+.me-head b { display: block; font-size: 14px; }
+.me-head span { display: block; font-size: 12.5px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 220px; }
+.me-menu a, .me-menu button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 10px; border: 0; border-radius: 10px; background: transparent; color: var(--muted); font: inherit; font-size: 14px; font-weight: 500; text-align: left; cursor: pointer; transition: background 0.15s, color 0.15s; }
+.me-menu a:hover, .me-menu button:hover { background: rgba(255, 255, 255, 0.06); color: var(--text); }
+.me-menu svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.me-menu .danger:hover { color: #ff7a87; background: rgba(255, 93, 108, 0.08); }
+.me-menu button:disabled { opacity: 0.6; cursor: default; }
+.me-sep { display: block; height: 1px; margin: 4px 6px; background: var(--line); }
 
 /* The eyes while the page loads. */
 #robtic-boot { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; background: #000; transition: opacity 0.4s ease; }

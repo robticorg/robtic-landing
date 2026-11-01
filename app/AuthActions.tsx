@@ -1,15 +1,24 @@
 'use client';
 
 // The bar's sign-in area. The landing and the panel share the robtic.org origin, so we ask the panel who is
-// signed in (its session cookie is sent same-origin). Signed in -> the avatar that opens the panel; signed out
-// (or while checking) -> Sign in / Get started, so the bar is never empty. Logout lives in the panel itself.
-import { useState, useEffect } from 'react';
+// signed in (its session cookie is sent same-origin). Signed in -> the avatar, which opens a menu (profile,
+// dashboard, log out); signed out (or while checking) -> Sign in / Get started, so the bar is never empty.
+import { useState, useEffect, useRef } from 'react';
 
-type Me = { username: string; avatarUrl: string | null } | null;
+type Me = { username: string; email: string; avatarUrl: string | null } | null;
+
+// Laravel's CSRF token, which the panel puts in a cookie for same-origin requests to send back.
+function csrfToken(): string | null {
+    const m = document.cookie.match(/(?:^|; )XSRF-TOKEN=([^;]+)/);
+    return m ? decodeURIComponent(m[1]) : null;
+}
 
 export default function AuthActions({ panelRoot }: { panelRoot: string }) {
     const [me, setMe] = useState<Me>(null);
     const [avatarFailed, setAvatarFailed] = useState(false);
+    const [open, setOpen] = useState(false);
+    const [leaving, setLeaving] = useState(false);
+    const wrap = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         let alive = true;
@@ -18,7 +27,7 @@ export default function AuthActions({ panelRoot }: { panelRoot: string }) {
             .then((d) => {
                 if (!alive) return;
                 const a = d && d.attributes;
-                if (a && a.username) setMe({ username: a.username, avatarUrl: a.avatar_url ?? null });
+                if (a && a.username) setMe({ username: a.username, email: a.email ?? '', avatarUrl: a.avatar_url ?? null });
             })
             .catch(() => {});
         return () => {
@@ -26,15 +35,72 @@ export default function AuthActions({ panelRoot }: { panelRoot: string }) {
         };
     }, []);
 
+    // Close on a click outside the menu, or Escape.
+    useEffect(() => {
+        if (!open) return;
+        const onDown = (e: MouseEvent) => {
+            if (wrap.current && !wrap.current.contains(e.target as Node)) setOpen(false);
+        };
+        const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
+        document.addEventListener('mousedown', onDown);
+        document.addEventListener('keydown', onKey);
+        return () => {
+            document.removeEventListener('mousedown', onDown);
+            document.removeEventListener('keydown', onKey);
+        };
+    }, [open]);
+
+    const logout = () => {
+        setLeaving(true);
+        const token = csrfToken();
+        fetch(`${panelRoot}/auth/logout`, {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: { Accept: 'application/json', ...(token ? { 'X-XSRF-TOKEN': token } : {}) },
+        })
+            .catch(() => {})
+            .finally(() => window.location.assign('/'));
+    };
+
     if (me) {
         return (
-            <a className="me" href={`${panelRoot}/panel`} title="Open the panel" aria-label={`Open the panel (${me.username})`}>
-                {me.avatarUrl && !avatarFailed ? (
-                    <img src={me.avatarUrl} alt="" onError={() => setAvatarFailed(true)} />
-                ) : (
-                    <span>{me.username.charAt(0).toUpperCase()}</span>
-                )}
-            </a>
+            <div className="me-wrap" ref={wrap}>
+                <button
+                    type="button"
+                    className="me"
+                    aria-haspopup="menu"
+                    aria-expanded={open}
+                    aria-label={`Account menu (${me.username})`}
+                    onClick={() => setOpen((o) => !o)}
+                >
+                    {me.avatarUrl && !avatarFailed ? (
+                        <img src={me.avatarUrl} alt="" onError={() => setAvatarFailed(true)} />
+                    ) : (
+                        <span>{me.username.charAt(0).toUpperCase()}</span>
+                    )}
+                </button>
+                {open ? (
+                    <div className="me-menu" role="menu">
+                        <div className="me-head">
+                            <b>{me.username}</b>
+                            {me.email ? <span>{me.email}</span> : null}
+                        </div>
+                        <a role="menuitem" href={`${panelRoot}/panel/account`}>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 20v-1.5A4.5 4.5 0 0015.5 14h-7A4.5 4.5 0 004 18.5V20M12 11a4 4 0 100-8 4 4 0 000 8z" /></svg>
+                            Profile
+                        </a>
+                        <a role="menuitem" href={`${panelRoot}/panel`}>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z" /></svg>
+                            Dashboard
+                        </a>
+                        <i className="me-sep" aria-hidden="true" />
+                        <button type="button" role="menuitem" className="danger" disabled={leaving} onClick={logout}>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h11" /></svg>
+                            {leaving ? 'Logging out…' : 'Log out'}
+                        </button>
+                    </div>
+                ) : null}
+            </div>
         );
     }
 
