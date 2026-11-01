@@ -2,6 +2,9 @@
 // URL) now live here, since this site runs on its own. Override the panel URL and origin with env vars at
 // build/run time; edit the contact and socials below.
 
+// Where errors are reported (a Sentry DSN only allows sending events, so it's fine in the browser).
+export const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN || 'https://c19cab4a39d9cad1393434cc2b0d547b@o4512336033742848.ingest.de.sentry.io/4512356321722448';
+
 export const ORIGIN = (process.env.NEXT_PUBLIC_SITE_ORIGIN || 'https://robtic.org').replace(/\/$/, '');
 export const PANEL_URL = (process.env.NEXT_PUBLIC_PANEL_URL || 'https://robtic.org/panel').replace(/\/$/, '');
 export const CONTACT = process.env.NEXT_PUBLIC_CONTACT || 'contact@robtic.org';

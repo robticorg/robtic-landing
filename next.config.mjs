@@ -1,3 +1,5 @@
+import sentry from '@sentry/nextjs/config';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
@@ -10,4 +12,11 @@ const nextConfig = {
     poweredByHeader: false,
 };
 
-export default nextConfig;
+// Source maps go up only when CI has a token; without one the build is unchanged.
+export default sentry.withSentryConfig(nextConfig, {
+    org: 'robtic-7p',
+    project: 'robtic-landing',
+    silent: true,
+    telemetry: false,
+    sourcemaps: { disable: !process.env.SENTRY_AUTH_TOKEN },
+});
