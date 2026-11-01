@@ -48,8 +48,21 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Trigger Portainer redeploy
+  # Portainer re-pulls :production and recreates the stack. Its webhook is reachable on the LAN only (:9443,
+  # self-signed), so this runs on the self-hosted runner on 192.168.1.137 — the same pattern as robtic-admin.
+  # (It used to be a step on the GitHub runner whose `if` read the step's own env, which is always empty there,
+  # so it was always skipped.)
+  redeploy:
+    name: Redeploy via Portainer
+    needs: build
+    runs-on: [self-hosted, robtic-deploy]
+    steps:
+      - name: Call the Portainer stack webhook
         env:
-          PORTAINER_WEBHOOK: ${{ secrets.PORTAINER_WEBHOOK }}
-        if: ${{ env.PORTAINER_WEBHOOK != '' }}
-        run: curl -fsS -X POST "$PORTAINER_WEBHOOK"
+          WEBHOOK: ${{ secrets.PORTAINER_WEBHOOK }}
+        run: |
+          if [ -z "$WEBHOOK" ]; then
+            echo "::warning::PORTAINER_WEBHOOK is not set — image pushed, nothing redeployed."
+            exit 0
+          fi
+          curl --fail-with-body -sSk -X POST --max-time 300 "$WEBHOOK"
