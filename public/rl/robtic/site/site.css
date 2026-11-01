@@ -581,6 +581,20 @@ body:has(.st-app) .foot-wave, body:has(.st-state) .foot-wave, body:has(.st-app) 
 .st-seg { display: inline-flex; gap: 2px; padding: 3px; border: 1px solid var(--line); border-radius: 999px; }
 .st-seg button { padding: 6px 16px; border: 0; border-radius: 999px; background: transparent; color: var(--muted); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
 .st-seg button.on { background: rgba(255, 255, 255, 0.1); color: var(--text); }
+.st-plan { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.st-plan small { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.st-plan h2 { margin: 2px 0 0; font-size: 26px; font-weight: 800; }
+.st-card a:not(.btn) { color: #6cc0ff; }
+.st-left { margin-top: 18px; }
+.st-left > div { display: flex; align-items: flex-end; gap: 22px; flex-wrap: wrap; }
+.st-left p { margin: 0; color: var(--muted); font-size: 12.5px; }
+.st-left p b { display: block; color: var(--text); font-size: 30px; font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.st-left small { margin: 0 0 2px auto; color: var(--muted); font-size: 12.5px; }
+.st-left i { display: block; height: 6px; margin-top: 12px; overflow: hidden; border-radius: 999px; background: rgba(255, 255, 255, 0.1); }
+.st-left s { display: block; height: 100%; border-radius: 999px; background: var(--blue); }
+.st-left i.low s { background: #f5a524; }
+.st-gap { height: 12px; }
+.st-pill.off { background: rgba(255, 255, 255, 0.08); color: var(--muted); }
 .st-toast { position: fixed; right: 20px; bottom: 20px; z-index: 60; max-width: min(520px, calc(100vw - 40px)); padding: 11px 16px; border-radius: 14px; font-size: 14px; font-weight: 600; animation: me-in 0.16s ease; }
 .st-toast.ok { background: #0c2a1e; color: #37d08a; border: 1px solid rgba(55, 208, 138, 0.35); }
 .st-toast.err { background: #2a0f15; color: #ff9aa5; border: 1px solid rgba(255, 93, 108, 0.4); }

@@ -127,7 +127,7 @@ export default function SettingsShell({ children }: { children: React.ReactNode 
                     ))}
                     <nav aria-label="Billing">
                         <h2>Billing</h2>
-                        <a href="/panel/account/plan">Plan</a>
+                        <a href="/settings/plan" className={path === '/settings/plan' ? 'on' : ''}>Plan</a>
                     </nav>
                 </aside>
                 <div className="st-main">{children}</div>
