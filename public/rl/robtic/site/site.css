@@ -462,7 +462,7 @@ body:has(.pf) .foot, body:has(.pf) .foot-wave { display: none; }
 .pf { padding-bottom: 90px; }
 .pf-banner { height: clamp(190px, 28vw, 340px); background: linear-gradient(115deg, #0c4f9e 0%, #1793ff 55%, #6cc0ff 100%); background-size: cover; background-position: center; }
 .pf-wrap { max-width: 860px; }
-.pf-none { padding-top: 34px; text-align: center; }
+.pf-none { padding-top: calc(var(--bar) + 60px); text-align: center; }
 .pf-none img { width: 170px; height: 170px; margin: 0 auto 8px; object-fit: contain; }
 .pf-none h1 { margin: 0; font-size: clamp(26px, 4vw, 34px); font-weight: 800; letter-spacing: -0.02em; overflow-wrap: anywhere; }
 .pf-none p { margin: 6px 0 20px; color: var(--muted); }

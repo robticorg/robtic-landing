@@ -2,7 +2,6 @@
 export default function ProfileNotFound() {
     return (
         <section className="pf">
-            <div className="pf-banner" />
             <div className="wrap pf-wrap pf-none">
                 <img src="/rl/robtic/404.webp" alt="" width={170} height={170} />
                 <h1>This account doesn’t exist</h1>
