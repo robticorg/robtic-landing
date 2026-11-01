@@ -4,6 +4,7 @@ import { PANEL_URL } from '@/lib/site';
 import { getSiteData, type LandingFeature } from '@/lib/site-data';
 import WaveLoop from './WaveLoop';
 import HeroCta from './HeroCta';
+import { asset } from '@/lib/asset';
 
 export const metadata: Metadata = {
     title: 'Robtic: Discord bot and app hosting, free for your first month',
@@ -129,7 +130,7 @@ export default async function Home() {
                 </div>
             </section>
 
-            <Script src="/rl/robtic/site/landing-deck.js" strategy="afterInteractive" />
+            <Script src={asset('/rl/robtic/site/landing-deck.js')} strategy="afterInteractive" />
         </>
     );
 }

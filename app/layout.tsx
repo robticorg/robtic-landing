@@ -3,6 +3,7 @@ import Script from 'next/script';
 import { ORIGIN, PANEL_URL, SOCIAL_ICONS } from '@/lib/site';
 import { getSiteData, legalPages, resolveContact, resolveSocials } from '@/lib/site-data';
 import AuthActions from './AuthActions';
+import { asset } from '@/lib/asset';
 
 const DESCRIPTION =
     'Robtic hosts Discord bots and small apps: upload your code or deploy it from GitHub, then run it from the ' +
@@ -67,7 +68,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <head>
                 <link
                     rel="stylesheet"
-                    href="/rl/robtic/site/site.css"
+                    href={asset('/rl/robtic/site/site.css')}
                     // eslint-disable-next-line @next/next/no-css-tags
                 />
                 <script
@@ -151,9 +152,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                     <svg className="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M12 19V5m-6 6l6-6 6 6" /></svg>
                 </button>
 
-                <Script src="/rl/robtic/site/landing-boot.js" strategy="afterInteractive" />
-                <Script src="/rl/robtic/transit.js" strategy="afterInteractive" />
-                <Script src="/rl/robtic/site/landing-ui.js" strategy="afterInteractive" />
+                <Script src={asset('/rl/robtic/site/landing-boot.js')} strategy="afterInteractive" />
+                <Script src={asset('/rl/robtic/transit.js')} strategy="afterInteractive" />
+                <Script src={asset('/rl/robtic/site/landing-ui.js')} strategy="afterInteractive" />
 
                 {/* Google Analytics (gtag.js) */}
                 <Script src="https://www.googletagmanager.com/gtag/js?id=G-MEX3YG8YG3" strategy="afterInteractive" />

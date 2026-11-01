@@ -15,7 +15,7 @@ permissions:
 
 concurrency:
   group: deploy-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -48,32 +48,40 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  # The runner on the server (192.168.1.137) pulls the new private image from ghcr and recreates the container in
-  # the compose project it already runs in (the Portainer stack's), so it starts on the new :production.
+  # Portainer re-pulls `:production` and recreates robtic-landing if its image changed — the same as the bots
+  # (robtic-staff, robtic-shop…). The webhook is reachable on the LAN only, so this runs on the self-hosted runner on
+  # the server (192.168.1.137). PORTAINER_WEBHOOK is this repo's secret: the robtic-landing stack's webhook URL.
   redeploy:
-    name: Redeploy on the server
+    name: Redeploy robtic-landing
     needs: build
     runs-on: [self-hosted, robtic-deploy]
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Log in to ghcr
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
-
-      - name: Pull and recreate
+      - name: Call the Portainer stack webhook
         env:
-          CONTAINER: robtic-landing
+          WEBHOOK: ${{ secrets.PORTAINER_WEBHOOK }}
         run: |
-          set -eu
-          # Keep the project the container already belongs to (the Portainer stack), else the compose file's own name.
-          project=$(docker inspect "$CONTAINER" --format '{{ index .Config.Labels "com.docker.compose.project" }}' 2>/dev/null || true)
-          echo "Running in project: ${project:-<none>}"
-          args="-f infra/compose.yml"
-          [ -n "$project" ] && args="$args -p $project"
-          docker compose $args pull
-          docker compose $args up -d --remove-orphans
-          docker inspect "$CONTAINER" --format 'Now running {{ .Config.Image }} ({{ .Image }}), started {{ .State.StartedAt }}'
+          if [ -z "$WEBHOOK" ]; then
+            echo "::error::PORTAINER_WEBHOOK is not set — image pushed, nothing redeployed."
+            exit 1
+          fi
+          # Portainer serves a self-signed certificate on :9443.
+          curl --fail-with-body -sSk -X POST --max-time 300 "$WEBHOOK"
 
-      - name: Log out of ghcr
-        if: always()
-        run: docker logout ghcr.io
+  notify:
+    name: Deploy notification
+    needs: [build, redeploy]
+    if: ${{ always() && needs.build.result != 'skipped' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Discord notification
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_DEPLOY }}
+          RESULT: ${{ needs.redeploy.result == 'success' && 'success' || 'failure' }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          [ -n "$WEBHOOK" ] || { echo "DISCORD_WEBHOOK_DEPLOY is not set — skipping."; exit 0; }
+          PAYLOAD=$(jq -n --arg repo "$REPO" --arg sha "${SHA:0:7}" --arg result "$RESULT" --arg url "$RUN_URL"             '{username: "Robtic Deploy", embeds: [{title: "\($repo) → robtic-landing: \($result)", url: $url,
+              description: "Image `sha-\($sha)` · stack webhook called", color: (if $result == "success" then 3066993 else 15158332 end)}]}')
+          curl --fail-with-body -sS -H "Content-Type: application/json" -d "$PAYLOAD" "$WEBHOOK"
