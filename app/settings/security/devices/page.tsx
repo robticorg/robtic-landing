@@ -49,7 +49,7 @@ export default function DevicesPage() {
 
             <div className="st-dvs">
                 {devices?.map((d) => (
-                    <article key={d.id} className={`st-dv${d.current ? ' me' : ''}`}>
+                    <article key={d.id} className={`st-dv${d.current ? ' here' : ''}`}>
                         <div className="st-dv-top">
                             <span className="st-dv-ico" title={KINDS[d.kind]}>
                                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d={ICONS[d.kind]} /></svg>

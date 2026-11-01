@@ -510,7 +510,7 @@ body:has(.st-app) .foot-wave, body:has(.st-state) .foot-wave, body:has(.st-app) 
 .st-crumb:hover { color: var(--text); }
 .st-dvs { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
 .st-dv { display: flex; flex-direction: column; gap: 12px; padding: 18px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--glass); }
-.st-dv.me { border-color: rgba(23, 147, 255, 0.5); }
+.st-dv.here { border-color: rgba(23, 147, 255, 0.5); }
 .st-dv-top { display: flex; align-items: center; gap: 12px; }
 .st-dv-ico { flex: none; width: 44px; height: 44px; display: grid; place-items: center; border-radius: 12px; background: rgba(23, 147, 255, 0.12); color: #6cc0ff; }
 .st-dv-ico svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
