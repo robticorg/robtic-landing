@@ -2,7 +2,7 @@
 
 // The Settings frame: who you are at the top of a left nav, the sections under it, one page each. Signed-out visitors
 // go to sign in and come back here.
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 const BACK_KEY = 'robtic-settings-back';
 import Link from 'next/link';
@@ -50,8 +50,62 @@ export function useRun() {
     return { run, pending };
 }
 
+// The same for a popup: a toast would sit behind it, so the failure is kept here to show inside.
+export function useAct() {
+    const [busy, setBusy] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const act = async <T,>(action: () => Promise<T>): Promise<T | null> => {
+        setBusy(true);
+        setError(null);
+        try {
+            const r = await action();
+            return r === undefined ? (true as T) : r;
+        } catch (e) {
+            setError(errorText(e));
+            return null;
+        } finally {
+            setBusy(false);
+        }
+    };
+    return { act, busy, error, setError };
+}
+
+export function Modal({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
+    const ref = useRef<HTMLDialogElement>(null);
+
+    useEffect(() => {
+        const dialog = ref.current;
+        if (!dialog) return;
+        dialog.showModal();
+        dialog.querySelector<HTMLElement>('input, textarea')?.focus();
+        return () => dialog.close();
+    }, []);
+
+    return (
+        <dialog
+            ref={ref}
+            className="st-modal"
+            aria-label={title}
+            onCancel={(e) => {
+                e.preventDefault();
+                onClose();
+            }}
+        >
+            <header>
+                <h2>{title}</h2>
+                <button type="button" className="st-x" aria-label="Close" onClick={onClose}>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+                </button>
+            </header>
+            {children}
+        </dialog>
+    );
+}
+
 export default function SettingsShell({ children }: { children: React.ReactNode }) {
     const path = usePathname();
+    // The email link opens this page from any device, signed in or not.
+    const open = path === '/settings/email/confirm';
     const [profile, setProfile] = useState<Profile | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [message, setMessage] = useState<{ kind: 'ok' | 'err'; text: string } | null>(null);
@@ -70,8 +124,14 @@ export default function SettingsShell({ children }: { children: React.ReactNode 
     }, []);
 
     useEffect(() => {
-        load();
-    }, [load]);
+        if (!open) load();
+    }, [load, open]);
+
+    // On a phone the sections are one sliding row: keep the open one in view.
+    const ready = !!profile;
+    useEffect(() => {
+        if (ready) document.querySelector('.st-tabs a.on')?.scrollIntoView({ inline: 'center', block: 'nearest' });
+    }, [path, ready]);
 
     useEffect(() => {
         if (!message) return;
@@ -91,6 +151,7 @@ export default function SettingsShell({ children }: { children: React.ReactNode 
         setBack(sessionStorage.getItem(BACK_KEY) ?? '/');
     }, []);
 
+    if (open) return <>{children}</>;
     if (error) {
         return (
             <div className="st-state">
@@ -117,20 +178,22 @@ export default function SettingsShell({ children }: { children: React.ReactNode 
                             <small>View public profile</small>
                         </div>
                     </a>
-                    {NAV.map((g) => (
-                        <nav key={g.group} aria-label={g.group}>
-                            <h2>{g.group}</h2>
-                            {g.items.map((i) => (
-                                <Link key={i.href} href={i.href} className={path === i.href || (i.href !== '/settings' && path.startsWith(`${i.href}/`)) ? 'on' : ''}>
-                                    {i.label}
-                                </Link>
-                            ))}
+                    <div className="st-tabs">
+                        {NAV.map((g) => (
+                            <nav key={g.group} aria-label={g.group}>
+                                <h2>{g.group}</h2>
+                                {g.items.map((i) => (
+                                    <Link key={i.href} href={i.href} className={path === i.href || (i.href !== '/settings' && path.startsWith(`${i.href}/`)) ? 'on' : ''}>
+                                        {i.label}
+                                    </Link>
+                                ))}
+                            </nav>
+                        ))}
+                        <nav aria-label="Billing">
+                            <h2>Billing</h2>
+                            <Link href="/settings/plan" className={path === '/settings/plan' ? 'on' : ''}>Plan</Link>
                         </nav>
-                    ))}
-                    <nav aria-label="Billing">
-                        <h2>Billing</h2>
-                        <Link href="/settings/plan" className={path === '/settings/plan' ? 'on' : ''}>Plan</Link>
-                    </nav>
+                    </div>
                 </aside>
                 <div className="st-main">{children}</div>
             </div>
@@ -140,9 +203,9 @@ export default function SettingsShell({ children }: { children: React.ReactNode 
 }
 
 // One setting: what it is on the left, its control on the right or below.
-export function Row({ title, desc, children }: { title: string; desc?: React.ReactNode; children?: React.ReactNode }) {
+export function Row({ title, desc, value, children }: { title: string; desc?: React.ReactNode; value?: boolean; children?: React.ReactNode }) {
     return (
-        <div className="st-row">
+        <div className={value ? 'st-row st-value' : 'st-row'}>
             <div>
                 <h3>{title}</h3>
                 {desc ? <p>{desc}</p> : null}
@@ -152,12 +215,12 @@ export function Row({ title, desc, children }: { title: string; desc?: React.Rea
     );
 }
 
-export function Field(props: { label: string; value: string; onChange: (v: string) => void; type?: string; hint?: string; autoComplete?: string; placeholder?: string; maxLength?: number; inputMode?: 'numeric' }) {
-    const { label, value, onChange, type = 'text', hint, autoComplete, placeholder, maxLength, inputMode } = props;
+export function Field(props: { label: string; value: string; onChange: (v: string) => void; type?: string; hint?: string; autoComplete?: string; placeholder?: string; maxLength?: number; inputMode?: 'numeric'; autoFocus?: boolean }) {
+    const { label, value, onChange, type = 'text', hint, autoComplete, placeholder, maxLength, inputMode, autoFocus } = props;
     return (
         <label className="st-field">
             <span>{label}</span>
-            <input type={type} value={value} onChange={(e) => onChange(e.target.value)} autoComplete={autoComplete} placeholder={placeholder} maxLength={maxLength} inputMode={inputMode} />
+            <input type={type} value={value} onChange={(e) => onChange(e.target.value)} autoComplete={autoComplete} placeholder={placeholder} maxLength={maxLength} inputMode={inputMode} autoFocus={autoFocus} />
             {hint ? <small>{hint}</small> : null}
         </label>
     );
