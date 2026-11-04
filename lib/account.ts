@@ -74,6 +74,7 @@ export function errorText(e: unknown): string {
 }
 
 export async function logout(): Promise<void> {
-    await request('POST', '/auth/logout').catch(() => undefined);
-    window.location.assign('/');
+    // Signed in through Robtic Auth, the reply says where to go to end that session as well.
+    const reply = await request<{ redirect?: string } | undefined>('POST', '/auth/logout').catch(() => undefined);
+    window.location.assign(reply?.redirect ?? '/');
 }
