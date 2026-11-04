@@ -12,7 +12,7 @@ import { ApiError, errorText, getProfile, type Profile } from '@/lib/account';
 const NAV: Array<{ group: string; items: Array<{ href: string; label: string }> }> = [
     { group: 'You', items: [{ href: '/settings', label: 'Public profile' }, { href: '/settings/account', label: 'Account' }] },
     { group: 'Preferences', items: [{ href: '/settings/notifications', label: 'Notifications' }] },
-    { group: 'Access', items: [{ href: '/settings/linked', label: 'Linked accounts' }, { href: '/settings/security', label: 'Security' }] },
+    { group: 'Access', items: [{ href: '/setting', label: 'Sign-in and security' }, { href: '/settings/linked', label: 'GitHub' }, { href: '/settings/security', label: 'Devices and SSH' }] },
 ];
 
 type Ctx = {
@@ -182,7 +182,9 @@ export default function SettingsShell({ children }: { children: React.ReactNode 
                         {NAV.map((g) => (
                             <nav key={g.group} aria-label={g.group}>
                                 <h2>{g.group}</h2>
-                                {g.items.map((i) => (
+                                {g.items.map((i) => i.href === '/setting' ? (
+                                    <a key={i.href} href={i.href}>{i.label}</a>
+                                ) : (
                                     <Link key={i.href} href={i.href} className={path === i.href || (i.href !== '/settings' && path.startsWith(`${i.href}/`)) ? 'on' : ''}>
                                         {i.label}
                                     </Link>

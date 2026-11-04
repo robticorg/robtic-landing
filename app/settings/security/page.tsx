@@ -2,108 +2,20 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
-import QRCode from 'qrcode';
 import { errorText, request } from '@/lib/account';
 import { Field, Row, useRun, useSettings } from '../SettingsShell';
 
-// Settings -> Security: two-factor authentication, signed-in devices and SSH keys.
+// Settings -> Devices and SSH: signed-in devices and SSH keys. Passwords and two-factor are at /setting.
 export default function SecuritySettings() {
     return (
         <>
             <header className="st-head">
-                <h1>Security</h1>
-                <p>Protect your account and see where you’re signed in.</p>
+                <h1>Devices and SSH</h1>
+                <p>See where you’re signed in and manage your SSH keys. Password and two-factor are under <a href="/setting">Sign-in and security</a>.</p>
             </header>
-            <TwoFactor />
             <Devices />
             <SshKeys />
         </>
-    );
-}
-
-function TwoFactor() {
-    const { profile, reload } = useSettings();
-    const { run, pending } = useRun();
-    const [setup, setSetup] = useState<{ secret: string; qr: string } | null>(null);
-    const [disabling, setDisabling] = useState(false);
-    const [code, setCode] = useState('');
-    const [password, setPassword] = useState('');
-    const [tokens, setTokens] = useState<string[] | null>(null);
-
-    const clear = () => {
-        setSetup(null);
-        setDisabling(false);
-        setCode('');
-        setPassword('');
-    };
-    const start = async () => {
-        const r = await run(() => request<{ data: { image_url_data: string; secret: string } }>('GET', '/api/client/account/two-factor'));
-        if (r) setSetup({ secret: r.data.secret, qr: await QRCode.toDataURL(r.data.image_url_data, { margin: 1, width: 200 }) });
-    };
-    const enable = async () => {
-        const r = await run(() => request<{ attributes: { tokens: string[] } }>('POST', '/api/client/account/two-factor', { code, password }), 'Two-factor authentication is on.');
-        if (r) {
-            setTokens(r.attributes.tokens);
-            clear();
-            await reload();
-        }
-    };
-    const disable = async () => {
-        if (await run(() => request('POST', '/api/client/account/two-factor/disable', { password }), 'Two-factor authentication is off.')) {
-            clear();
-            await reload();
-        }
-    };
-
-    return (
-        <section className="st-card">
-            <Row
-                title="Two-factor authentication"
-                desc={profile.two_factor ? 'On. Signing in asks for a code from your app.' : 'Off. Add a code from an authenticator app when you sign in.'}
-            >
-                {profile.two_factor ? (
-                    !disabling && <button type="button" className="st-link danger" onClick={() => setDisabling(true)}>Turn off</button>
-                ) : (
-                    !setup && <button type="button" className="btn btn-primary" disabled={pending || !profile.password_set} onClick={start}>Turn on</button>
-                )}
-            </Row>
-            {!profile.password_set ? <p className="st-sub">Set a password under Account first: turning this on needs it.</p> : null}
-
-            {setup ? (
-                <div className="st-2fa">
-                    <img src={setup.qr} alt="QR code for your authenticator app" width={200} height={200} />
-                    <div>
-                        <p className="st-sub">Scan this with an authenticator app, or enter the key by hand:</p>
-                        <code>{setup.secret}</code>
-                        <Field label="Code from the app" value={code} onChange={setCode} autoComplete="one-time-code" inputMode="numeric" maxLength={6} />
-                        <Field label="Your password" type="password" value={password} onChange={setPassword} autoComplete="current-password" />
-                        <div className="st-actions">
-                            <button type="button" className="st-link" onClick={clear}>Cancel</button>
-                            <button type="button" className="btn btn-primary" disabled={pending || code.length !== 6 || !password} onClick={enable}>Turn on</button>
-                        </div>
-                    </div>
-                </div>
-            ) : null}
-
-            {disabling ? (
-                <div className="st-inline">
-                    <Field label="Your password" type="password" value={password} onChange={setPassword} autoComplete="current-password" />
-                    <div className="st-actions">
-                        <button type="button" className="st-link" onClick={clear}>Cancel</button>
-                        <button type="button" className="btn btn-ghost" disabled={pending || !password} onClick={disable}>Turn off</button>
-                    </div>
-                </div>
-            ) : null}
-
-            {tokens ? (
-                <div className="st-tokens">
-                    <h3>Save your recovery codes</h3>
-                    <p className="st-sub">Each one signs you in once if you lose your app. They won’t be shown again.</p>
-                    <pre>{tokens.join('\n')}</pre>
-                    <button type="button" className="btn btn-ghost" onClick={() => setTokens(null)}>I’ve saved them</button>
-                </div>
-            ) : null}
-        </section>
     );
 }
 
