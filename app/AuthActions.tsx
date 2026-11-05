@@ -105,7 +105,7 @@ export default function AuthActions({ panelRoot }: { panelRoot: string }) {
                         </button>
                     </div>
                 ) : null}
-            {switching ? <SwitchAccount current={[me.email, me.username]} onClose={() => setSwitching(false)} /> : null}
+            {switching ? <SwitchAccount onClose={() => setSwitching(false)} /> : null}
             </div>
         );
     }

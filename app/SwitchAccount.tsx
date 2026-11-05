@@ -4,7 +4,7 @@
 // an account still signed in continues straight away, one that signed out asks for its password.
 import { useEffect, useRef, useState } from 'react';
 
-type Account = { login: string; name: string | null; active: boolean };
+type Account = { login: string; shown: string; user: string | null; name: string | null; active: boolean };
 
 const signIn = (params: Record<string, string> = {}) => {
     window.location.assign(`/oidc/login?${new URLSearchParams({ ...params, return: window.location.pathname })}`);
@@ -24,10 +24,11 @@ async function choose(account: Account) {
     signIn({ login_hint: account.login });
 }
 
-export default function SwitchAccount({ current, onClose }: { current: string[]; onClose: () => void }) {
+export default function SwitchAccount({ onClose }: { onClose: () => void }) {
     const ref = useRef<HTMLDialogElement>(null);
     const [accounts, setAccounts] = useState<Account[] | null>(null);
     const [going, setGoing] = useState<string | null>(null);
+    const [sub, setSub] = useState<string | null>(null);
 
     useEffect(() => {
         const dialog = ref.current;
@@ -36,6 +37,10 @@ export default function SwitchAccount({ current, onClose }: { current: string[];
             .then((r) => (r.ok ? r.json() : { accounts: [] }))
             .then((r) => setAccounts(r.accounts))
             .catch(() => setAccounts([]));
+        fetch('/api/client/account', { headers: { Accept: 'application/json' }, credentials: 'same-origin' })
+            .then((r) => (r.ok ? r.json() : null))
+            .then((r) => setSub(r?.attributes?.sub ?? null))
+            .catch(() => {});
         return () => dialog?.close();
     }, []);
 
@@ -61,7 +66,7 @@ export default function SwitchAccount({ current, onClose }: { current: string[];
             {!accounts ? <div className="st-spin" /> : (
                 <div className="st-accounts">
                     {accounts.map((a) => {
-                        const here = current.some((name) => name && [a.login.toLowerCase(), a.login.toLowerCase().split('@')[0]].includes(name.toLowerCase()));
+                        const here = !!sub && a.user === sub;
                         return (
                             <button
                                 key={a.login}
@@ -72,10 +77,10 @@ export default function SwitchAccount({ current, onClose }: { current: string[];
                                     choose(a);
                                 }}
                             >
-                                <i aria-hidden="true">{(a.name || a.login).charAt(0).toUpperCase()}</i>
+                                <i aria-hidden="true">{(a.name || a.shown).charAt(0).toUpperCase()}</i>
                                 <span>
-                                    <b>{a.name || a.login}</b>
-                                    <small>{a.login}</small>
+                                    <b>{a.name || a.shown}</b>
+                                    <small>{a.shown}</small>
                                 </span>
                                 <em>{going === a.login ? <span className="st-spin st-spin-sm" /> : here ? 'Current' : a.active ? '' : 'Signed out'}</em>
                             </button>

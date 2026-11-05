@@ -5,7 +5,7 @@ import { identity, IDENTITY, request, type Identity, type Profile } from '@/lib/
 import { CodeField, Field, Modal, Row, useAct, useRun, useSettings } from '../SettingsShell';
 
 // Settings -> Account: each setting shows what it is now, and its change opens in a popup.
-type Popup = 'name' | 'username' | 'email';
+type Popup = 'name' | 'username' | 'panel' | 'email';
 
 export default function AccountSettings() {
     const { profile } = useSettings();
@@ -24,21 +24,25 @@ export default function AccountSettings() {
         <>
             <header className="st-head">
                 <h1>Account</h1>
-                <p>Your name, username and email, and how the panel looks.</p>
+                <p>Your name, sign-in username, panel name and email, and how the panel looks.</p>
             </header>
             <section className="st-card">
                 <Row value title="Name" desc={me ? `${me.name.first} ${me.name.last}`.trim() : '…'}>
                     <Change what="name" onClick={() => setPopup('name')} />
                 </Row>
-                <Row value title="Username" desc={profile.username}>
+                <Row value title="Username" desc={me ? me.username : '…'}>
                     <Change what="username" onClick={() => setPopup('username')} />
+                </Row>
+                <Row value title="Panel name" desc={profile.username}>
+                    <Change what="panel name" onClick={() => setPopup('panel')} />
                 </Row>
                 <Row value title="Email" desc={me ? `${me.email.address}${me.email.verified ? '' : ' (not confirmed yet)'}` : profile.email}>
                     <Change what="email" onClick={() => setPopup('email')} />
                 </Row>
             </section>
             <PanelView />
-            {popup === 'username' ? <UsernamePopup onClose={close} /> : null}
+            {popup === 'username' && me ? <UsernamePopup current={me.username} onClose={close} /> : null}
+            {popup === 'panel' ? <PanelNamePopup onClose={close} /> : null}
             {popup === 'name' && me ? <NamePopup first={me.name.first} last={me.name.last} onClose={close} /> : null}
             {popup === 'email' ? <EmailPopup onClose={close} /> : null}
         </>
@@ -81,7 +85,36 @@ function PanelView() {
     );
 }
 
-function UsernamePopup({ onClose }: { onClose: () => void }) {
+// The name to sign in with. Only the account id links it to the panel name.
+function UsernamePopup({ current, onClose }: { current: string; onClose: () => void }) {
+    const { toast } = useSettings();
+    const { act, busy, error } = useAct();
+    const [username, setUsername] = useState(current);
+
+    const save = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (await act(() => request('PUT', `${IDENTITY}/username`, { username }))) {
+            toast('ok', 'Username changed.');
+            onClose();
+        }
+    };
+
+    return (
+        <Modal title="Change username" onClose={onClose}>
+            <form onSubmit={save}>
+                <p className="st-sub">The name you sign in with. Your panel name stays the same.</p>
+                <Field label="New username" value={username} onChange={setUsername} autoComplete="username" maxLength={30} />
+                {error ? <p className="st-err" role="alert">{error}</p> : null}
+                <div className="st-actions">
+                    <button type="button" className="st-link" onClick={onClose}>Cancel</button>
+                    <button type="submit" className="btn btn-primary" disabled={busy || username.length < 3 || username === current}>Change username</button>
+                </div>
+            </form>
+        </Modal>
+    );
+}
+
+function PanelNamePopup({ onClose }: { onClose: () => void }) {
     const { profile, setProfile, toast } = useSettings();
     const { act, busy, error } = useAct();
     const [username, setUsername] = useState(profile.username);
@@ -91,20 +124,20 @@ function UsernamePopup({ onClose }: { onClose: () => void }) {
         const r = await act(() => request<{ data: Profile }>('PUT', '/api/client/robtic/account/username', { username }));
         if (r) {
             setProfile(r.data);
-            toast('ok', 'Username changed.');
+            toast('ok', 'Panel name changed.');
             onClose();
         }
     };
 
     return (
-        <Modal title="Change username" onClose={onClose}>
+        <Modal title="Change panel name" onClose={onClose}>
             <form onSubmit={save}>
                 <p className="st-sub">It’s also your profile’s address. The old address stops working when you change it.</p>
-                <Field label="New username" value={username} onChange={setUsername} autoComplete="username" maxLength={191} />
+                <Field label="New panel name" value={username} onChange={setUsername} autoComplete="off" maxLength={191} />
                 {error ? <p className="st-err" role="alert">{error}</p> : null}
                 <div className="st-actions">
                     <button type="button" className="st-link" onClick={onClose}>Cancel</button>
-                    <button type="submit" className="btn btn-primary" disabled={busy || !username || username === profile.username}>Change username</button>
+                    <button type="submit" className="btn btn-primary" disabled={busy || !username || username === profile.username}>Change panel name</button>
                 </div>
             </form>
         </Modal>
