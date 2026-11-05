@@ -12,7 +12,7 @@ import { ApiError, errorText, getProfile, type Profile } from '@/lib/account';
 const NAV: Array<{ group: string; items: Array<{ href: string; label: string }> }> = [
     { group: 'You', items: [{ href: '/settings', label: 'Public profile' }, { href: '/settings/account', label: 'Account' }] },
     { group: 'Preferences', items: [{ href: '/settings/notifications', label: 'Notifications' }] },
-    { group: 'Access', items: [{ href: '/setting', label: 'Sign-in and security' }, { href: '/settings/linked', label: 'GitHub' }, { href: '/settings/security', label: 'Devices and SSH' }] },
+    { group: 'Access', items: [{ href: '/settings/security', label: 'Security' }, { href: '/settings/connections', label: 'Connections' }, { href: '/settings/devices', label: 'Devices' }] },
 ];
 
 type Ctx = {
@@ -30,6 +30,13 @@ export function useSettings(): Ctx {
     return ctx;
 }
 
+// A change that needs a recent sign-in sends the person through one and back to this page.
+function needsSignIn(e: unknown): boolean {
+    if (!(e instanceof ApiError) || e.status !== 428) return false;
+    window.location.assign(`/oidc/login?${new URLSearchParams({ prompt: 'login', return: window.location.pathname })}`);
+    return true;
+}
+
 // Run an action: failures and (optionally) success become a toast; returns the result, or null if it failed.
 export function useRun() {
     const { toast } = useSettings();
@@ -41,7 +48,7 @@ export function useRun() {
             if (done) toast('ok', done);
             return r === undefined ? (true as T) : r;
         } catch (e) {
-            toast('err', errorText(e));
+            if (!needsSignIn(e)) toast('err', errorText(e));
             return null;
         } finally {
             setPending(false);
@@ -61,7 +68,7 @@ export function useAct() {
             const r = await action();
             return r === undefined ? (true as T) : r;
         } catch (e) {
-            setError(errorText(e));
+            if (!needsSignIn(e)) setError(errorText(e));
             return null;
         } finally {
             setBusy(false);
@@ -182,9 +189,7 @@ export default function SettingsShell({ children }: { children: React.ReactNode 
                         {NAV.map((g) => (
                             <nav key={g.group} aria-label={g.group}>
                                 <h2>{g.group}</h2>
-                                {g.items.map((i) => i.href === '/setting' ? (
-                                    <a key={i.href} href={i.href}>{i.label}</a>
-                                ) : (
+                                {g.items.map((i) => (
                                     <Link key={i.href} href={i.href} className={path === i.href || (i.href !== '/settings' && path.startsWith(`${i.href}/`)) ? 'on' : ''}>
                                         {i.label}
                                     </Link>
@@ -224,6 +229,21 @@ export function Field(props: { label: string; value: string; onChange: (v: strin
             <span>{label}</span>
             <input type={type} value={value} onChange={(e) => onChange(e.target.value)} autoComplete={autoComplete} placeholder={placeholder} maxLength={maxLength} inputMode={inputMode} autoFocus={autoFocus} />
             {hint ? <small>{hint}</small> : null}
+        </label>
+    );
+}
+
+// A code: one box per character, with one real input over them, so typing, pasting and autofill all just work.
+export function CodeField({ label, value, onChange, length = 6 }: { label: string; value: string; onChange: (v: string) => void; length?: number }) {
+    return (
+        <label className="st-otp">
+            <span>{label}</span>
+            <span className="st-otp-boxes">
+                {Array.from({ length }, (_, i) => (
+                    <span key={i} className={i === Math.min(value.length, length - 1) ? 'st-otp-box now' : 'st-otp-box'}>{value[i]}</span>
+                ))}
+                <input type="text" value={value} maxLength={length} autoComplete="one-time-code" spellCheck={false} onChange={(e) => onChange(e.target.value.replace(/\s/g, ''))} />
+            </span>
         </label>
     );
 }

@@ -6,6 +6,7 @@
 // bar is never empty. While signed in it also sends the ping that counts time on Robtic.
 import { useState, useEffect, useRef } from 'react';
 import { logout as signOut } from '@/lib/account';
+import SwitchAccount from './SwitchAccount';
 import { useHeartbeat } from './useHeartbeat';
 
 type Me = { username: string; email: string; avatarUrl: string | null } | null;
@@ -14,6 +15,7 @@ export default function AuthActions({ panelRoot }: { panelRoot: string }) {
     const [me, setMe] = useState<Me>(null);
     const [avatarFailed, setAvatarFailed] = useState(false);
     const [open, setOpen] = useState(false);
+    const [switching, setSwitching] = useState(false);
     const [leaving, setLeaving] = useState(false);
     const wrap = useRef<HTMLDivElement>(null);
     useHeartbeat(!!me);
@@ -92,6 +94,10 @@ export default function AuthActions({ panelRoot }: { panelRoot: string }) {
                             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z" /></svg>
                             Dashboard
                         </a>
+                        <button type="button" role="menuitem" onClick={() => { setOpen(false); setSwitching(true); }}>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h13l-3-3M17 17H4l3 3" /></svg>
+                            Switch account
+                        </button>
                         <i className="me-sep" aria-hidden="true" />
                         <button type="button" role="menuitem" className="danger" disabled={leaving} onClick={logout}>
                             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h11" /></svg>
@@ -99,6 +105,7 @@ export default function AuthActions({ panelRoot }: { panelRoot: string }) {
                         </button>
                     </div>
                 ) : null}
+            {switching ? <SwitchAccount current={me.email} onClose={() => setSwitching(false)} /> : null}
             </div>
         );
     }

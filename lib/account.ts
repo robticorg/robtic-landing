@@ -60,6 +60,20 @@ export async function request<T>(method: string, path: string, body?: unknown): 
 
 export const PROFILE = '/api/client/robtic/account/profile';
 
+// Name, email, password, passkeys, two-factor and connections, kept in Robtic Auth.
+export const IDENTITY = '/api/client/robtic/identity';
+export type Identity = {
+    name: { first: string; last: string };
+    email: { address: string; verified: boolean };
+    password: boolean;
+    authenticator: boolean;
+    email_codes: boolean;
+    recovery_codes: boolean;
+    passkeys: Array<{ id: string; name: string }>;
+    providers: Array<{ id: string; name: string; linked_as: string | null; linked_id: string | null }>;
+};
+export const identity = () => request<Identity>('GET', IDENTITY);
+
 export const getProfile = () => request<{ data: Profile }>('GET', PROFILE).then((r) => r.data);
 
 // The file field for an image upload.

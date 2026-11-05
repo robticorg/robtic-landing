@@ -1,33 +1,46 @@
 'use client';
 
-import { useState } from 'react';
-import { request, type Profile } from '@/lib/account';
-import { Field, Modal, Row, useAct, useRun, useSettings } from '../SettingsShell';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { identity, IDENTITY, request, type Identity, type Profile } from '@/lib/account';
+import { CodeField, Field, Modal, Row, useAct, useRun, useSettings } from '../SettingsShell';
 
 // Settings -> Account: each setting shows what it is now, and its change opens in a popup.
-type Popup = 'username';
+type Popup = 'name' | 'username' | 'email';
 
 export default function AccountSettings() {
     const { profile } = useSettings();
     const [popup, setPopup] = useState<Popup | null>(null);
-    const close = () => setPopup(null);
+    const [me, setMe] = useState<Identity | null>(null);
+    const load = useCallback(() => {
+        identity().then(setMe).catch(() => setMe(null));
+    }, []);
+    useEffect(load, [load]);
+    const close = () => {
+        setPopup(null);
+        load();
+    };
 
     return (
         <>
             <header className="st-head">
                 <h1>Account</h1>
-                <p>Your username and how the panel looks.</p>
+                <p>Your name, username and email, and how the panel looks.</p>
             </header>
             <section className="st-card">
+                <Row value title="Name" desc={me ? `${me.name.first} ${me.name.last}` : '…'}>
+                    <Change what="name" onClick={() => setPopup('name')} />
+                </Row>
                 <Row value title="Username" desc={profile.username}>
                     <Change what="username" onClick={() => setPopup('username')} />
                 </Row>
-                <Row value title="Email and password" desc={profile.email}>
-                    <a className="btn btn-ghost" href="/setting">Change</a>
+                <Row value title="Email" desc={me ? `${me.email.address}${me.email.verified ? '' : ' (not confirmed yet)'}` : profile.email}>
+                    <Change what="email" onClick={() => setPopup('email')} />
                 </Row>
             </section>
             <PanelView />
             {popup === 'username' ? <UsernamePopup onClose={close} /> : null}
+            {popup === 'name' && me ? <NamePopup first={me.name.first} last={me.name.last} onClose={close} /> : null}
+            {popup === 'email' ? <EmailPopup onClose={close} /> : null}
         </>
     );
 }
@@ -94,6 +107,73 @@ function UsernamePopup({ onClose }: { onClose: () => void }) {
                     <button type="submit" className="btn btn-primary" disabled={busy || !username || username === profile.username}>Change username</button>
                 </div>
             </form>
+        </Modal>
+    );
+}
+
+function NamePopup({ first: firstNow, last: lastNow, onClose }: { first: string; last: string; onClose: () => void }) {
+    const { toast } = useSettings();
+    const { act, busy, error } = useAct();
+    const [first, setFirst] = useState(firstNow);
+    const [last, setLast] = useState(lastNow);
+
+    const submit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (await act(() => request('PUT', `${IDENTITY}/name`, { first, last }))) {
+            toast('ok', 'Name changed.');
+            onClose();
+        }
+    };
+
+    return (
+        <Modal title="Change your name" onClose={onClose}>
+            <form onSubmit={submit}>
+                <Field label="First name" value={first} onChange={setFirst} autoComplete="given-name" />
+                <Field label="Last name" value={last} onChange={setLast} autoComplete="family-name" />
+                {error ? <p className="st-error">{error}</p> : null}
+                <button type="submit" className="btn btn-primary" disabled={busy || !first.trim() || !last.trim()}>Save</button>
+            </form>
+        </Modal>
+    );
+}
+
+// The new address only counts once the code sent to it is confirmed.
+function EmailPopup({ onClose }: { onClose: () => void }) {
+    const { toast, reload } = useSettings();
+    const { act, busy, error } = useAct();
+    const [email, setEmail] = useState('');
+    const [code, setCode] = useState('');
+    const [sent, setSent] = useState(false);
+
+    const send = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (await act(() => request('POST', `${IDENTITY}/email`, { email }))) setSent(true);
+    };
+    const confirm = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (await act(() => request('POST', `${IDENTITY}/email/verify`, { code }))) {
+            toast('ok', 'Email changed.');
+            await reload();
+            onClose();
+        }
+    };
+
+    return (
+        <Modal title="Change your email" onClose={onClose}>
+            {sent ? (
+                <form onSubmit={confirm}>
+                    <p className="st-sub">We sent a code to <b>{email}</b>. Type it here.</p>
+                    <CodeField label="Code" value={code} onChange={setCode} />
+                    {error ? <p className="st-error">{error}</p> : null}
+                    <button type="submit" className="btn btn-primary" disabled={busy || code.length < 6}>Confirm</button>
+                </form>
+            ) : (
+                <form onSubmit={send}>
+                    <Field label="New email" type="email" value={email} onChange={setEmail} autoComplete="email" />
+                    {error ? <p className="st-error">{error}</p> : null}
+                    <button type="submit" className="btn btn-primary" disabled={busy || !email.includes('@')}>Send code</button>
+                </form>
+            )}
         </Modal>
     );
 }
