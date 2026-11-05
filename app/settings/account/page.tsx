@@ -27,7 +27,7 @@ export default function AccountSettings() {
                 <p>Your name, username and email, and how the panel looks.</p>
             </header>
             <section className="st-card">
-                <Row value title="Name" desc={me ? `${me.name.first} ${me.name.last}` : '…'}>
+                <Row value title="Name" desc={me ? `${me.name.first} ${me.name.last}`.trim() : '…'}>
                     <Change what="name" onClick={() => setPopup('name')} />
                 </Row>
                 <Row value title="Username" desc={profile.username}>
@@ -129,9 +129,9 @@ function NamePopup({ first: firstNow, last: lastNow, onClose }: { first: string;
         <Modal title="Change your name" onClose={onClose}>
             <form onSubmit={submit}>
                 <Field label="First name" value={first} onChange={setFirst} autoComplete="given-name" />
-                <Field label="Last name" value={last} onChange={setLast} autoComplete="family-name" />
+                <Field label="Last name (optional)" value={last} onChange={setLast} autoComplete="family-name" />
                 {error ? <p className="st-error">{error}</p> : null}
-                <button type="submit" className="btn btn-primary" disabled={busy || !first.trim() || !last.trim()}>Save</button>
+                <button type="submit" className="btn btn-primary" disabled={busy || !first.trim()}>Save</button>
             </form>
         </Modal>
     );

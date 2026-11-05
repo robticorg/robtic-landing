@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import TopProgress from './TopProgress';
 import Script from 'next/script';
 import { ORIGIN, PANEL_URL, SOCIAL_ICONS } from '@/lib/site';
 import { getSiteData, legalPages, resolveContact, resolveSocials } from '@/lib/site-data';
@@ -78,6 +79,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 />
             </head>
             <body>
+                <TopProgress />
                 {/* The eyes while the page loads: they blink once, then fade out once the page is there. */}
                 <div id="robtic-boot" aria-hidden="true">
                     <video autoPlay muted loop playsInline disablePictureInPicture preload="auto" poster="/rl/robtic/loading.jpg">

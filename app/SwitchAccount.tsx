@@ -6,13 +6,28 @@ import { useEffect, useRef, useState } from 'react';
 
 type Account = { login: string; name: string | null; active: boolean };
 
-const signIn = (params: Record<string, string>) => {
+const signIn = (params: Record<string, string> = {}) => {
     window.location.assign(`/oidc/login?${new URLSearchParams({ ...params, return: window.location.pathname })}`);
 };
 
-export default function SwitchAccount({ current, onClose }: { current: string; onClose: () => void }) {
+// An account still signed in continues as its exact session. One that signed out goes to its own sign-in.
+async function choose(account: Account) {
+    if (account.active) {
+        const reply = await fetch('/auth/signedin-accounts', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ login: account.login }),
+        }).then((r) => r.json()).catch(() => ({ found: false }));
+        if (reply.found) return signIn();
+    }
+    signIn({ login_hint: account.login });
+}
+
+export default function SwitchAccount({ current, onClose }: { current: string[]; onClose: () => void }) {
     const ref = useRef<HTMLDialogElement>(null);
     const [accounts, setAccounts] = useState<Account[] | null>(null);
+    const [going, setGoing] = useState<string | null>(null);
 
     useEffect(() => {
         const dialog = ref.current;
@@ -46,21 +61,37 @@ export default function SwitchAccount({ current, onClose }: { current: string; o
             {!accounts ? <div className="st-spin" /> : (
                 <div className="st-accounts">
                     {accounts.map((a) => {
-                        const here = a.login.toLowerCase() === current.toLowerCase();
+                        const here = current.some((name) => name && [a.login.toLowerCase(), a.login.toLowerCase().split('@')[0]].includes(name.toLowerCase()));
                         return (
-                            <button key={a.login} type="button" disabled={here} onClick={() => signIn({ login_hint: a.login })}>
+                            <button
+                                key={a.login}
+                                type="button"
+                                disabled={here || !!going}
+                                onClick={() => {
+                                    setGoing(a.login);
+                                    choose(a);
+                                }}
+                            >
                                 <i aria-hidden="true">{(a.name || a.login).charAt(0).toUpperCase()}</i>
                                 <span>
                                     <b>{a.name || a.login}</b>
                                     <small>{a.login}</small>
                                 </span>
-                                <em>{here ? 'Current' : a.active ? '' : 'Signed out'}</em>
+                                <em>{going === a.login ? <span className="st-spin st-spin-sm" /> : here ? 'Current' : a.active ? '' : 'Signed out'}</em>
                             </button>
                         );
                     })}
-                    <button type="button" onClick={() => signIn({ prompt: 'login' })}>
+                    <button
+                        type="button"
+                        disabled={!!going}
+                        onClick={() => {
+                            setGoing('+');
+                            signIn({ prompt: 'login' });
+                        }}
+                    >
                         <i aria-hidden="true">+</i>
                         <span><b>Add another account</b></span>
+                        {going === '+' ? <em><span className="st-spin st-spin-sm" /></em> : null}
                     </button>
                 </div>
             )}

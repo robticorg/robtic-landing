@@ -730,3 +730,12 @@ body:has(.st-app) .foot-wave, body:has(.st-state) .foot-wave, body:has(.st-app) 
 .st-accounts b { display: block; font-size: 14px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .st-accounts small { display: block; color: var(--muted); font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .st-accounts em { flex: none; color: var(--muted); font-size: 12.5px; font-style: normal; }
+
+/* Something is on its way. */
+.top-progress { position: fixed; inset: 0 0 auto 0; z-index: 90; height: 3px; overflow: hidden; opacity: 0; pointer-events: none; transition: opacity 0.15s; }
+.top-progress.on { opacity: 1; }
+.top-progress::after { content: ''; position: absolute; inset: 0 auto 0 0; width: 40%; border-radius: 3px; background: var(--blue); box-shadow: 0 0 10px rgba(23, 147, 255, 0.8); animation: top-progress 1.1s ease-in-out infinite; }
+@keyframes top-progress { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
+@media (prefers-reduced-motion: reduce) { .top-progress::after { width: 100%; animation: none; } }
+.st-spin.st-spin-sm { display: inline-block; width: 16px; height: 16px; margin: 0; border-width: 2px; vertical-align: middle; }
+.st-accounts button:disabled em { opacity: 1; }
