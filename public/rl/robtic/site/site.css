@@ -287,11 +287,25 @@ footer.foot { position: relative; overflow: hidden; background: radial-gradient(
 .mcard figcaption span { color: var(--muted); font-size: 14px; }
 @media (prefers-reduced-motion: reduce) { .marquee { overflow-x: auto; } .marquee .track { animation: none; } }
 
-/* Legal pages: the four of them side by side. */
-.legal-tabs { display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 4px; margin: 22px auto 0; padding: 4px; max-width: 100%; border: 1px solid var(--line); border-radius: 999px; background: var(--glass); }
-.legal-tabs a { padding: 7px 14px; border-radius: 999px; font-size: 14px; color: var(--muted); }
+/* Legal pages: a Terms | Privacy switch, and under it the pages of the group you're in (one per service, so the
+   row can grow; on a phone it scrolls sideways instead of wrapping into a pile). */
+.legal-nav { display: flex; flex-direction: column; align-items: center; gap: 14px; margin: 24px auto 0; max-width: 100%; }
+.legal-groups { display: inline-flex; gap: 4px; padding: 4px; border: 1px solid var(--line); border-radius: 999px; background: var(--glass); }
+.legal-groups a { padding: 8px 22px; border-radius: 999px; font-size: 14.5px; font-weight: 600; color: var(--muted); transition: color 0.15s, background 0.15s; }
+.legal-groups a:hover { color: var(--text); }
+.legal-groups a.on { background: rgba(23, 147, 255, 0.18); color: var(--text); box-shadow: inset 0 0 0 1px rgba(23, 147, 255, 0.35); }
+.legal-tabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 6px; max-width: 100%; }
+.legal-tabs a { position: relative; padding: 6px 12px; font-size: 14px; color: var(--muted); white-space: nowrap; transition: color 0.15s; }
 .legal-tabs a:hover { color: var(--text); }
-.legal-tabs a.on { background: rgba(255, 255, 255, 0.1); color: var(--text); }
+.legal-tabs a.on { color: var(--text); }
+.legal-tabs a.on::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: 0; height: 2px; border-radius: 2px; background: var(--blue); }
+@media (max-width: 640px) {
+    .legal-tabs { flex-wrap: nowrap; justify-content: flex-start; align-self: stretch; overflow-x: auto; scrollbar-width: none; padding: 0 4px 4px;
+        -webkit-mask-image: linear-gradient(90deg, transparent, #000 14px, #000 calc(100% - 14px), transparent); mask-image: linear-gradient(90deg, transparent, #000 14px, #000 calc(100% - 14px), transparent); }
+    .legal-tabs::-webkit-scrollbar { display: none; }
+    .legal-tabs a:first-child { margin-left: auto; }
+    .legal-tabs a:last-child { margin-right: auto; }
+}
 
 /* Legal/privacy pages: a minimal, centred reading column with the plans-page gradient header, and a plain
    sidebar (no background or borders) in the left margin listing the sections — click a title to jump to it.
@@ -311,16 +325,28 @@ footer.foot { position: relative; overflow: hidden; background: radial-gradient(
 .legal hr { border: 0; border-top: 1px solid var(--line); margin: 36px 0; }
 .legal code { background: var(--glass); border: 1px solid var(--line); padding: 1px 6px; border-radius: 6px; font-size: 0.9em; }
 
-.legal-toc { grid-column: 1; justify-self: end; width: 190px; position: sticky; top: calc(var(--bar) + 28px); }
+.legal-toc { grid-column: 1; grid-row: 1; justify-self: end; width: 190px; position: sticky; top: calc(var(--bar) + 28px); }
 .legal-toc h2 { margin: 0 0 16px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.11em; color: var(--muted); opacity: 0.6; }
 .legal-toc nav { display: flex; flex-direction: column; gap: 11px; }
 .legal-toc a { font-size: 13.5px; line-height: 1.45; color: var(--muted); transition: color 0.15s; }
 .legal-toc a:hover { color: var(--text); }
 
+/* "Read also": the related pages, in the right margin (mirroring the contents on the left); under the article on
+   narrower screens. */
+.legal-rel { grid-column: 3; grid-row: 1; justify-self: start; width: 210px; position: sticky; top: calc(var(--bar) + 28px); }
+.legal-rel h2 { margin: 0 0 14px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.11em; color: var(--muted); opacity: 0.6; }
+.legal-rel nav { display: flex; flex-direction: column; gap: 8px; }
+.legal-rel a { display: block; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--glass); transition: border-color 0.15s, background 0.15s; }
+.legal-rel a:hover { border-color: rgba(23, 147, 255, 0.45); background: rgba(23, 147, 255, 0.08); }
+.legal-rel small { display: block; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: #6cc0ff; }
+.legal-rel span { display: block; margin-top: 2px; font-size: 14px; color: var(--text); }
+
 @media (max-width: 1040px) {
     .legal-wrap { grid-template-columns: minmax(0, 720px); justify-content: center; }
     .legal { grid-column: 1; }
     .legal-toc { display: none; }
+    .legal-rel { grid-column: 1; grid-row: auto; justify-self: stretch; width: auto; position: static; margin-top: 40px; padding-top: 28px; border-top: 1px solid var(--line); }
+    .legal-rel nav { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
 }
 
 /* Things rise gently into view (only when scripts run; without them everything just shows). */

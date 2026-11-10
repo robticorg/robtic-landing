@@ -6,6 +6,7 @@ These terms are the agreement between you and Robtic for hosting apps on Robtic 
 - You may sign in with GitHub or Discord; their own terms apply to those accounts.
 - You are responsible for what happens under your account.
 - You must be old enough to agree to these terms where you live, and at least 13.
+- What we keep about you and your account, and why, is explained in [Account Privacy](/privacy/account).
 
 ## 2. What Robtic provides
 
@@ -33,7 +34,7 @@ We may stop, suspend or remove an app or an account that breaks these rules, whe
 
 ## 5. Your content
 
-Your code, files, databases and backups stay yours. You give Robtic only the permission needed to store and run them for you. You are responsible for having the right to use what you upload, including your bots' tokens.
+Your code, files, databases and backups stay yours. You give Robtic only the permission needed to store and run them for you. You are responsible for having the right to use what you upload, including your bots' tokens. How we store what you host, and who can see it, is in [Hosting Privacy](/privacy/hosting).
 
 ## 6. Backups and availability
 
@@ -41,7 +42,7 @@ We work to keep Robtic running and your data safe, but we cannot promise it will
 
 ## 7. Ending
 
-You can stop using Robtic and ask us to delete your account at any time. We may end or suspend accounts that break these terms or put Robtic or its users at risk.
+You can stop using Robtic and ask us to delete your account at any time; what is removed, and when, is in [Account Privacy](/privacy/account#how-long-we-keep-it). We may end or suspend accounts that break these terms or put Robtic or its users at risk.
 
 ## 8. Liability
 

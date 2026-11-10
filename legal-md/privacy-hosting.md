@@ -9,7 +9,7 @@ This page explains how Robtic handles what you host: your apps, their files and 
 
 ## Who can see it
 
-- You, and the people you invite or give access to in your workspace or team, with the permissions you choose.
+- You, and the people you invite or give access to in your workspace or team, with the permissions you choose (see the roles in the [Team's Terms](/terms/teams#2-roles)).
 - Robtic's administrators, only when needed to run the service, fix a problem you ask about, or deal with abuse.
 - Nobody else, unless the law requires it.
 
@@ -22,7 +22,7 @@ This page explains how Robtic handles what you host: your apps, their files and 
 
 ## How long we keep it
 
-- Your apps and their files, for as long as the app exists. When a plan ends they are kept for a while; long after, they may be removed after an email to you.
+- Your apps and their files, for as long as the app exists. When a plan ends they are kept for a while; long after, they may be removed after an email to you (see [Plans and payment](/terms/hosting#3-plans-and-payment)).
 - Backups until you delete them, turn backups off for the app, or delete the app.
 - Databases until you remove them or their workspace.
 

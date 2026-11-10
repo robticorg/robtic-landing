@@ -22,7 +22,7 @@ A team has a pool of memory, CPU and storage set by its plan or offer. The owner
 
 - People can be invited into a workspace to work on its apps, within the number the plan allows.
 - Whoever invites someone chooses what they can do and which apps they see, and is responsible for that choice.
-- An invited person must follow the Hosting Terms like any other user.
+- An invited person must follow the [Hosting Terms](/terms/hosting) like any other user.
 
 ## 5. Leaving and removal
 
@@ -36,4 +36,4 @@ The team's workspaces and apps are kept for a while, but apps cannot be started 
 
 ## 7. Working together
 
-People in a team can see each other on the workspace canvas and in the activity log. Be fair to each other: do not use your access to harm the team's apps or data.
+People in a team can see each other on the workspace canvas and in the activity log. Be fair to each other: do not use your access to harm the team's apps or data. What the people in a workspace can see is in [Hosting Privacy](/privacy/hosting#who-can-see-it).

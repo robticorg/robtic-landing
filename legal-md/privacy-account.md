@@ -4,7 +4,7 @@ This page explains what Robtic keeps about you and your account, why, and what y
 
 - Your username, email address and password (stored only as a hash), your picture if you add one, and your two-step verification settings.
 - If you sign in with or connect **GitHub** or **Discord**: your id, username and email there. For GitHub, also an access token (kept encrypted) so Robtic can clone, deploy and push your repositories.
-- Your plan, its dates, your subscription history, and your teams and roles.
+- Your plan, its dates, your subscription history, and your teams and roles (the roles are explained in the [Team's Terms](/terms/teams#2-roles)).
 - The devices you are signed in on: the browser and system, the IP address and when it was last seen.
 - An activity log of actions on your account, apps, workspaces and teams, with the IP address. People who run a team or workspace see the activity in it.
 
@@ -29,7 +29,7 @@ Robtic uses only the cookies needed to keep you signed in and to protect forms. 
 
 - See and change your details under Account; sign out other devices under Account → Devices.
 - Disconnect GitHub or Discord at any time.
-- Ask us for a copy of your data, to correct it, or to delete your account.
+- Ask us for a copy of your data, to correct it, or to delete your account (see [Ending](/terms/hosting#7-ending) in the Hosting Terms).
 
 ## Children
 
