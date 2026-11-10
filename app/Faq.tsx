@@ -54,9 +54,19 @@ export default function Faq({
             </div>
 
             {showImage ? (
-                <div className="faq-art" aria-hidden="true">
-                    <img className="faq-q-img" src="/rl/robtic/site/question.png" alt="" width={520} height={620} />
-                </div>
+                <>
+                    {/* Desktop: one big 3D question mark beside the list. */}
+                    <div className="faq-art" aria-hidden="true">
+                        <img className="faq-q-img" src="/rl/robtic/site/question.png" alt="" width={520} height={620} />
+                    </div>
+                    {/* Phone: the big one is dropped for a few small ones floating around the section — two up
+                        at the top-left, one down at the bottom-right. */}
+                    <span className="faq-cluster" aria-hidden="true">
+                        <img className="fqm fqm-a" src="/rl/robtic/site/question.png" alt="" width={140} height={166} />
+                        <img className="fqm fqm-b" src="/rl/robtic/site/question.png" alt="" width={100} height={119} />
+                        <img className="fqm fqm-c" src="/rl/robtic/site/question.png" alt="" width={180} height={214} />
+                    </span>
+                </>
             ) : null}
         </div>
     );

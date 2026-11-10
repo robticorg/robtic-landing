@@ -18,6 +18,8 @@ import {
     BookOpen,
     Activity,
     ChevronDown,
+    MoreVertical,
+    X,
     type LucideIcon,
 } from 'lucide-react';
 
@@ -131,6 +133,8 @@ export default function SiteNav({
     const minimal = pathname === '/faq' || pathname?.startsWith('/faq/');
 
     const [open, setOpen] = useState<string | null>(null);
+    // The mobile sheet (opened by the ⋮ button) — a separate piece of state from the desktop hover menus.
+    const [mOpen, setMOpen] = useState(false);
     const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const cancelClose = useCallback(() => {
@@ -141,16 +145,32 @@ export default function SiteNav({
         closeTimer.current = setTimeout(() => setOpen(null), 140);
     }, [cancelClose]);
 
-    // Escape closes the open menu.
+    // Escape closes whichever menu is open (desktop mega or the mobile sheet).
     useEffect(() => {
-        const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(null);
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                setOpen(null);
+                setMOpen(false);
+            }
+        };
         document.addEventListener('keydown', onKey);
         return () => document.removeEventListener('keydown', onKey);
     }, []);
 
+    // Lock the page behind the mobile sheet while it's open.
+    useEffect(() => {
+        if (!mOpen) return;
+        const prev = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = prev;
+        };
+    }, [mOpen]);
+
     // Links with no page close the menu; the global [data-soon] handler (landing-ui.js) shows the toast.
     const onItem = (e: React.MouseEvent, item: Item) => {
         setOpen(null);
+        setMOpen(false);
         if (!item.href) e.preventDefault();
     };
 
@@ -185,6 +205,55 @@ export default function SiteNav({
                 <a href="/#features">Features</a>
                 <a href="/plans">Plans</a>
             </nav>
+
+            {/* Phone bar: the ⋮ button opens the sheet below (the centre pill is hidden at this width). */}
+            <button
+                type="button"
+                className="m-kebab"
+                aria-label={mOpen ? 'Close menu' : 'Open menu'}
+                aria-haspopup="menu"
+                aria-expanded={mOpen}
+                onClick={() => setMOpen((o) => !o)}
+            >
+                {mOpen ? <X size={22} aria-hidden="true" /> : <MoreVertical size={22} aria-hidden="true" />}
+            </button>
+
+            {/* The mobile sheet: the whole nav, with Dashboard and Community shown as the same icon+title+desc cards. */}
+            <div className={mOpen ? 'm-nav is-open' : 'm-nav'} role="dialog" aria-modal="true" aria-label="Menu">
+                <button type="button" className="m-scrim" aria-label="Close menu" onClick={() => setMOpen(false)} />
+                <nav className="m-panel" aria-label="Site">
+                    <a className="m-link" href="/" onClick={() => setMOpen(false)}>Home</a>
+                    {menus.map((m) => (
+                        <div className="m-group" key={m.key}>
+                            <p className="m-group-h">{m.label}</p>
+                            {m.columns.map((col) => (
+                                <div className="m-sub" key={col.heading}>
+                                    <p className="m-sub-h">{col.heading}</p>
+                                    {col.items.map((item) => (
+                                        <a
+                                            key={item.label}
+                                            className="mega-item m-item"
+                                            href={item.href || '#'}
+                                            {...(item.external ? { target: '_blank', rel: 'noopener' } : {})}
+                                            {...(item.href ? {} : { 'data-soon': `${item.label} — coming soon` })}
+                                            aria-disabled={item.href ? undefined : true}
+                                            onClick={(e) => onItem(e, item)}
+                                        >
+                                            <ItemIcon icon={item.icon} />
+                                            <span className="mega-tx">
+                                                <b>{item.label}</b>
+                                                <small>{item.desc}</small>
+                                            </span>
+                                        </a>
+                                    ))}
+                                </div>
+                            ))}
+                        </div>
+                    ))}
+                    <a className="m-link" href="/#features" onClick={() => setMOpen(false)}>Features</a>
+                    <a className="m-link" href="/plans" onClick={() => setMOpen(false)}>Plans</a>
+                </nav>
+            </div>
 
             {menus.map((m) => (
                 <div
@@ -222,7 +291,7 @@ export default function SiteNav({
                             ))}
                         </div>
                         <div className="mega-card">
-                            <img src="/rl/robtic/site/robot-sitting.webp" alt="" aria-hidden="true" />
+                            <img src={m.card.img} alt="" aria-hidden="true" />
                             <b>{m.card.title}</b>
                             <p>{m.card.text}</p>
                         </div>
