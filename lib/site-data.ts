@@ -51,10 +51,10 @@ export type LegalPage = { key: string; title: string; path: string; updated?: st
 // What the site starts from, and what it falls back to when the panel can't be reached: the built-in pages, whose
 // Markdown is a snapshot in legal-md/.
 export const BUILTIN_LEGAL: LegalPage[] = [
-    { key: 'terms-hosting', title: 'Hosting Terms', path: 'terms-hosting' },
-    { key: 'terms-teams', title: "Team's Terms", path: 'terms-teams' },
-    { key: 'privacy-account', title: 'Account Privacy', path: 'privacy-account' },
-    { key: 'privacy-hosting', title: 'Hosting Privacy', path: 'privacy-hosting' },
+    { key: 'terms-hosting', title: 'Hosting Terms', path: 'terms/hosting' },
+    { key: 'terms-teams', title: "Team's Terms", path: 'terms/teams' },
+    { key: 'privacy-account', title: 'Account Privacy', path: 'privacy/account' },
+    { key: 'privacy-hosting', title: 'Hosting Privacy', path: 'privacy/hosting' },
 ];
 const BUILTIN_UPDATED = 'October 25, 2026';
 
@@ -108,9 +108,19 @@ export async function getSiteData(): Promise<SiteData | null> {
     }
 }
 
-// The legal pages, in the order the admin console set them.
+// The address a legal page is served at, derived from its key so the landing is self-consistent whatever path the
+// panel stored: a `terms-*` or `privacy-*` key lives at /<group>/<name> (first dash only, so `terms-teams-eu`
+// -> terms/teams-eu). Any other key keeps its stored path.
+export function legalHref(page: LegalPage): string {
+    const m = /^(terms|privacy)-(.+)$/.exec(page.key);
+    return m ? `${m[1]}/${m[2]}` : page.path;
+}
+
+// The legal pages, in the order the admin console set them, each with its address normalised to the /terms/* and
+// /privacy/* layout.
 export function legalPages(data: SiteData | null): LegalPage[] {
-    return data?.legal_pages?.length ? data.legal_pages : BUILTIN_LEGAL;
+    const pages = data?.legal_pages?.length ? data.legal_pages : BUILTIN_LEGAL;
+    return pages.map((p) => ({ ...p, path: legalHref(p) }));
 }
 
 // The FAQ, from the admin console if set, otherwise the built-ins.
@@ -118,11 +128,12 @@ export function landingFaq(data: SiteData | null): FaqItem[] {
     return data?.landing?.faq?.length ? data.landing.faq : BUILTIN_FAQ;
 }
 
-// One legal page by its address, with its Markdown. Asks the panel; if it can't be reached, a built-in page is
-// read from legal-md/ so the terms never go missing.
-export async function getLegalPage(slug: string): Promise<(LegalPage & { markdown: string; updated: string }) | null> {
+// One legal page by its KEY (e.g. 'terms-hosting'), with its Markdown. The address is `/<group>/<name>` and the
+// routes derive the key from it. Asks the panel by key; if it can't be reached, a built-in page is read from
+// legal-md/<key>.md so the terms never go missing.
+export async function getLegalPage(key: string): Promise<(LegalPage & { markdown: string; updated: string }) | null> {
     try {
-        const res = await fetch(`${PANEL_API_ORIGIN}/api/robtic/site/legal/${encodeURIComponent(slug)}`, {
+        const res = await fetch(`${PANEL_API_ORIGIN}/api/robtic/site/legal/${encodeURIComponent(key)}`, {
             headers: { Accept: 'application/json' },
             next: { revalidate: 300 },
         });
@@ -131,7 +142,7 @@ export async function getLegalPage(slug: string): Promise<(LegalPage & { markdow
     } catch {
         // fall through to the snapshot
     }
-    const page = BUILTIN_LEGAL.find((p) => p.path === slug);
+    const page = BUILTIN_LEGAL.find((p) => p.key === key);
     if (!page) return null;
     try {
         const markdown = fs.readFileSync(path.join(process.cwd(), 'legal-md', `${page.key}.md`), 'utf8');
