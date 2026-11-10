@@ -849,3 +849,9 @@ body:has(.st-app) .foot-wave, body:has(.st-state) .foot-wave, body:has(.st-app) 
 
 /* Normalise the two menu-card characters by height (they have different aspect ratios). */
 .mega-card img { width: auto; height: 46px; max-width: 70%; object-fit: contain; object-position: left bottom; }
+
+/* 404 page: strip the top bar down to just the RobTic logo — no centre nav, no Sign in / Get started. */
+body:has(.notfound) .nav-links,
+body:has(.notfound) .nav-has-menu,
+body:has(.notfound) .mega,
+body:has(.notfound) .actions { display: none !important; }
