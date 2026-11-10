@@ -1,9 +1,12 @@
 // The deck: scrolling down slides the pictures to the left (eased). Each rides a wave by how far it is from
 // the middle; the one in the middle is up. Narrow screens swipe them instead.
 (function () {
+    // Run once only (the afterInteractive copy and the inline resilience fallback can both fetch this on a slow load).
+    if (window.__robticDeck) return;
     var deck = document.getElementById('features');
     var track = document.getElementById('deck-track');
     if (!deck || !track) return;
+    window.__robticDeck = true;
     var cards = [].slice.call(track.children);
     var bar = document.getElementById('deck-bar');
     var clamp = function (v, a, b) { return Math.max(a, Math.min(b, v)); };

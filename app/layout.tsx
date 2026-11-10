@@ -173,7 +173,24 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 {/* Lightweight toast, driven by landing-ui.js: any link with a data-soon attribute shows it. */}
                 <div id="toast" className="toast" role="status" aria-live="polite" aria-hidden="true" />
 
+                {/* The enhancement scripts load after the app becomes interactive (so they run post-hydration and
+                    don't fight React over the DOM). On modern browsers this is all that runs. */}
                 <Script src={asset('/rl/robtic/site/landing-ui.js')} strategy="afterInteractive" />
+
+                {/* Resilience net for old / very slow browsers: if the app never finishes hydrating, the
+                    afterInteractive scripts above never load, and the page (whose reveal content starts hidden)
+                    would stay blank. This inline script runs straight from the parsed HTML — no hydration needed —
+                    and, only if nothing has booted after a short wait, loads the same scripts by hand. On a healthy
+                    modern load it sees the app already running and does nothing, so behaviour there is unchanged. */}
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html:
+                            `(function(){var ui=${JSON.stringify(asset('/rl/robtic/site/landing-ui.js'))},` +
+                            `dk=${JSON.stringify(asset('/rl/robtic/site/landing-deck.js'))};setTimeout(function(){` +
+                            `if(window.__robticUi)return;var add=function(s){var e=document.createElement('script');e.src=s;document.body.appendChild(e);};` +
+                            `add(ui);if(document.getElementById('deck-track'))add(dk);},2600);})();`,
+                    }}
+                />
 
                 {/* Google Analytics (gtag.js) */}
                 <Script src="https://www.googletagmanager.com/gtag/js?id=G-MEX3YG8YG3" strategy="afterInteractive" />
