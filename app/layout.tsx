@@ -4,11 +4,12 @@ import Script from 'next/script';
 import { ORIGIN, PANEL_URL, SOCIAL_ICONS } from '@/lib/site';
 import { getSiteData, legalPages, resolveContact, resolveSocials } from '@/lib/site-data';
 import AuthActions from './AuthActions';
+import SiteNav from './SiteNav';
 import { asset } from '@/lib/asset';
 
 const DESCRIPTION =
-    'Robtic hosts Discord bots and small apps: upload your code or deploy it from GitHub, then run it from the ' +
-    'browser with a live console, a code editor, databases, backups and teams.';
+    'Robtic is the platform for Discord builders: host bots and small apps, run game and app servers, and add ' +
+    'our public bots — all from one account, in the browser, with a live console, code editor, databases and teams.';
 const IMAGE = `${ORIGIN}/rl/robtic/icon-512.png`;
 
 const BASE_METADATA: Metadata = {
@@ -50,6 +51,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     const contact = resolveContact(site);
     const socials = resolveSocials(site);
     const legal = legalPages(site);
+    // Links the centre nav's mega-menus need. The Discord/GitHub entries prefer whatever is set in the admin
+    // console, falling back to Robtic's own.
+    const panelRoot = PANEL_URL.replace(/\/panel$/, '');
+    const socialMap = Object.fromEntries(socials);
+    const navDiscord = socialMap.discord || 'https://discord.gg/robtic';
+    const navGithub = socialMap.github || 'https://github.com/robticorg';
     const jsonLd = {
         '@context': 'https://schema.org',
         '@graph': [
@@ -93,13 +100,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                         <img src="/rl/robtic/icon-128.png" alt="" />
                         <span>Robtic</span>
                     </a>
-                    <nav className="nav-links" aria-label="Site">
-                        <a href="/">Home</a>
-                        <a href="/#features">Features</a>
-                        <a href="/plans">Plans</a>
-                    </nav>
+                    <SiteNav
+                        hosting={`${panelRoot}/hosting/dashboard`}
+                        discord={navDiscord}
+                        github={navGithub}
+                    />
                     <div className="actions">
-                        <AuthActions panelRoot={PANEL_URL.replace(/\/panel$/, '')} />
+                        <AuthActions panelRoot={panelRoot} />
                     </div>
                 </header>
 
@@ -132,6 +139,20 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                         </div>
                         <div className="foot-right">
                             <div className="foot-col">
+                                <h4>Platforms</h4>
+                                <a href={`${panelRoot}/hosting/dashboard`}>Hosting</a>
+                                <a href="#" data-soon="Servers — coming soon">Servers</a>
+                                <a href="#" data-soon="Public Bots — coming soon">Public Bots</a>
+                                <a href="#" data-soon="Private Bots — coming soon">Private Bots</a>
+                            </div>
+                            <div className="foot-col">
+                                <h4>Community</h4>
+                                <a href="#" data-soon="Docs — coming soon">Docs</a>
+                                <a href="#" data-soon="Status — coming soon">Status</a>
+                                <a href={navDiscord} target="_blank" rel="noopener">Discord</a>
+                                <a href={navGithub} target="_blank" rel="noopener">GitHub</a>
+                            </div>
+                            <div className="foot-col">
                                 <h4>Terms &amp; Service</h4>
                                 {legal.map((p) => (
                                     <a key={p.key} href={`/${p.path}`}>{p.title}</a>
@@ -141,7 +162,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                                 <h4>Other</h4>
                                 <a href="/#features">Features</a>
                                 <a href="/plans">Plans</a>
-                                <a href={`${PANEL_URL.replace(/\/panel$/, '')}/auth/login`}>Sign in</a>
+                                <a href={`${panelRoot}/auth/login`}>Sign in</a>
                             </div>
                         </div>
                     </div>
@@ -154,6 +175,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                     <svg className="ring" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" /><circle className="fill" id="to-top-fill" cx="24" cy="24" r="22" /></svg>
                     <svg className="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M12 19V5m-6 6l6-6 6 6" /></svg>
                 </button>
+
+                {/* Lightweight toast, driven by landing-ui.js: any link with a data-soon attribute shows it. */}
+                <div id="toast" className="toast" role="status" aria-live="polite" aria-hidden="true" />
 
                 <Script src={asset('/rl/robtic/site/landing-boot.js')} strategy="afterInteractive" />
                 <Script src={asset('/rl/robtic/transit.js')} strategy="afterInteractive" />

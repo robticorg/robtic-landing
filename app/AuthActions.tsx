@@ -90,10 +90,6 @@ export default function AuthActions({ panelRoot }: { panelRoot: string }) {
                             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10M16 9.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 19.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" /></svg>
                             Settings
                         </a>
-                        <a role="menuitem" href={`${panelRoot}/panel`}>
-                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z" /></svg>
-                            Dashboard
-                        </a>
                         <button type="button" role="menuitem" onClick={() => { setOpen(false); setSwitching(true); }}>
                             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h13l-3-3M17 17H4l3 3" /></svg>
                             Switch account

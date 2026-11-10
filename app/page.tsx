@@ -8,10 +8,10 @@ import { asset } from '@/lib/asset';
 import { BUILTIN_FEATURES, SHOTS } from '@/lib/features';
 
 export const metadata: Metadata = {
-    title: 'Robtic: Discord bot and app hosting, free for your first month',
+    title: 'Robtic: the platform for Discord builders — hosting, servers and bots',
     description:
-        'Host Discord bots (discord.js, discord.py, TypeScript), websites and APIs, run from your browser. ' +
-        'MongoDB and Redis on paid plans. First month free.',
+        'Host Discord bots (discord.js, discord.py, TypeScript), websites and APIs, run game and app servers, and ' +
+        'add our public bots — all from your browser. MongoDB and Redis on paid plans. First month free.',
     alternates: { canonical: '/' },
 };
 
@@ -56,7 +56,7 @@ export default async function Home() {
                     )}
                     <p className="lead">
                         {heroSubtitle ||
-                            'Robtic keeps your Discord bots and small Node.js or Python apps running. Upload them or bring them from GitHub, then watch them work from your browser.'}
+                            'Robtic is where Discord builders ship: host your bots and apps, run servers, or add our ready-made bots — all from one account, straight from your browser.'}
                     </p>
                     <div className="ctas">
                         <HeroCta label={ctaLabel} />

@@ -13,8 +13,9 @@ export const AI_GUIDE_PATH = '/rl/ai/robtic.md';
 export const NOINDEX = { 'X-Robots-Tag': 'noindex' };
 
 const SUMMARY =
-    'Robtic hosts Discord bots and small apps. Upload your code or deploy it from GitHub, then run it from the ' +
-    `browser with a live console, a code editor, databases, backups and teams. The Personal plan is free for the first ${TRIAL_DAYS} days.`;
+    'Robtic is the platform for Discord builders: host bots and small apps, run game and app servers, and add ' +
+    `ready-made public bots — all from one account in the browser, with a live console, a code editor, databases, ` +
+    `backups and teams. The Personal plan is free for the first ${TRIAL_DAYS} days.`;
 
 function features(site: SiteData | null): Array<{ title: string; text: string }> {
     const fromPanel = site?.landing?.features;
@@ -46,6 +47,11 @@ export function llmsIndex(site: SiteData | null): string {
         `- [Create an account](${ORIGIN}/auth/register): sign up and start on the Personal plan, free for ${TRIAL_DAYS} days`,
         `- [Sign in](${ORIGIN}/auth/login): open the panel`,
         `- [Everything about Robtic](${ORIGIN}${AI_GUIDE_PATH}): features, plans, limits and contacts in one Markdown file`,
+        '',
+        '## Platforms',
+        '',
+        `- [Hosting](${ORIGIN}/hosting/dashboard): host Discord bots, websites and APIs from the browser`,
+        '- Servers (game and app servers) and Discord bots (ready-made public bots, plus private bots you host) are in development.',
         '',
         '## Plans',
         '',
@@ -85,9 +91,13 @@ export function aiGuide(site: SiteData | null): string {
         '',
         '## What Robtic is',
         '',
-        'A hosting service for Discord bots (discord.js, discord.py, TypeScript), websites and APIs. Everything runs ' +
-            'from the browser, so there is no server to set up. Add an app by uploading files, starting from a ready ' +
-            'Discord bot, or cloning a GitHub repository.',
+        'A platform for Discord builders, run entirely from the browser. It brings several things together under one ' +
+            'account:',
+        '',
+        '- **Hosting** — Discord bots (discord.js, discord.py, TypeScript), websites and APIs. Add an app by ' +
+            'uploading files, starting from a ready Discord bot, or cloning a GitHub repository; there is no server to set up.',
+        '- **Servers** — game and app servers (in development).',
+        '- **Discord bots** — ready-made public bots to add to your own server, and private bots you host and run on Robtic (in development).',
         '',
         '## Features',
         '',

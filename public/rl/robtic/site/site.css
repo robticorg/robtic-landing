@@ -55,14 +55,52 @@ img { max-width: 100%; display: block; }
 .btn-ghost { border: 1px solid var(--line); color: var(--text); background: rgba(7, 11, 20, 0.35); }
 .btn-ghost:hover { border-color: rgba(255, 255, 255, 0.25); }
 .btn-lg { padding: 13px 26px; font-size: 16px; }
+
+/* Centre nav: Dashboard and Community open a hover mega-menu. The triggers keep the .nav-links pill look. */
+.nav-has-menu { display: flex; }
+.nav-trigger { display: inline-flex; align-items: center; gap: 4px; padding: 7px 14px; border: 0; background: none; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 500; color: var(--muted); cursor: pointer; transition: background 0.15s, color 0.15s; }
+.nav-trigger:hover, .nav-trigger.is-open { background: rgba(255, 255, 255, 0.06); color: var(--text); }
+.nav-trigger .caret { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; opacity: 0.7; transition: transform 0.2s; }
+.nav-trigger.is-open .caret { transform: rotate(180deg); }
+
+.mega { position: fixed; top: calc(var(--bar) - 4px); left: 50%; z-index: 39; width: min(720px, calc(100vw - 24px)); transform: translate(-50%, 8px); opacity: 0; pointer-events: none; transition: opacity 0.18s, transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.mega.is-open { opacity: 1; pointer-events: auto; transform: translate(-50%, 0); }
+.bar.is-collapsed .mega { opacity: 0; pointer-events: none; }
+.mega-in { display: grid; grid-template-columns: 1fr 236px; gap: 14px; padding: 16px; border: 1px solid var(--line); border-radius: 18px; background: rgba(11, 18, 34, 0.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 30px 70px -20px rgba(0, 0, 0, 0.7); }
+.mega-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 18px; }
+.mega-col { display: flex; flex-direction: column; gap: 2px; }
+.mega-h { margin: 4px 10px 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--blue); }
+.mega-item { display: flex; align-items: flex-start; gap: 12px; padding: 9px 10px; border-radius: 12px; transition: background 0.15s; }
+.mega-item:hover { background: rgba(255, 255, 255, 0.05); }
+.mega-ic { flex: none; display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 10px; border: 1px solid var(--line); background: rgba(255, 255, 255, 0.03); color: var(--text); transition: color 0.15s, border-color 0.15s; }
+.mega-ic svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.mega-ic.is-brand svg { fill: currentColor; stroke: none; }
+.mega-item:hover .mega-ic { color: var(--blue); border-color: rgba(23, 147, 255, 0.5); }
+.mega-tx { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.mega-tx b { font-size: 14px; font-weight: 600; color: var(--text); }
+.mega-tx small { font-size: 12.5px; color: var(--muted); }
+.mega-item[aria-disabled="true"] .mega-tx b::after { content: 'Soon'; margin-left: 8px; padding: 1px 7px; border-radius: 999px; font-size: 10px; font-weight: 600; letter-spacing: 0.04em; color: var(--muted); background: rgba(255, 255, 255, 0.07); vertical-align: middle; }
+.mega-card { position: relative; display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; padding: 16px; border-radius: 14px; overflow: hidden; background: radial-gradient(340px 150px at 50% 0%, rgba(23, 147, 255, 0.28), transparent), var(--bg-2); border: 1px solid rgba(23, 147, 255, 0.25); }
+.mega-card img { width: 64px; height: auto; margin-bottom: 4px; }
+.mega-card b { font-size: 15px; font-weight: 700; color: var(--text); }
+.mega-card p { margin: 0; font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+/* Toast: the "coming soon" message at the bottom (landing-ui.js shows it). */
+.toast { position: fixed; left: 50%; bottom: 28px; z-index: 80; transform: translate(-50%, 16px); max-width: calc(100vw - 32px); padding: 11px 18px; border-radius: 999px; border: 1px solid var(--line); background: rgba(11, 18, 34, 0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); color: var(--text); font-size: 14px; font-weight: 500; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.25s, transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0.25s; }
+.toast.is-shown { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+
 @media (max-width: 760px) {
     .bar { padding: 0 16px; }
     .brand span { display: none; }
     .nav-links { position: static; transform: none; margin-left: auto; }
     .nav-links a { padding: 6px 11px; }
+    .nav-trigger { padding: 6px 10px; }
     .actions { display: none; }
     .bar.is-collapsed .nav-links { transform: translateY(-10px); }
     .bar.is-collapsed .brand span { display: inline; }
+    .mega-in { grid-template-columns: 1fr; }
+    .mega-cols { grid-template-columns: 1fr; }
+    .mega-card { display: none; }
 }
 
 /* ---------- Hero: the sky ---------- */

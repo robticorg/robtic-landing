@@ -16,7 +16,9 @@ export default function robots(): MetadataRoute.Robots {
         rules: {
             userAgent: ['*', ...AI_CRAWLERS],
             allow: ['/', '/auth/login', '/auth/register', '/auth/llms.txt', '/panel/llms.txt'],
-            disallow: ['/panel', '/settings', '/auth/', '/api/', '/plans/choose', '/robtic/github/', '/robtic/discord/', '/sanctum/'],
+            // Dashboards are private app routes (hosting moved from /panel to /hosting; Discord bot dashboards live
+            // under /discord). /panel is kept here for the duration of the move so old links aren't crawled either.
+            disallow: ['/panel', '/hosting', '/discord', '/settings', '/auth/', '/api/', '/plans/choose', '/robtic/github/', '/robtic/discord/', '/sanctum/'],
         },
         sitemap: `${ORIGIN}/sitemap.xml`,
     };

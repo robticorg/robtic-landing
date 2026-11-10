@@ -72,6 +72,29 @@
         items.forEach(function (el) { seen.observe(el); });
     }
 
+    // Toast: a small message at the bottom. Any link with a data-soon attribute (nav mega-menu items and footer
+    // links to platforms that aren't built yet) raises it instead of navigating. window.robticToast(msg) shows it too.
+    var toastEl = document.getElementById('toast');
+    var toastTimer = null;
+    var showToast = function (msg) {
+        if (!toastEl) return;
+        toastEl.textContent = msg || 'Coming soon';
+        toastEl.classList.add('is-shown');
+        toastEl.setAttribute('aria-hidden', 'false');
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () {
+            toastEl.classList.remove('is-shown');
+            toastEl.setAttribute('aria-hidden', 'true');
+        }, 2600);
+    };
+    window.robticToast = showToast;
+    document.addEventListener('click', function (e) {
+        var a = e.target.closest ? e.target.closest('[data-soon]') : null;
+        if (!a) return;
+        e.preventDefault();
+        showToast(a.getAttribute('data-soon') || 'Coming soon');
+    });
+
     // Back to the top: shows once the page is scrolled; its ring fills as you read down.
     var btn = document.getElementById('to-top');
     var fill = document.getElementById('to-top-fill');
