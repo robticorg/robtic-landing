@@ -9,6 +9,9 @@ export const ORIGIN = (process.env.NEXT_PUBLIC_SITE_ORIGIN || 'https://robtic.or
 export const PANEL_URL = (process.env.NEXT_PUBLIC_PANEL_URL || 'https://robtic.org/panel').replace(/\/$/, '');
 export const CONTACT = process.env.NEXT_PUBLIC_CONTACT || 'contact@robtic.org';
 
+// The admin console (robtic-admin), a site of its own. Only shown to administrators. Defaults to admin.<site host>.
+export const ADMIN_URL = (process.env.NEXT_PUBLIC_ADMIN_URL || `https://admin.${new URL(ORIGIN).host}`).replace(/\/$/, '');
+
 // Social links shown in the footer. Empty ones are left out. Keys must match SOCIAL_ICONS below.
 export const SOCIALS: Record<string, string> = {
     discord: process.env.NEXT_PUBLIC_SOCIAL_DISCORD || '',

@@ -5,12 +5,13 @@
 // right-click (profile, settings, dashboard, log out); signed out (or while checking) -> Sign in / Get started, so the
 // bar is never empty. While signed in it also sends the ping that counts time on Robtic.
 import { useState, useEffect, useRef } from 'react';
-import { User, SlidersHorizontal, ArrowLeftRight, LogOut } from 'lucide-react';
+import { User, SlidersHorizontal, ArrowLeftRight, LogOut, Shield } from 'lucide-react';
 import { logout as signOut } from '@/lib/account';
+import { ADMIN_URL } from '@/lib/site';
 import SwitchAccount from './SwitchAccount';
 import { useHeartbeat } from './useHeartbeat';
 
-type Me = { username: string; email: string; avatarUrl: string | null } | null;
+type Me = { username: string; email: string; avatarUrl: string | null; admin: boolean } | null;
 
 export default function AuthActions({ panelRoot }: { panelRoot: string }) {
     const [me, setMe] = useState<Me>(null);
@@ -28,7 +29,7 @@ export default function AuthActions({ panelRoot }: { panelRoot: string }) {
             .then((d) => {
                 if (!alive) return;
                 const a = d && d.attributes;
-                if (a && a.username) setMe({ username: a.username, email: a.email ?? '', avatarUrl: a.avatar_url ?? null });
+                if (a && a.username) setMe({ username: a.username, email: a.email ?? '', avatarUrl: a.avatar_url ?? null, admin: !!a.admin });
             })
             .catch(() => {});
         return () => {
@@ -91,6 +92,12 @@ export default function AuthActions({ panelRoot }: { panelRoot: string }) {
                             <SlidersHorizontal aria-hidden="true" />
                             Settings
                         </a>
+                        {me.admin ? (
+                            <a role="menuitem" href={ADMIN_URL}>
+                                <Shield aria-hidden="true" />
+                                Admin
+                            </a>
+                        ) : null}
                         <button type="button" role="menuitem" onClick={() => { setOpen(false); setSwitching(true); }}>
                             <ArrowLeftRight aria-hidden="true" />
                             Switch account

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { ORIGIN } from '@/lib/site';
 import { getPublicProfile, lastSeenText } from '@/lib/profile';
 import ActivityChart from './ActivityChart';
 import ProfileOwnerLink from './ProfileOwnerLink';
@@ -13,10 +14,34 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { username } = await params;
     const profile = await getPublicProfile(username);
     if (!profile) return { title: 'Profile not found · Robtic', robots: { index: false } };
+
+    const title = `${profile.username} · Robtic`;
+    const description = profile.bio || `${profile.username} on Robtic.`;
+    const url = `${ORIGIN}/u/${profile.username}`;
+    // When the profile is shared (Discord, X, etc.) show the person's name, bio and picture. A banner makes a wide
+    // card; otherwise the avatar makes a square one. With neither, the plain card still carries the name and bio.
+    const image = profile.banner_url || profile.avatar_url || null;
+    const wide = !!profile.banner_url;
+
     return {
-        title: `${profile.username} · Robtic`,
-        description: profile.bio || `${profile.username} on Robtic.`,
+        title,
+        description,
         alternates: { canonical: `/u/${profile.username}` },
+        openGraph: {
+            type: 'profile',
+            siteName: 'Robtic',
+            title,
+            description,
+            url,
+            ...(profile.username ? { username: profile.username } : {}),
+            ...(image ? { images: [{ url: image, alt: `${profile.username} on Robtic` }] } : {}),
+        },
+        twitter: {
+            card: image ? (wide ? 'summary_large_image' : 'summary') : 'summary',
+            title,
+            description,
+            ...(image ? { images: [image] } : {}),
+        },
     };
 }
 
