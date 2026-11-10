@@ -9,6 +9,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     return [
         { url: `${ORIGIN}/`, lastModified: now, changeFrequency: 'weekly', priority: 1.0 },
         { url: `${ORIGIN}/plans`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
+        { url: `${ORIGIN}/faq`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
         { url: `${ORIGIN}/auth/register`, lastModified: now, changeFrequency: 'yearly', priority: 0.5 },
         { url: `${ORIGIN}/auth/login`, lastModified: now, changeFrequency: 'yearly', priority: 0.4 },
         ...legalPages(site).map((p) => ({

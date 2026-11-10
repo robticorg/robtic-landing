@@ -4,7 +4,7 @@
 import { BUILTIN_FEATURES } from './features';
 import { PLANS, PLAN_FEATURE_LABELS, TRIAL_DAYS, featureDetail, limitRows, type Plan } from './plans';
 import { ORIGIN } from './site';
-import { legalPages, priceMap, resolveContact, resolveSocials, type SiteData } from './site-data';
+import { landingFaq, legalPages, priceMap, resolveContact, resolveSocials, type SiteData } from './site-data';
 
 // Only llms.txt links here: no page, menu or sitemap does.
 export const AI_GUIDE_PATH = '/rl/ai/robtic.md';
@@ -44,6 +44,7 @@ export function llmsIndex(site: SiteData | null): string {
         '',
         `- [Home](${ORIGIN}/): what Robtic does and its features`,
         `- [Plans and pricing](${ORIGIN}/plans): every plan with its limits and price`,
+        `- [FAQ](${ORIGIN}/faq): common questions about hosting, bots, plans and getting started`,
         `- [Create an account](${ORIGIN}/auth/register): sign up and start on the Personal plan, free for ${TRIAL_DAYS} days`,
         `- [Sign in](${ORIGIN}/auth/login): open the panel`,
         `- [Everything about Robtic](${ORIGIN}${AI_GUIDE_PATH}): features, plans, limits and contacts in one Markdown file`,
@@ -109,6 +110,11 @@ export function aiGuide(site: SiteData | null): string {
             `Business plans: ${PLANS.filter((p) => p.group === 'business').map((p) => p.name).join(', ')}.`,
         '',
         ...PLANS.flatMap((p) => planDetails(p, prices)),
+        '## Frequently asked questions',
+        '',
+        `Full list at ${ORIGIN}/faq.`,
+        '',
+        ...landingFaq(site).flatMap((f) => [`### ${f.q}`, '', f.a, '']),
         '## Getting started',
         '',
         `1. Create an account at ${ORIGIN}/auth/register.`,

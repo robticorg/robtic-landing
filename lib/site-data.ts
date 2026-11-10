@@ -32,12 +32,17 @@ export type SiteData = {
         cta_label: string;
         images: Record<string, { url: string; alt: string }>;
         features?: LandingFeature[];
+        faq?: FaqItem[];
     };
     legal_updated: Record<string, string>;
     legal_pages?: LegalPage[];
 };
 
 export type LandingFeature = { title: string; text: string; image: string; alt: string };
+
+// A frequently-asked question and its answer. Owned by the panel (set in the admin console); the home page shows the
+// first few and /faq shows them all.
+export type FaqItem = { q: string; a: string };
 
 // A legal page: `key` is where the panel stores it, `path` its address here (robtic.org/<path>), both set in the
 // admin console.
@@ -52,6 +57,43 @@ export const BUILTIN_LEGAL: LegalPage[] = [
     { key: 'privacy-hosting', title: 'Hosting Privacy', path: 'privacy-hosting' },
 ];
 const BUILTIN_UPDATED = 'October 25, 2026';
+
+// The questions shown until the admin console sets its own. Kept broad (what Robtic is, trial, languages, data) so
+// the section and /faq are never empty.
+export const BUILTIN_FAQ: FaqItem[] = [
+    {
+        q: 'What is Robtic?',
+        a: 'Robtic is a platform for Discord builders. Host your bots, websites and APIs, run game and app servers, or add our ready-made public bots — all from one account, straight from the browser.',
+    },
+    {
+        q: 'Is it really free to start?',
+        a: 'Yes. The Personal plan is free for your first month — no card needed to begin. After that you pick a plan that fits, and you can stay on a free tier for small projects.',
+    },
+    {
+        q: 'Which languages can I host?',
+        a: 'Discord bots in discord.js, discord.py or TypeScript, and small Node.js, Python or Bun apps. Bring your code by uploading it, starting from a ready template, or cloning a GitHub repository.',
+    },
+    {
+        q: 'Do I need my own server or any setup?',
+        a: 'No. There is nothing to provision or configure. You run everything from the browser with a live console, a code editor, databases and backups — Robtic handles the machines.',
+    },
+    {
+        q: 'Can I use a database?',
+        a: 'Yes. MongoDB and Redis are available on paid plans, wired to your apps without exposing credentials. Backups are built in.',
+    },
+    {
+        q: 'Can my team work together?',
+        a: 'Yes. Invite teammates into a workspace to share resources and manage apps together, each with their own access.',
+    },
+    {
+        q: 'How do I deploy from GitHub?',
+        a: 'Link your GitHub account, pick a repository, and Robtic clones and runs it. Push changes and redeploy from the panel whenever you are ready.',
+    },
+    {
+        q: 'What happens if my bot crashes?',
+        a: 'Robtic keeps your apps running and shows you the live console and logs so you can see exactly why something stopped — and start it again in a click.',
+    },
+];
 
 export async function getSiteData(): Promise<SiteData | null> {
     try {
@@ -69,6 +111,11 @@ export async function getSiteData(): Promise<SiteData | null> {
 // The legal pages, in the order the admin console set them.
 export function legalPages(data: SiteData | null): LegalPage[] {
     return data?.legal_pages?.length ? data.legal_pages : BUILTIN_LEGAL;
+}
+
+// The FAQ, from the admin console if set, otherwise the built-ins.
+export function landingFaq(data: SiteData | null): FaqItem[] {
+    return data?.landing?.faq?.length ? data.landing.faq : BUILTIN_FAQ;
 }
 
 // One legal page by its address, with its Markdown. Asks the panel; if it can't be reached, a built-in page is

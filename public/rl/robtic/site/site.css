@@ -66,7 +66,7 @@ img { max-width: 100%; display: block; }
 .mega { position: fixed; top: calc(var(--bar) - 4px); left: 50%; z-index: 39; width: min(720px, calc(100vw - 24px)); transform: translate(-50%, 8px); opacity: 0; pointer-events: none; transition: opacity 0.18s, transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1); }
 .mega.is-open { opacity: 1; pointer-events: auto; transform: translate(-50%, 0); }
 .bar.is-collapsed .mega { opacity: 0; pointer-events: none; }
-.mega-in { display: grid; grid-template-columns: 1fr 236px; gap: 14px; padding: 16px; border: 1px solid var(--line); border-radius: 18px; background: rgba(11, 18, 34, 0.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 30px 70px -20px rgba(0, 0, 0, 0.7); }
+.mega-in { display: grid; grid-template-columns: 1fr 236px; gap: 14px; padding: 16px; border: 1px solid var(--line); border-radius: 18px; background: rgba(11, 18, 34, 0.82); backdrop-filter: blur(9px) saturate(120%); -webkit-backdrop-filter: blur(9px) saturate(120%); box-shadow: 0 30px 70px -20px rgba(0, 0, 0, 0.7); }
 .mega-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 18px; }
 .mega-col { display: flex; flex-direction: column; gap: 2px; }
 .mega-h { margin: 4px 10px 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--blue); }
@@ -86,7 +86,7 @@ img { max-width: 100%; display: block; }
 .mega-card p { margin: 0; font-size: 13px; color: var(--muted); line-height: 1.5; }
 
 /* Toast: the "coming soon" message at the bottom (landing-ui.js shows it). */
-.toast { position: fixed; left: 50%; bottom: 28px; z-index: 80; transform: translate(-50%, 16px); max-width: calc(100vw - 32px); padding: 11px 18px; border-radius: 999px; border: 1px solid var(--line); background: rgba(11, 18, 34, 0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); color: var(--text); font-size: 14px; font-weight: 500; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.25s, transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0.25s; }
+.toast { position: fixed; left: 50%; bottom: 28px; z-index: 80; transform: translate(-50%, 16px); max-width: calc(100vw - 32px); padding: 11px 18px; border-radius: 999px; border: 1px solid var(--line); background: rgba(11, 18, 34, 0.82); backdrop-filter: blur(9px) saturate(120%); -webkit-backdrop-filter: blur(9px) saturate(120%); color: var(--text); font-size: 14px; font-weight: 500; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.25s, transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0.25s; }
 .toast.is-shown { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
 
 @media (max-width: 760px) {
@@ -378,7 +378,7 @@ html { scrollbar-width: thin; scrollbar-color: #1f6fc4 #070b14; }
 .me { padding: 0; cursor: pointer; font: inherit; }
 /* The avatar's menu: the same glass as the nav pill. */
 .me-wrap { position: relative; }
-.me-menu { position: absolute; right: 0; top: calc(100% + 10px); z-index: 50; min-width: 220px; padding: 6px; border: 1px solid var(--line); border-radius: var(--radius); background: rgba(7, 11, 20, 0.88); backdrop-filter: blur(14px); box-shadow: 0 24px 60px -18px rgba(0, 0, 0, 0.8); animation: me-in 0.16s ease; }
+.me-menu { position: absolute; right: 0; top: calc(100% + 10px); z-index: 50; min-width: 220px; padding: 6px; border: 1px solid var(--line); border-radius: var(--radius); background: rgba(7, 11, 20, 0.82); backdrop-filter: blur(9px) saturate(120%); -webkit-backdrop-filter: blur(9px) saturate(120%); box-shadow: 0 24px 60px -18px rgba(0, 0, 0, 0.8); animation: me-in 0.16s ease; }
 @keyframes me-in { from { opacity: 0; transform: translateY(-6px); } }
 .me-head { padding: 8px 10px 10px; margin-bottom: 4px; border-bottom: 1px solid var(--line); }
 .me-head b { display: block; font-size: 14px; }
@@ -777,3 +777,75 @@ body:has(.st-app) .foot-wave, body:has(.st-state) .foot-wave, body:has(.st-app) 
 @media (prefers-reduced-motion: reduce) { .top-progress::after { width: 100%; animation: none; } }
 .st-spin.st-spin-sm { display: inline-block; width: 16px; height: 16px; margin: 0; border-width: 2px; vertical-align: middle; }
 .st-accounts button:disabled em { opacity: 1; }
+
+/* ---- Generic pill + FAQ ------------------------------------------------- */
+.pill { display: inline-block; padding: 2px 12px; border-radius: 999px; background: var(--blue); color: #04121f; font-size: 12px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; }
+
+/* The FAQ gets its own tint (a blue glow over the darker base, settling to bg-2 so it flows into the footer wave). */
+.faq-sec { position: relative; overflow: hidden; background: linear-gradient(180deg, var(--bg) 0%, var(--bg) 55%, var(--bg-2) 100%); }
+.faq-head { max-width: 640px; margin: 0 0 36px; }
+.faq-head .pill { margin-bottom: 14px; }
+.faq-head h2 { margin: 0; font-size: clamp(30px, 4.4vw, 46px); letter-spacing: -0.02em; line-height: 1.1; }
+.faq-head .sub { margin: 12px 0 0; color: var(--muted); font-size: 17px; }
+
+.faq-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 48px; align-items: start; }
+.faq-grid-solo { grid-template-columns: 1fr; }
+
+.faq-list { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.faq-item { border: 1px solid var(--line); border-radius: 14px; background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.012)); overflow: hidden; transition: border-color 0.2s, background 0.2s; }
+.faq-item.is-open { border-color: rgba(23, 147, 255, 0.4); }
+.faq-q { display: flex; align-items: center; justify-content: space-between; gap: 16px; width: 100%; padding: 18px 20px; border: 0; background: none; font: inherit; font-size: 16px; font-weight: 600; color: var(--text); text-align: left; cursor: pointer; }
+.faq-chev { flex: none; color: var(--muted); transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.2s; }
+.faq-item.is-open .faq-chev { transform: rotate(180deg); color: var(--blue); }
+/* Smooth accordion: the answer row grows 0fr -> 1fr (its inner wrapper clips the overflow). */
+.faq-a { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.faq-item.is-open .faq-a { grid-template-rows: 1fr; }
+.faq-a-in { overflow: hidden; }
+.faq-a p { margin: 0; padding: 0 20px 20px; color: var(--muted); font-size: 15px; line-height: 1.7; }
+.faq-more { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; padding: 10px 2px; font-size: 15px; font-weight: 600; color: var(--blue); width: max-content; }
+.faq-more:hover { text-decoration: underline; }
+
+.faq-art { display: flex; justify-content: center; align-items: flex-start; position: sticky; top: 120px; }
+.faq-q-img { width: min(100%, 360px); height: auto; filter: drop-shadow(0 30px 50px rgba(23, 147, 255, 0.35)); animation: faq-float 6s ease-in-out infinite; }
+@keyframes faq-float { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-16px) rotate(2deg); } }
+
+@media (max-width: 820px) {
+    .faq-grid { grid-template-columns: 1fr; gap: 28px; }
+    .faq-art { order: -1; position: static; }
+    .faq-q-img { width: 170px; }
+}
+@media (prefers-reduced-motion: reduce) { .faq-q-img { animation: none; } }
+
+/* /faq page: a flat header (no glow), so it reads as one surface with the list below. */
+.page-head.faq-top { background: var(--bg); }
+
+/* ---- FAQ polish -------------------------------------------------------- */
+/* A soft round glow that sits BEHIND the question mark and follows it — light, but never a rectangular panel. */
+.faq-art::before { content: ''; position: absolute; top: 10%; left: 50%; width: 72%; aspect-ratio: 1 / 1; transform: translateX(-50%); border-radius: 50%; background: radial-gradient(circle, rgba(23, 147, 255, 0.3), transparent 68%); filter: blur(14px); z-index: 0; pointer-events: none; }
+.faq-q-img { position: relative; z-index: 1; }
+
+.faq-q:hover { background: rgba(255, 255, 255, 0.03); }
+.faq-item:hover { border-color: rgba(255, 255, 255, 0.18); }
+.faq-item.is-open { border-color: rgba(23, 147, 255, 0.4); box-shadow: 0 0 0 1px rgba(23, 147, 255, 0.12), 0 18px 40px -26px rgba(23, 147, 255, 0.55); }
+
+.faq-more { align-self: flex-start; margin-top: 14px; padding: 10px 18px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255, 255, 255, 0.03); transition: border-color 0.15s, background 0.15s, transform 0.15s; }
+.faq-more:hover { text-decoration: none; border-color: rgba(23, 147, 255, 0.5); background: rgba(23, 147, 255, 0.08); transform: translateY(-1px); }
+
+@media (max-width: 820px) { .faq-art { position: relative; } }
+
+/* Generous vertical space so the FAQ sits centred in its own section — clear of the wave above and below, the airy
+   feel of the features. On /faq the title (page-head) already gives the top space, so the list starts sooner. */
+.faq-sec { padding-top: 150px; padding-bottom: 170px; }
+.faq-sec.faq-page { padding-top: 40px; }
+
+/* Home FAQ fills a full viewport with its content centred, like the features deck — so you see the FAQ alone, not
+   the footer. The /faq page keeps normal flow (title + list together), with room before the footer wave. */
+.faq-sec { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding-top: 120px; padding-bottom: 120px; }
+.faq-sec.faq-page { min-height: 0; display: block; padding-top: 40px; padding-bottom: 150px; }
+
+/* "See all questions" is a plain text link again — underline only on hover, no button chrome. */
+.faq-more { align-self: flex-start; margin-top: 10px; padding: 8px 2px; border: 0; border-radius: 0; background: none; transform: none; }
+.faq-more:hover { text-decoration: underline; border: 0; background: none; transform: none; }
+
+/* Normalise the two menu-card characters by height (they have different aspect ratios). */
+.mega-card img { width: auto; height: 46px; max-width: 70%; object-fit: contain; object-position: left bottom; }

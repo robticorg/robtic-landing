@@ -5,6 +5,7 @@
 // right-click (profile, settings, dashboard, log out); signed out (or while checking) -> Sign in / Get started, so the
 // bar is never empty. While signed in it also sends the ping that counts time on Robtic.
 import { useState, useEffect, useRef } from 'react';
+import { User, SlidersHorizontal, ArrowLeftRight, LogOut } from 'lucide-react';
 import { logout as signOut } from '@/lib/account';
 import SwitchAccount from './SwitchAccount';
 import { useHeartbeat } from './useHeartbeat';
@@ -83,20 +84,20 @@ export default function AuthActions({ panelRoot }: { panelRoot: string }) {
                             {me.email ? <span>{me.email}</span> : null}
                         </div>
                         <a role="menuitem" href={`/u/${me.username}`}>
-                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 20v-1.5A4.5 4.5 0 0015.5 14h-7A4.5 4.5 0 004 18.5V20M12 11a4 4 0 100-8 4 4 0 000 8z" /></svg>
+                            <User aria-hidden="true" />
                             Profile
                         </a>
                         <a role="menuitem" href="/settings">
-                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10M16 9.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 19.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" /></svg>
+                            <SlidersHorizontal aria-hidden="true" />
                             Settings
                         </a>
                         <button type="button" role="menuitem" onClick={() => { setOpen(false); setSwitching(true); }}>
-                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h13l-3-3M17 17H4l3 3" /></svg>
+                            <ArrowLeftRight aria-hidden="true" />
                             Switch account
                         </button>
                         <i className="me-sep" aria-hidden="true" />
                         <button type="button" role="menuitem" className="danger" disabled={leaving} onClick={logout}>
-                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h11" /></svg>
+                            <LogOut aria-hidden="true" />
                             {leaving ? 'Logging out…' : 'Log out'}
                         </button>
                     </div>

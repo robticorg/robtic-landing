@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
 import { PANEL_URL } from '@/lib/site';
-import { getSiteData, type LandingFeature } from '@/lib/site-data';
+import { getSiteData, landingFaq, type LandingFeature } from '@/lib/site-data';
 import WaveLoop from './WaveLoop';
 import HeroCta from './HeroCta';
+import Faq from './Faq';
 import { asset } from '@/lib/asset';
 import { BUILTIN_FEATURES, SHOTS } from '@/lib/features';
 
@@ -20,7 +21,9 @@ const panelRoot = PANEL_URL.replace(/\/panel$/, '');
 export default async function Home() {
     // Hero words and the hero picture are owned by the panel (set in the admin console, stored in the DB); the
     // landing only reads them, cached via ISR. Each falls back to the built-in default when unset.
-    const landing = (await getSiteData())?.landing;
+    const site = await getSiteData();
+    const landing = site?.landing;
+    const faq = landingFaq(site);
     const heroTitle = landing?.hero_title?.trim();
     const heroSubtitle = landing?.hero_subtitle?.trim();
     const ctaLabel = landing?.cta_label?.trim() || 'Start free for a month';
@@ -110,6 +113,23 @@ export default async function Home() {
                             </figure>
                         ))}
                     </div>
+                </div>
+            </section>
+
+            {/* Wave from the features (bg-2) into the FAQ (bg). */}
+            <div className="wave" data-wave style={{ ['--from' as string]: 'var(--bg-2)', ['--to' as string]: 'var(--bg)' }} aria-hidden="true">
+                <svg viewBox="0 0 1440 110" preserveAspectRatio="none"><path className="w2" /><path className="w1" /><path className="wl" /></svg>
+            </div>
+
+            {/* FAQ: the common questions, with the 3D question mark. Its own subtle tint; the first few here, all at /faq. */}
+            <section className="block faq-sec" id="faq">
+                <div className="wrap reveal">
+                    <div className="faq-head">
+                        <span className="pill">FAQ</span>
+                        <h2>Questions, answered</h2>
+                        <p className="sub">The things people ask most before they start. More on the full FAQ.</p>
+                    </div>
+                    <Faq items={faq} limit={5} moreHref="/faq" />
                 </div>
             </section>
 

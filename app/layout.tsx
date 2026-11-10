@@ -87,13 +87,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             </head>
             <body>
                 <TopProgress />
-                {/* The eyes while the page loads: they blink once, then fade out once the page is there. */}
-                <div id="robtic-boot" aria-hidden="true">
-                    <video autoPlay muted loop playsInline disablePictureInPicture preload="auto" poster="/rl/robtic/loading.jpg">
-                        <source src="/rl/robtic/loading.webm" type="video/webm" />
-                        <source src="/rl/robtic/loading.mp4" type="video/mp4" />
-                    </video>
-                </div>
 
                 <header className="bar" id="bar">
                     <a href="/" className="brand" aria-label="Robtic home">
@@ -162,6 +155,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                                 <h4>Other</h4>
                                 <a href="/#features">Features</a>
                                 <a href="/plans">Plans</a>
+                                <a href="/faq">FAQ</a>
                                 <a href={`${panelRoot}/auth/login`}>Sign in</a>
                             </div>
                         </div>
@@ -179,8 +173,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 {/* Lightweight toast, driven by landing-ui.js: any link with a data-soon attribute shows it. */}
                 <div id="toast" className="toast" role="status" aria-live="polite" aria-hidden="true" />
 
-                <Script src={asset('/rl/robtic/site/landing-boot.js')} strategy="afterInteractive" />
-                <Script src={asset('/rl/robtic/transit.js')} strategy="afterInteractive" />
                 <Script src={asset('/rl/robtic/site/landing-ui.js')} strategy="afterInteractive" />
 
                 {/* Google Analytics (gtag.js) */}
