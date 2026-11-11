@@ -62,6 +62,9 @@ export const PROFILE = '/api/client/robtic/account/profile';
 
 // Name, email, password, passkeys, two-factor and connections, kept in Robtic Auth.
 export const IDENTITY = '/api/client/robtic/identity';
+
+/** The window Settings → Connections opens to connect an account (see app/settings/connections/popup). */
+export const CONNECT_WINDOW = 'robtic-connect';
 export type Identity = {
     username: string;
     name: { first: string; last: string };

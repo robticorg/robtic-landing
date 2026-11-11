@@ -112,7 +112,8 @@ export function Modal({ title, onClose, children }: { title: string; onClose: ()
 export default function SettingsShell({ children }: { children: React.ReactNode }) {
     const path = usePathname();
     // The email link opens this page from any device, signed in or not.
-    const open = path === '/settings/email/confirm';
+    // …and the connect window is a page of its own, without the Settings frame.
+    const open = path === '/settings/email/confirm' || path === '/settings/connections/popup';
     const [profile, setProfile] = useState<Profile | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [message, setMessage] = useState<{ kind: 'ok' | 'err'; text: string } | null>(null);
