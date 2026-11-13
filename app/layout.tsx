@@ -7,6 +7,7 @@ import AuthActions from './AuthActions';
 import SiteNav from './SiteNav';
 import { asset } from '@/lib/asset';
 
+import { SignInLink } from './SignInLink';
 const DESCRIPTION =
     'Robtic is the platform for Discord builders: host bots and small apps, run game and app servers, and add ' +
     'our public bots — all from one account, in the browser, with a live console, code editor, databases and teams.';
@@ -156,7 +157,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                                 <a href="/#features">Features</a>
                                 <a href="/plans">Plans</a>
                                 <a href="/faq">FAQ</a>
-                                <a href={`${panelRoot}/auth/login`}>Sign in</a>
+                                <SignInLink panelRoot={panelRoot}>Sign in</SignInLink>
                             </div>
                         </div>
                     </div>

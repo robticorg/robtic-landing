@@ -11,6 +11,7 @@ import { ADMIN_URL } from '@/lib/site';
 import SwitchAccount from './SwitchAccount';
 import { useHeartbeat } from './useHeartbeat';
 
+import { SignInLink } from './SignInLink';
 type Me = { username: string; email: string; avatarUrl: string | null; admin: boolean } | null;
 
 export default function AuthActions({ panelRoot }: { panelRoot: string }) {
@@ -116,8 +117,8 @@ export default function AuthActions({ panelRoot }: { panelRoot: string }) {
 
     return (
         <>
-            <a className="btn btn-ghost" href={`${panelRoot}/auth/login`}>Sign in</a>
-            <a className="btn btn-primary" href={`${panelRoot}/auth/register`}>Get started</a>
+            <SignInLink className="btn btn-ghost" panelRoot={panelRoot}>Sign in</SignInLink>
+            <SignInLink className="btn btn-primary" panelRoot={panelRoot} create>Get started</SignInLink>
         </>
     );
 }
