@@ -90,7 +90,7 @@ export default function SiteNav({
                 {
                     heading: 'Discord',
                     items: [
-                        { label: 'Public Bots', desc: 'Add our bots to your server', icon: { lucide: Bot } },
+                        { label: 'Public Bots', desc: 'Add our bots to your server', icon: { lucide: Bot }, href: '/discord/public' },
                         { label: 'Private Bots', desc: 'Host and run your own', icon: { lucide: ShieldCheck } },
                     ],
                 },

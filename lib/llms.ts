@@ -1,6 +1,7 @@
 // What AI tools read about Robtic: /llms.txt (the index, see llmstxt.org) and the fuller guide it links to. Both are
 // built from the panel's data, so a price or legal page changed in the admin console shows up without a redeploy.
 
+import { BOT_GUIDES } from './discord-bots';
 import { BUILTIN_FEATURES } from './features';
 import { PLANS, PLAN_FEATURE_LABELS, TRIAL_DAYS, featureDetail, limitRows, type Plan } from './plans';
 import { ORIGIN } from './site';
@@ -52,7 +53,13 @@ export function llmsIndex(site: SiteData | null): string {
         '## Platforms',
         '',
         `- [Hosting](${ORIGIN}/hosting/dashboard): host Discord bots, websites and APIs from the browser`,
-        '- Servers (game and app servers) and Discord bots (ready-made public bots, plus private bots you host) are in development.',
+        `- [Discord bots dashboard](${ORIGIN}/discord/public): server administrators add and configure Robtic’s public Discord bots (rolling out to allowlisted servers)`,
+        '- Servers (game and app servers) and private bots you host are in development.',
+        '',
+        '## Discord bots',
+        '',
+        `- [Robtic System](${ORIGIN}${BOT_GUIDES.system.path}): community bot with XP and levels, activity points and RC, daily streaks, leaderboards, moderation with evidence, shortcuts and log channels`,
+        `- [Robtic Staff](${ORIGIN}${BOT_GUIDES.staff.path}): staff management bot with a rank ladder, staff points and promotions, warnings, reports, appeals, vacations and staff applications`,
         '',
         '## Plans',
         '',

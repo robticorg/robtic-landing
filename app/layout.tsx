@@ -135,7 +135,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                                 <h4>Platforms</h4>
                                 <a href={`${panelRoot}/hosting/dashboard`}>Hosting</a>
                                 <a href="#" data-soon="Servers — coming soon">Servers</a>
-                                <a href="#" data-soon="Public Bots — coming soon">Public Bots</a>
+                                <a href="/discord/public">Public Bots</a>
                                 <a href="#" data-soon="Private Bots — coming soon">Private Bots</a>
                             </div>
                             <div className="foot-col">

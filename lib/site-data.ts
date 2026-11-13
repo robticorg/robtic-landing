@@ -60,6 +60,10 @@ export const BUILTIN_LEGAL: LegalPage[] = [
     { key: 'terms-teams', title: "Team's Terms", path: 'terms/teams', related: ['terms-hosting', 'privacy-hosting', 'privacy-account'] },
     { key: 'privacy-account', title: 'Account Privacy', path: 'privacy/account', related: ['privacy-hosting', 'terms-hosting'] },
     { key: 'privacy-hosting', title: 'Hosting Privacy', path: 'privacy/hosting', related: ['privacy-account', 'terms-hosting', 'terms-teams'] },
+    { key: 'terms-system-bot', title: 'Robtic System Terms', path: 'terms/system-bot', related: ['privacy-system-bot', 'terms-hosting', 'privacy-account'] },
+    { key: 'terms-staff-bot', title: 'Robtic Staff Terms', path: 'terms/staff-bot', related: ['privacy-staff-bot', 'terms-hosting', 'privacy-account'] },
+    { key: 'privacy-system-bot', title: 'Robtic System Privacy', path: 'privacy/system-bot', related: ['terms-system-bot', 'privacy-account'] },
+    { key: 'privacy-staff-bot', title: 'Robtic Staff Privacy', path: 'privacy/staff-bot', related: ['terms-staff-bot', 'privacy-account'] },
 ];
 const BUILTIN_UPDATED = 'October 25, 2026';
 
@@ -134,7 +138,9 @@ export function legalGroupOf(path: string): LegalGroup {
 // The legal pages, in the order the admin console set them, each at its /terms/* or /privacy/* address, with its
 // related pages (the admin console's pick; the built-in defaults for a built-in page that has none set).
 export function legalPages(data: SiteData | null): LegalPage[] {
-    const pages = data?.legal_pages?.length ? data.legal_pages : BUILTIN_LEGAL;
+    // A built-in page the admin console hasn't listed yet (e.g. a new bot's terms) still shows, after the console's.
+    const set = data?.legal_pages ?? [];
+    const pages = [...set, ...BUILTIN_LEGAL.filter((b) => !set.some((p) => p.key === b.key))];
     return pages.map((p) => ({
         ...p,
         path: legalHref(p),
@@ -160,13 +166,13 @@ async function fetchLegal(address: string): Promise<LegalDoc | null | 'missing'>
 
 // One legal page by its address (e.g. 'terms/hosting'), with its Markdown. Asks the panel by that address, then by
 // the older flat form (`terms-hosting`) that a panel not yet updated, or a page saved before the move, still uses.
-// If the panel can't be reached, a built-in page is read from legal-md/<key>.md so the terms never go missing.
+// If the panel can't be reached, or has no text for a built-in page yet, it is read from legal-md/<key>.md so the
+// terms never go missing.
 export async function getLegalPage(address: string): Promise<LegalDoc | null> {
     try {
         let found = await fetchLegal(address);
         if (found === 'missing') found = await fetchLegal(address.replace('/', '-'));
-        if (found === 'missing') return null;
-        if (found) return { ...found, path: address };
+        if (found && found !== 'missing') return { ...found, path: address };
     } catch {
         // fall through to the snapshot
     }
