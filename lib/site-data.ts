@@ -64,6 +64,10 @@ export const BUILTIN_LEGAL: LegalPage[] = [
     { key: 'terms-staff-bot', title: 'Robtic Staff Terms', path: 'terms/staff-bot', related: ['privacy-staff-bot', 'terms-hosting', 'privacy-account'] },
     { key: 'privacy-system-bot', title: 'Robtic System Privacy', path: 'privacy/system-bot', related: ['terms-system-bot', 'privacy-account'] },
     { key: 'privacy-staff-bot', title: 'Robtic Staff Privacy', path: 'privacy/staff-bot', related: ['terms-staff-bot', 'privacy-account'] },
+    { key: 'terms-ticket-bot', title: 'Robtic Ticket Terms', path: 'terms/ticket-bot', related: ['privacy-ticket-bot', 'terms-hosting', 'privacy-account'] },
+    { key: 'terms-music-bot', title: 'Robtic Music Terms', path: 'terms/music-bot', related: ['privacy-music-bot', 'terms-hosting', 'privacy-account'] },
+    { key: 'privacy-ticket-bot', title: 'Robtic Ticket Privacy', path: 'privacy/ticket-bot', related: ['terms-ticket-bot', 'privacy-account'] },
+    { key: 'privacy-music-bot', title: 'Robtic Music Privacy', path: 'privacy/music-bot', related: ['terms-music-bot', 'privacy-account'] },
 ];
 const BUILTIN_UPDATED = 'October 25, 2026';
 
