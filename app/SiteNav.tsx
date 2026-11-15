@@ -78,19 +78,19 @@ export default function SiteNav({
     const menus: Menu[] = [
         {
             key: 'dashboard',
-            label: 'Services',
+            label: 'Dashboard',
             columns: [
                 {
                     heading: 'Platforms',
                     items: [
-                        { label: 'Hosting', desc: 'Discord bots, sites and APIs', icon: { lucide: Server }, href: '/hosting' },
+                        { label: 'Hosting', desc: 'Discord bots, sites and APIs', icon: { lucide: Server }, href: hosting },
                         { label: 'Servers', desc: 'Game and app servers', icon: { lucide: Gamepad2 } },
                     ],
                 },
                 {
                     heading: 'Discord',
                     items: [
-                        { label: 'Public Bots', desc: 'Add our bots to your server', icon: { lucide: Bot }, href: '/discord' },
+                        { label: 'Public Bots', desc: 'Add our bots to your server', icon: { lucide: Bot }, href: '/discord/public' },
                         { label: 'Private Bots', desc: 'Host and run your own', icon: { lucide: ShieldCheck } },
                     ],
                 },

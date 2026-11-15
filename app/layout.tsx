@@ -142,11 +142,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                         </div>
                         <div className="foot-right">
                             <div className="foot-col">
-                                <h4>Services</h4>
-                                <a href="/hosting">Hosting</a>
-                                <a href="/hosting/plans">Hosting plans</a>
+                                <h4>Dashboard</h4>
+                                <a href={`${panelRoot}/hosting/dashboard`}>Hosting</a>
                                 <a href="#" data-soon="Servers — coming soon">Servers</a>
-                                <a href="/discord">Public Bots</a>
+                                <a href="/discord/public">Public Bots</a>
                                 <a href="#" data-soon="Private Bots — coming soon">Private Bots</a>
                             </div>
                             <div className="foot-col">
@@ -164,7 +163,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                             </div>
                             <div className="foot-col">
                                 <h4>Other</h4>
-                                <a href="/#services">Our services</a>
+                                <a href="/hosting">Robtic Hosting</a>
+                                <a href="/hosting/plans">Hosting plans</a>
+                                <a href="/discord">Robtic Discord</a>
                                 <a href="/faq">FAQ</a>
                                 <SignInLink panelRoot={panelRoot}>Sign in</SignInLink>
                             </div>

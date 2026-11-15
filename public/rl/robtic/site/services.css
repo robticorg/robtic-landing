@@ -299,25 +299,38 @@
 .rx-ds-profile .roles span i { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
 
 /* which bot, beside the card */
-.rx-ds-dots { position: absolute; z-index: 4; right: 28px; top: calc(var(--bar) + 44px); display: flex; gap: 18px; padding: 8px 16px; border-radius: 999px; background: rgba(17, 18, 20, 0.72); opacity: var(--open, 0); pointer-events: none; backdrop-filter: blur(8px); }
-.rx-ds[data-step="2"] .rx-ds-dots, .rx-ds[data-step="3"] .rx-ds-dots, .rx-ds[data-step="4"] .rx-ds-dots, .rx-ds[data-step="5"] .rx-ds-dots { pointer-events: auto; }
-@media (max-width: 1100px) { .rx-ds-dots { display: none; } }
-.rx-ds-dots button { display: flex; align-items: center; gap: 8px; padding: 0; border: 0; background: none; color: rgba(255, 255, 255, 0.45); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; transition: color 0.3s; }
-.rx-ds-dots button i { width: 10px; height: 10px; border-radius: 50%; border: 2px solid currentColor; transition: background 0.3s, border-color 0.3s, transform 0.3s; }
-.rx-ds-dots button.on { color: #fff; }
-.rx-ds-dots button.on i { background: var(--accent); border-color: var(--accent); transform: scale(1.25); }
 
-@media (max-width: 760px) { .rx-ds-dots { display: none; } }
 @media (max-width: 1100px) {
     .rx-ds-card { grid-template-columns: 72px 200px minmax(0, 1fr); }
     .rx-ds-members { display: none; }
 }
 @media (max-width: 760px) {
-    .rx-ds-card { grid-template-columns: minmax(0, 1fr); }
+    /* phones: the chat on top, the bot's card as a strip under it (never over the messages) */
+    .rx-ds-pin { padding: calc(var(--bar) + 16px) 12px 14px; }
+    .rx-ds-card { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; margin-top: 18px; max-height: none; font-size: 13px; }
     .rx-ds-rail, .rx-ds-side { display: none; }
-    .rx-ds-profile { top: auto; bottom: 74px; left: 10px; right: 10px; width: auto; }
-    .rx-ds-profile .pbody > p:not(.ph) { display: none; }
-    .rx-ds-title .lead { font-size: 16px; }
+    .rx-ds-title .lead { font-size: 15px; margin-top: 12px; }
+    .rx-ds-ctas { margin-top: 16px; }
+    .rx-ds-ctas .btn-ghost { display: none; }
+    .rx-ds-msgs { gap: 12px; padding: 12px; }
+    .rx-ds-msg { grid-template-columns: 32px minmax(0, 1fr); gap: 10px; }
+    img.av { width: 32px; height: 32px; }
+    .rx-ds-emb { padding: 8px 10px; }
+    .rx-ds-input { margin: 0 12px 12px; padding: 10px 12px; }
+    .rx-ds-invite { padding: 18px 20px; }
+    img.rx-ds-inv-ic { width: 56px; height: 56px; }
+    .rx-ds-profile { position: static; grid-row: 2; width: auto; margin: 0; border-radius: 0; border-top: 1px solid #1f2023; box-shadow: none; display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 10px; align-items: start; padding: 12px; animation-name: rx-msg-in; }
+    .rx-ds-profile .banner { display: none; }
+    .rx-ds-profile .pav { position: relative; top: auto; left: auto; width: 52px; height: 52px; border-width: 0; }
+    .rx-ds-profile .pav i { border-width: 3px; width: 13px; height: 13px; }
+    .rx-ds-profile .pbody { margin: 0; padding: 0; background: none; }
+    .rx-ds-profile .pbody b { font-size: 15px; }
+    .rx-ds-profile .pbody > p { display: none; }
+    .rx-ds-profile .pbody { min-width: 0; }
+    .rx-ds-profile .roles { margin-top: 8px; flex-wrap: wrap; }
+    .rx-ds-profile .roles span:nth-child(n+6) { display: none; }
+    .rx-ds-profile .roles span { font-size: 11px; padding: 2px 7px; }
+}
 }
 @media (prefers-reduced-motion: reduce) {
     .rx-ds-bg i, .rx-ds-invite button, .rx-ds-voice.live span:first-child i { animation: none; }

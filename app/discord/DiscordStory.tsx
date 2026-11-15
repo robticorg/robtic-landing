@@ -227,13 +227,6 @@ export default function DiscordStory({ addHref, discordMark }: { addHref: string
                     ) : null}
                 </div>
 
-                <nav className="rx-ds-dots" aria-label="Bots">
-                    {BOTS.map((b, i) => (
-                        <button key={b.key} type="button" className={step === i + 2 ? 'on' : ''} style={{ ['--accent' as string]: b.accent }} onClick={() => goTo(i + 2)}>
-                            <i />{b.name.replace('Robtic ', '')}
-                        </button>
-                    ))}
-                </nav>
             </div>
 
             {/* The same story as text, for screen readers and search engines. */}
