@@ -4,7 +4,7 @@ import { getSiteData, legalPages } from '@/lib/site-data';
 
 // Robtic's own pages, for search engines: the home page, the FAQ, the account pages and the account's legal pages.
 // Each service has its own sitemap with its landing page and its own terms (/hosting/sitemap.xml,
-// /discord/sitemap.xml), so every address is listed in exactly one.
+// /discord/sitemap.xml); their landing pages are listed here too.
 const SERVICE_PAGE = /^(terms|privacy)\/(hosting|teams|discord|[a-z]+-bot)$/;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -12,6 +12,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const site = await getSiteData();
     return [
         { url: `${ORIGIN}/`, lastModified: now, changeFrequency: 'weekly', priority: 1.0 },
+        // The services' landing pages, here as well as in their own sitemaps: the home page links to both.
+        { url: `${ORIGIN}/hosting`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
+        { url: `${ORIGIN}/discord`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
         { url: `${ORIGIN}/faq`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
         { url: `${ORIGIN}/auth/register`, lastModified: now, changeFrequency: 'yearly', priority: 0.5 },
         { url: `${ORIGIN}/auth/login`, lastModified: now, changeFrequency: 'yearly', priority: 0.4 },
