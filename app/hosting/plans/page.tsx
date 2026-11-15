@@ -4,11 +4,11 @@ import { getSiteData, priceMap } from '@/lib/site-data';
 import PlansView from './PlansView';
 
 export const metadata: Metadata = {
-    title: 'Plans and pricing · Robtic',
+    title: 'Robtic Hosting plans and pricing',
     description:
         'Robtic plans and prices: Personal (free for the first month), Developers, Servers, Communities, Team ' +
         'and Org, with their memory, CPU, storage and databases.',
-    alternates: { canonical: '/plans' },
+    alternates: { canonical: '/hosting/plans' },
 };
 
 export default async function PlansPage() {
@@ -19,12 +19,12 @@ export default async function PlansPage() {
     const serviceLd = {
         '@context': 'https://schema.org',
         '@type': 'Service',
-        name: 'Robtic hosting',
+        name: 'Robtic Hosting',
         serviceType: 'Discord bot and application hosting',
-        url: `${ORIGIN}/plans`,
+        url: `${ORIGIN}/hosting/plans`,
         provider: { '@id': `${ORIGIN}/#organization` },
         offers: priced.map((p) => ({
-            '@type': 'Offer', name: p.name, price: p.amount, priceCurrency: site?.currency, url: `${ORIGIN}/plans`,
+            '@type': 'Offer', name: p.name, price: p.amount, priceCurrency: site?.currency, url: `${ORIGIN}/hosting/plans`,
         })),
     };
     return (

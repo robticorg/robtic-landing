@@ -15,13 +15,18 @@ export default function robots(): MetadataRoute.Robots {
     return {
         rules: {
             userAgent: ['*', ...AI_CRAWLERS],
-            // /discord/public$ is the Discord platform's one public page (only that address: the dashboards under
-            // it stay disallowed); its llms.txt and sitemap are readable too.
-            allow: ['/', '/auth/login', '/auth/register', '/auth/llms.txt', '/panel/llms.txt', '/discord/public$', '/discord/llms.txt', '/discord/sitemap.xml'],
+            // The services' public pages: their landing pages (/hosting, /discord: those addresses only), Hosting's
+            // plans, Discord's server picker (/discord/public$), and each one's llms.txt and sitemap. Everything else
+            // under them is a signed-in app and stays disallowed.
+            allow: [
+                '/', '/auth/login', '/auth/register', '/auth/llms.txt', '/panel/llms.txt',
+                '/hosting$', '/hosting/plans', '/hosting/sitemap.xml',
+                '/discord$', '/discord/public$', '/discord/llms.txt', '/discord/sitemap.xml',
+            ],
             // Dashboards are private app routes (hosting moved from /panel to /hosting; Discord bot dashboards live
             // under /discord). /panel is kept here for the duration of the move so old links aren't crawled either.
             disallow: ['/panel', '/hosting', '/discord', '/settings', '/auth/', '/api/', '/plans/choose', '/robtic/github/', '/robtic/discord/', '/sanctum/'],
         },
-        sitemap: [`${ORIGIN}/sitemap.xml`, `${ORIGIN}/discord/sitemap.xml`],
+        sitemap: [`${ORIGIN}/sitemap.xml`, `${ORIGIN}/hosting/sitemap.xml`, `${ORIGIN}/discord/sitemap.xml`],
     };
 }

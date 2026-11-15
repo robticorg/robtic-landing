@@ -84,6 +84,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                     href={asset('/rl/robtic/site/site.css')}
                     // eslint-disable-next-line @next/next/no-css-tags
                 />
+                <link
+                    rel="stylesheet"
+                    href={asset('/rl/robtic/site/services.css')}
+                    // eslint-disable-next-line @next/next/no-css-tags
+                />
                 <link rel="describedby" type="text/plain" href="/llms.txt" />
                 <script
                     type="application/ld+json"
@@ -137,10 +142,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                         </div>
                         <div className="foot-right">
                             <div className="foot-col">
-                                <h4>Platforms</h4>
-                                <a href={`${panelRoot}/hosting/dashboard`}>Hosting</a>
+                                <h4>Services</h4>
+                                <a href="/hosting">Hosting</a>
+                                <a href="/hosting/plans">Hosting plans</a>
                                 <a href="#" data-soon="Servers — coming soon">Servers</a>
-                                <a href="/discord/public">Public Bots</a>
+                                <a href="/discord">Public Bots</a>
                                 <a href="#" data-soon="Private Bots — coming soon">Private Bots</a>
                             </div>
                             <div className="foot-col">
@@ -158,8 +164,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                             </div>
                             <div className="foot-col">
                                 <h4>Other</h4>
-                                <a href="/#features">Features</a>
-                                <a href="/plans">Plans</a>
+                                <a href="/#services">Our services</a>
                                 <a href="/faq">FAQ</a>
                                 <SignInLink panelRoot={panelRoot}>Sign in</SignInLink>
                             </div>

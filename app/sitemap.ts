@@ -2,19 +2,20 @@ import type { MetadataRoute } from 'next';
 import { ORIGIN } from '@/lib/site';
 import { getSiteData, legalPages } from '@/lib/site-data';
 
-// The public pages, for search engines. The legal pages are the ones set in the admin console, at their addresses.
+// Robtic's own pages, for search engines: the home page, the FAQ, the account pages and the account's legal pages.
+// Each service has its own sitemap with its landing page and its own terms (/hosting/sitemap.xml,
+// /discord/sitemap.xml), so every address is listed in exactly one.
+const SERVICE_PAGE = /^(terms|privacy)\/(hosting|teams|discord|[a-z]+-bot)$/;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const now = new Date();
     const site = await getSiteData();
     return [
         { url: `${ORIGIN}/`, lastModified: now, changeFrequency: 'weekly', priority: 1.0 },
-        { url: `${ORIGIN}/plans`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
         { url: `${ORIGIN}/faq`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
-        // The Discord platform's public page (robtic-discord); its own sitemap is /discord/sitemap.xml.
-        { url: `${ORIGIN}/discord/public`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
         { url: `${ORIGIN}/auth/register`, lastModified: now, changeFrequency: 'yearly', priority: 0.5 },
         { url: `${ORIGIN}/auth/login`, lastModified: now, changeFrequency: 'yearly', priority: 0.4 },
-        ...legalPages(site).map((p) => ({
+        ...legalPages(site).filter((p) => !SERVICE_PAGE.test(p.path)).map((p) => ({
             url: `${ORIGIN}/${p.path}`,
             lastModified: validDate(p.updated) ?? now,
             changeFrequency: 'yearly' as const,

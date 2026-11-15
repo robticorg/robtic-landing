@@ -75,12 +75,12 @@ const BUILTIN_UPDATED = 'October 25, 2026';
 // the section and /faq are never empty.
 export const BUILTIN_FAQ: FaqItem[] = [
     {
-        q: 'What is Robtic?',
-        a: 'Robtic is a platform for Discord builders. Host your bots, websites and APIs, run game and app servers, or add our ready-made public bots — all from one account, straight from the browser.',
+        q: 'What is Robtic Hosting?',
+        a: 'Robtic Hosting runs your Discord bots, websites and APIs for you. You manage everything from the browser: workspaces, a live console, a code editor, databases and backups.',
     },
     {
         q: 'Is it really free to start?',
-        a: 'Yes. The Personal plan is free for your first month — no card needed to begin. After that you pick a plan that fits, and you can stay on a free tier for small projects.',
+        a: 'Yes. The Personal plan is free for your first month after you start Hosting — no card needed to begin. After that you pick a plan that fits, and you can stay on a free tier for small projects.',
     },
     {
         q: 'Which languages can I host?',

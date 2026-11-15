@@ -10,6 +10,11 @@ const nextConfig = {
     // Node server so the catch-all redirect (not-found) and headers work without extra nginx rules; nginx can
     // still sit in front of it.
     poweredByHeader: false,
+    // Plans are Robtic Hosting's prices, so they live under /hosting now. Only /plans itself: /plans/choose is the
+    // panel's.
+    async redirects() {
+        return [{ source: '/plans', destination: '/hosting/plans', permanent: true }];
+    },
 };
 
 // Source maps go up only when CI has a token; without one the build is unchanged.

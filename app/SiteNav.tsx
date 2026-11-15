@@ -78,19 +78,19 @@ export default function SiteNav({
     const menus: Menu[] = [
         {
             key: 'dashboard',
-            label: 'Dashboard',
+            label: 'Services',
             columns: [
                 {
                     heading: 'Platforms',
                     items: [
-                        { label: 'Hosting', desc: 'Discord bots, sites and APIs', icon: { lucide: Server }, href: hosting },
+                        { label: 'Hosting', desc: 'Discord bots, sites and APIs', icon: { lucide: Server }, href: '/hosting' },
                         { label: 'Servers', desc: 'Game and app servers', icon: { lucide: Gamepad2 } },
                     ],
                 },
                 {
                     heading: 'Discord',
                     items: [
-                        { label: 'Public Bots', desc: 'Add our bots to your server', icon: { lucide: Bot }, href: '/discord/public' },
+                        { label: 'Public Bots', desc: 'Add our bots to your server', icon: { lucide: Bot }, href: '/discord' },
                         { label: 'Private Bots', desc: 'Host and run your own', icon: { lucide: ShieldCheck } },
                     ],
                 },
@@ -202,8 +202,7 @@ export default function SiteNav({
                         </button>
                     </div>
                 ))}
-                <a href="/#features">Features</a>
-                <a href="/plans">Plans</a>
+                <a href="/faq">FAQ</a>
             </nav>
 
             {/* Phone bar: the ⋮ button opens the sheet below (the centre pill is hidden at this width). */}
@@ -250,8 +249,7 @@ export default function SiteNav({
                             ))}
                         </div>
                     ))}
-                    <a className="m-link" href="/#features" onClick={() => setMOpen(false)}>Features</a>
-                    <a className="m-link" href="/plans" onClick={() => setMOpen(false)}>Plans</a>
+                    <a className="m-link" href="/faq" onClick={() => setMOpen(false)}>FAQ</a>
                 </nav>
             </div>
 
