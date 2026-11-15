@@ -20,7 +20,11 @@ const BASE_METADATA: Metadata = {
     alternates: { canonical: '/' },
     robots: { index: true, follow: true, 'max-image-preview': 'large' } as Metadata['robots'],
     icons: {
-        icon: [{ url: '/rl/favicons/favicon-32x32.png?v=r3', sizes: '32x32', type: 'image/png' }],
+        icon: [
+            { url: '/rl/favicons/favicon-16x16.png?v=r3', sizes: '16x16', type: 'image/png' },
+            { url: '/rl/favicons/favicon-32x32.png?v=r3', sizes: '32x32', type: 'image/png' },
+            { url: '/rl/favicons/favicon-96x96.png?v=r3', sizes: '96x96', type: 'image/png' },
+        ],
         apple: [{ url: '/rl/favicons/apple-touch-icon.png?v=r3', sizes: '180x180' }],
     },
     openGraph: {

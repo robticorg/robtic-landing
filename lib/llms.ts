@@ -60,6 +60,7 @@ export function llmsIndex(site: SiteData | null): string {
         '',
         `- [Robtic System](${ORIGIN}${BOT_GUIDES.system.path}): community bot with XP and levels, activity points and RC, daily streaks, leaderboards, moderation with evidence, shortcuts and log channels`,
         `- [Robtic Staff](${ORIGIN}${BOT_GUIDES.staff.path}): staff management bot with a rank ladder, staff points and promotions, warnings, reports, appeals, vacations and staff applications`,
+        `- [Every public bot and how to add it](${ORIGIN}/discord/llms.txt): Robtic System, Staff, Music and Ticket, from the Discord platform itself`,
         '',
         '## Plans',
         '',
