@@ -195,8 +195,9 @@
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 
 /* discord: the scroll story. The section is one screen per step tall; .rx-ds-pin stays on screen while it scrolls. */
-.rx-ds { position: relative; height: calc(var(--steps) * 100vh); background: var(--bg); }
-.rx-ds-pin { position: sticky; top: 0; display: flex; flex-direction: column; align-items: center; height: 100vh; overflow: hidden; padding: calc(var(--bar) + 28px) 24px 24px; }
+.rx-ds { position: relative; height: calc(var(--steps) * 100vh); height: calc(var(--steps) * 100svh); background: var(--bg); }
+/* svh: the phone's screen with its address bar shown, so the story doesn't jump when the bar slides away. */
+.rx-ds-pin { position: sticky; top: 0; display: flex; flex-direction: column; align-items: center; height: 100vh; height: 100svh; overflow: hidden; padding: calc(var(--bar) + 28px) 24px 24px; }
 .rx-ds-bg { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(1100px 520px at 50% -8%, rgba(88, 101, 242, 0.55), transparent 62%), linear-gradient(180deg, #171a4a 0%, #0c1030 45%, var(--bg) 100%); }
 .rx-ds-bg i { position: absolute; width: 520px; height: 520px; border-radius: 50%; filter: blur(90px); opacity: 0.35; background-color: var(--accent); transition: background-color 0.8s ease, transform 1.2s ease; animation: rx-orb 14s ease-in-out infinite; }
 .rx-ds-bg i:nth-child(1) { top: 10%; left: -8%; }
@@ -331,6 +332,12 @@
     .rx-ds-profile .roles span:nth-child(n+6) { display: none; }
     .rx-ds-profile .roles span { font-size: 11px; padding: 2px 7px; }
 }
+/* Phones and touch screens: no blurred glow circles (very costly to draw), a lighter shadow, and no animated font
+   sizes, so scrolling the story stays smooth. */
+@media (max-width: 760px), (pointer: coarse) {
+    .rx-ds-bg i { display: none; }
+    .rx-ds-card { box-shadow: 0 24px 50px -24px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(88, 101, 242, 0.15); transition: none; }
+    .rx-ds-title, .rx-ds-title h1 { transition: none; }
 }
 @media (prefers-reduced-motion: reduce) {
     .rx-ds-bg i, .rx-ds-invite button, .rx-ds-voice.live span:first-child i { animation: none; }

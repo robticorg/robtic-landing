@@ -933,3 +933,11 @@ body:has(.notfound) .m-kebab { display: none !important; }
 /* Settings → Connections: the small window that connects GitHub or Discord */
 .st-popup { min-height: 100vh; display: grid; place-content: center; justify-items: center; gap: 14px; padding: 24px; text-align: center; color: var(--muted, #9aa7be); font-size: 15px; }
 .st-popup .st-popup-err { color: #ff8a95; max-width: 360px; margin: 0; }
+
+/* Phones and touch screens: no frosted-glass blur on what stays on screen while scrolling (the bar, the floating
+   buttons, the toast). The blur had to be redrawn on every scroll frame; a solid background reads the same. */
+@media (max-width: 760px), (pointer: coarse) {
+    .nav-links, .to-top, .sky-sound, .toast, .me-menu, .mega-in { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+    .to-top, .sky-sound, .toast { background: rgba(11, 18, 34, 0.94); }
+    .me-menu, .mega-in { background: rgba(11, 18, 34, 0.98); }
+}

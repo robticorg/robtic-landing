@@ -88,6 +88,11 @@ export default function DiscordStory({ addHref, discordMark }: { addHref: string
 
     useEffect(() => {
         let frame = 0;
+        let lastOpen = '';
+        let lastStep = -1;
+        // Phones: the card is the full width already, so the opening effect would change nothing and only make the
+        // browser restyle the whole story on every scroll frame. It runs on wide screens only.
+        const wide = window.matchMedia('(min-width: 761px)');
         const onScroll = () => {
             cancelAnimationFrame(frame);
             frame = requestAnimationFrame(() => {
@@ -97,9 +102,17 @@ export default function DiscordStory({ addHref, discordMark }: { addHref: string
                 const run = el.offsetHeight - window.innerHeight;
                 const progress = run > 0 ? Math.min(1, Math.max(0, -box.top / run)) : 0;
                 // How far the server has opened up (0 at the top, 1 once the first step is scrolled): the card
-                // grows from its own width to nearly the whole screen with it, smoothly, frame by frame.
-                el.style.setProperty('--open', String(Math.min(1, progress * STEPS).toFixed(3)));
-                setStep(Math.min(STEPS - 1, Math.floor(progress * STEPS)));
+                // grows from its own width to nearly the whole screen with it. Set on the card alone, and only when
+                // it changed, so nothing else is restyled.
+                if (wide.matches) {
+                    const open = Math.min(1, progress * STEPS).toFixed(2);
+                    if (open !== lastOpen) {
+                        lastOpen = open;
+                        el.querySelector<HTMLElement>('.rx-ds-card')?.style.setProperty('--open', open);
+                    }
+                }
+                const next = Math.min(STEPS - 1, Math.floor(progress * STEPS));
+                if (next !== lastStep) { lastStep = next; setStep(next); }
             });
         };
         onScroll();

@@ -70,28 +70,41 @@
                 }
                 return d;
             };
-            var draw = function () {
-                push *= 0.92;
-                amp += (10 + Math.min(32, push * 0.12) - amp) * 0.08;
-                phase += 0.012 + push * 0.0004;
-                seenWaves.forEach(function (w) {
-                    var p = w.querySelectorAll('path');
-                    var top = line(amp, 1.5, phase, 0);
-                    p[0].setAttribute('d', line(amp * 0.8, 1.1, -phase * 0.8 + 1.2, -14) + 'L1440 110L0 110Z');
-                    p[1].setAttribute('d', top + 'L1440 110L0 110Z');
-                    p[2].setAttribute('d', top);
-                });
-                if (seenWaves.size) requestAnimationFrame(draw); else looping = false;
+            var paint = function (w) {
+                var p = w.querySelectorAll('path');
+                var top = line(amp, 1.5, phase, 0);
+                p[0].setAttribute('d', line(amp * 0.8, 1.1, -phase * 0.8 + 1.2, -14) + 'L1440 110L0 110Z');
+                p[1].setAttribute('d', top + 'L1440 110L0 110Z');
+                p[2].setAttribute('d', top);
             };
-            var watchWaves = new IntersectionObserver(function (entries) {
-                entries.forEach(function (e) { if (e.isIntersecting) seenWaves.add(e.target); else seenWaves.delete(e.target); });
-                if (seenWaves.size && !looping) { looping = true; requestAnimationFrame(draw); }
-            });
-            waves.forEach(function (w) { watchWaves.observe(w); });
-            window.addEventListener('scroll', function () {
-                push += Math.abs(window.scrollY - lastY);
-                lastY = window.scrollY;
-            }, { passive: true });
+            // Phones, touch screens and "reduce motion": the waves are drawn once and stay still. Redrawing them every
+            // frame kept phones busy the whole time a wave was on screen (the page felt slow).
+            var still = window.matchMedia('(max-width: 760px), (pointer: coarse), (prefers-reduced-motion: reduce)').matches;
+            if (still) {
+                waves.forEach(paint);
+            } else {
+                // Desktop: they move while the page scrolls and settle a moment after, then the loop stops.
+                var quietFrames = 0;
+                var draw = function () {
+                    push *= 0.92;
+                    amp += (10 + Math.min(32, push * 0.12) - amp) * 0.08;
+                    phase += 0.012 + push * 0.0004;
+                    seenWaves.forEach(paint);
+                    quietFrames = push < 0.5 ? quietFrames + 1 : 0;
+                    if (seenWaves.size && quietFrames < 90) requestAnimationFrame(draw); else looping = false;
+                };
+                var start = function () { if (seenWaves.size && !looping) { looping = true; quietFrames = 0; requestAnimationFrame(draw); } };
+                var watchWaves = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (e) { if (e.isIntersecting) { seenWaves.add(e.target); paint(e.target); } else seenWaves.delete(e.target); });
+                    start();
+                });
+                waves.forEach(function (w) { paint(w); watchWaves.observe(w); });
+                window.addEventListener('scroll', function () {
+                    push += Math.abs(window.scrollY - lastY);
+                    lastY = window.scrollY;
+                    start();
+                }, { passive: true });
+            }
         }
     } catch (e) {}
 
