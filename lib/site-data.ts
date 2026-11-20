@@ -56,9 +56,11 @@ export const LEGAL_GROUP_TITLE: Record<LegalGroup, string> = { terms: 'Terms', p
 // What the site starts from, and what it falls back to when the panel can't be reached: the built-in pages, whose
 // Markdown is a snapshot in legal-md/.
 export const BUILTIN_LEGAL: LegalPage[] = [
-    { key: 'terms-hosting', title: 'Hosting Terms', path: 'terms/hosting', related: ['privacy-account', 'privacy-hosting', 'terms-teams'] },
+    { key: 'terms-robtic', title: 'Robtic Terms', path: 'terms/robtic', related: ['privacy-account', 'terms-discord', 'terms-hosting'] },
+    { key: 'terms-discord', title: 'Robtic Discord Terms', path: 'terms/discord', related: ['terms-robtic', 'privacy-account'] },
+    { key: 'terms-hosting', title: 'Robtic Hosting Terms', path: 'terms/hosting', related: ['privacy-account', 'privacy-hosting', 'terms-teams'] },
     { key: 'terms-teams', title: "Team's Terms", path: 'terms/teams', related: ['terms-hosting', 'privacy-hosting', 'privacy-account'] },
-    { key: 'privacy-account', title: 'Account Privacy', path: 'privacy/account', related: ['privacy-hosting', 'terms-hosting'] },
+    { key: 'privacy-account', title: 'Robtic Privacy', path: 'privacy/account', related: ['privacy-hosting', 'terms-hosting'] },
     { key: 'privacy-hosting', title: 'Hosting Privacy', path: 'privacy/hosting', related: ['privacy-account', 'terms-hosting', 'terms-teams'] },
     { key: 'terms-system-bot', title: 'Robtic System Terms', path: 'terms/system-bot', related: ['privacy-system-bot', 'terms-hosting', 'privacy-account'] },
     { key: 'terms-staff-bot', title: 'Robtic Staff Terms', path: 'terms/staff-bot', related: ['privacy-staff-bot', 'terms-hosting', 'privacy-account'] },

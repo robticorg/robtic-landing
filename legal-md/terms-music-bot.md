@@ -1,6 +1,6 @@
 > **Draft.** These terms are a first version for review and may change before Robtic Music opens to everyone.
 
-These terms cover adding and using **Robtic Music**, Robtic's music bots for voice channels, and their dashboard at robtic.org/discord/public. They add to the [Hosting Terms](/terms/hosting), which cover your Robtic account. What the bots keep, and why, is in [Robtic Music Privacy](/privacy/music-bot).
+These terms cover adding and using **Robtic Music**, Robtic's music bots for voice channels, and their dashboard at robtic.org/discord/public. They add to the [Robtic Discord Terms](/terms/discord) and the [Robtic Terms](/terms/robtic), which cover your Robtic account. What the bots keep, and why, is in [Robtic Music Privacy](/privacy/music-bot).
 
 ## 1. Who can add and configure it
 
@@ -19,7 +19,7 @@ Members choose what is played. **Your server is responsible for what its members
 ## 4. Your responsibilities
 
 - Use the bots within [Discord's Terms of Service](https://discord.com/terms) and Community Guidelines, and the terms of the services music is played from.
-- Don't use the bots to broadcast content you have no right to share, to disturb voice channels, or to break the [acceptable use rules](/terms/hosting#4-acceptable-use).
+- Don't use the bots to broadcast content you have no right to share, to disturb voice channels, or to break the [acceptable use rules](/terms/robtic#3-acceptable-use).
 
 ## 5. Availability
 

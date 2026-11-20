@@ -1,12 +1,8 @@
-These terms are the agreement between you and Robtic for hosting apps on Robtic and using this website and the Robtic panel. By making an account or using Robtic you agree to them. Teams and organisations also follow the [Team's Terms](/terms/teams).
+These terms cover **Robtic Hosting**: hosting apps on Robtic and using the hosting panel. You accept them when you first turn Robtic Hosting on. They add to the [Robtic Terms](/terms/robtic), which cover your Robtic account. Teams and organisations also follow the [Team's Terms](/terms/teams).
 
 ## 1. Your account
 
-- You need an account to use the panel. Give a real email address and keep your password and two-step codes to yourself.
-- You may sign in with GitHub or Discord; their own terms apply to those accounts.
-- You are responsible for what happens under your account.
-- You must be old enough to agree to these terms where you live, and at least 13.
-- What we keep about you and your account, and why, is explained in [Account Privacy](/privacy/account).
+Your Robtic account, and the rules for it, are covered by the [Robtic Terms](/terms/robtic). What we keep about you is in [Robtic Privacy](/privacy/account).
 
 ## 2. What Robtic provides
 

@@ -1,6 +1,6 @@
 > **Draft.** These terms are a first version for review and may change before Robtic Staff opens to everyone.
 
-These terms cover adding and using **Robtic Staff**, Robtic's staff-management bot (ranks, staff points, warnings, reports, appeals, vacations and applications), and its dashboard at robtic.org/discord/public. They add to the [Hosting Terms](/terms/hosting), which cover your Robtic account. What the bot keeps, and why, is in [Robtic Staff Privacy](/privacy/staff-bot).
+These terms cover adding and using **Robtic Staff**, Robtic's staff-management bot (ranks, staff points, warnings, reports, appeals, vacations and applications), and its dashboard at robtic.org/discord/public. They add to the [Robtic Discord Terms](/terms/discord) and the [Robtic Terms](/terms/robtic), which cover your Robtic account. What the bot keeps, and why, is in [Robtic Staff Privacy](/privacy/staff-bot).
 
 ## 1. Who can add and configure it
 
@@ -21,7 +21,7 @@ The bot carries out the rules your server sets (for example: three staff warning
 - Use the bot within [Discord's Terms of Service](https://discord.com/terms) and Community Guidelines.
 - Only attach evidence you have the right to share, and only what a decision needs.
 - Tell your staff that the bot records their activity, points and warnings.
-- Don't use the bot to harass anyone or break the [acceptable use rules](/terms/hosting#4-acceptable-use).
+- Don't use the bot to harass anyone or break the [acceptable use rules](/terms/robtic#3-acceptable-use).
 
 ## 5. Availability
 

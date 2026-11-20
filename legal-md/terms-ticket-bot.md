@@ -1,6 +1,6 @@
 > **Draft.** These terms are a first version for review and may change before Robtic Ticket opens to everyone.
 
-These terms cover adding and using **Robtic Ticket**, Robtic's support-ticket bot (ticket panels, forms, staff controls and transcripts), and its dashboard at robtic.org/discord/public. They add to the [Hosting Terms](/terms/hosting), which cover your Robtic account. What the bot keeps, and why, is in [Robtic Ticket Privacy](/privacy/ticket-bot).
+These terms cover adding and using **Robtic Ticket**, Robtic's support-ticket bot (ticket panels, forms, staff controls and transcripts), and its dashboard at robtic.org/discord/public. They add to the [Robtic Discord Terms](/terms/discord) and the [Robtic Terms](/terms/robtic), which cover your Robtic account. What the bot keeps, and why, is in [Robtic Ticket Privacy](/privacy/ticket-bot).
 
 ## 1. Who can add and configure it
 
@@ -21,7 +21,7 @@ Your server's staff decide how each ticket is handled, who is blocked from openi
 - Use the bot within [Discord's Terms of Service](https://discord.com/terms) and Community Guidelines.
 - Don't ask members for passwords, payment details or other sensitive data in ticket forms.
 - Tell your members that ticket conversations are saved as transcripts your staff can read.
-- Don't use the bot (including its direct-message "come to your ticket" notice) to spam or harass anyone, or to break the [acceptable use rules](/terms/hosting#4-acceptable-use).
+- Don't use the bot (including its direct-message "come to your ticket" notice) to spam or harass anyone, or to break the [acceptable use rules](/terms/robtic#3-acceptable-use).
 
 ## 5. Availability
 

@@ -1,6 +1,6 @@
 > **Draft.** These terms are a first version for review and may change.
 
-These terms cover adding and using **Scam Guard**, Robtic's bot that stops scam raids, and its dashboard at robtic.org/discord/public. They add to the [Hosting Terms](/terms/hosting), which cover your Robtic account. What the bot keeps, and why, is in [Scam Guard Privacy](/privacy/scam-guard).
+These terms cover adding and using **Scam Guard**, Robtic's bot that stops scam raids, and its dashboard at robtic.org/discord/public. They add to the [Robtic Discord Terms](/terms/discord) and the [Robtic Terms](/terms/robtic), which cover your Robtic account. What the bot keeps, and why, is in [Scam Guard Privacy](/privacy/scam-guard).
 
 ## 1. Who can add and configure it
 
@@ -19,7 +19,7 @@ Scam Guard acts on its own, without a person checking first. It can be wrong, fo
 
 - Use the bot within [Discord's Terms of Service](https://discord.com/terms) and Community Guidelines.
 - Give the bot only the permissions it needs: read messages, manage messages, time out members and send messages in the alert channel.
-- Don't use the bot to harass members or to break the [acceptable use rules](/terms/hosting#4-acceptable-use).
+- Don't use the bot to harass members or to break the [acceptable use rules](/terms/robtic#3-acceptable-use).
 
 ## 5. Availability
 

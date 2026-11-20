@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import TopProgress from './TopProgress';
 import Script from 'next/script';
 import { ORIGIN, PANEL_URL, SOCIAL_ICONS } from '@/lib/site';
-import { getSiteData, legalPages, resolveContact, resolveSocials } from '@/lib/site-data';
+import { getSiteData, resolveContact, resolveSocials } from '@/lib/site-data';
 import AuthActions from './AuthActions';
 import SiteNav from './SiteNav';
 import { asset } from '@/lib/asset';
@@ -55,7 +55,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     const site = await getSiteData();
     const contact = resolveContact(site);
     const socials = resolveSocials(site);
-    const legal = legalPages(site);
     // Links the centre nav's mega-menus need. The Discord/GitHub entries prefer whatever is set in the admin
     // console, falling back to Robtic's own.
     const panelRoot = PANEL_URL.replace(/\/panel$/, '');
@@ -157,9 +156,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                             </div>
                             <div className="foot-col">
                                 <h4>Terms &amp; Service</h4>
-                                {legal.map((p) => (
-                                    <a key={p.key} href={`/${p.path}`}>{p.title}</a>
-                                ))}
+                                {/* Only the four main pages; each links to the rest (the bots' own terms, teams, hosting privacy). */}
+                                <a href="/terms/robtic">Robtic Terms</a>
+                                <a href="/privacy/account">Robtic Privacy</a>
+                                <a href="/terms/discord">Robtic Discord Terms</a>
+                                <a href="/terms/hosting">Robtic Hosting Terms</a>
                             </div>
                             <div className="foot-col">
                                 <h4>Other</h4>

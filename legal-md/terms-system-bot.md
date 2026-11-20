@@ -1,6 +1,6 @@
 > **Draft.** These terms are a first version for review and may change before Robtic System opens to everyone.
 
-These terms cover adding and using **Robtic System**, Robtic's community bot (levels, points, streaks, moderation and logs), and its dashboard at robtic.org/discord/public. They add to the [Hosting Terms](/terms/hosting), which cover your Robtic account. What the bot keeps, and why, is in [Robtic System Privacy](/privacy/system-bot).
+These terms cover adding and using **Robtic System**, Robtic's community bot (levels, points, streaks, moderation and logs), and its dashboard at robtic.org/discord/public. They add to the [Robtic Discord Terms](/terms/discord) and the [Robtic Terms](/terms/robtic), which cover your Robtic account. What the bot keeps, and why, is in [Robtic System Privacy](/privacy/system-bot).
 
 ## 1. Who can add and configure it
 
@@ -16,7 +16,7 @@ Robtic System gives members XP and levels for chat and voice, activity points th
 
 - You decide how the bot is configured in your server and are responsible for using it within [Discord's Terms of Service](https://discord.com/terms) and Community Guidelines.
 - Tell your members that the bot records activity (messages counted, voice time, streaks) for levels and points.
-- Don't use the bot to harass members, to punish people unfairly, or to break the [acceptable use rules](/terms/hosting#4-acceptable-use).
+- Don't use the bot to harass members, to punish people unfairly, or to break the [acceptable use rules](/terms/robtic#3-acceptable-use).
 
 ## 4. Points and RC
 
