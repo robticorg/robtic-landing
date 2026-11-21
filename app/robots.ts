@@ -15,13 +15,12 @@ export default function robots(): MetadataRoute.Robots {
     return {
         rules: {
             userAgent: ['*', ...AI_CRAWLERS],
-            // The services' public pages: their landing pages (/hosting, /discord: those addresses only), Hosting's
-            // plans, Discord's server picker (/discord/public$), and each one's llms.txt and sitemap. Everything else
-            // under them is a signed-in app and stays disallowed.
+            // Sign-in pages and the dashboards (/discord/public too) aren't for search: "Robtic", "Robtic Hosting" and
+            // "Robtic Discord" lead to the landing pages.
             allow: [
-                '/', '/auth/login', '/auth/register', '/auth/llms.txt', '/panel/llms.txt',
+                '/', '/auth/llms.txt', '/panel/llms.txt',
                 '/hosting$', '/hosting/plans', '/hosting/sitemap.xml',
-                '/discord$', '/discord/public$', '/discord/llms.txt', '/discord/sitemap.xml',
+                '/discord$', '/discord/llms.txt', '/discord/sitemap.xml',
             ],
             // Dashboards are private app routes (hosting moved from /panel to /hosting; Discord bot dashboards live
             // under /discord). /panel is kept here for the duration of the move so old links aren't crawled either.

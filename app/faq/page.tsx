@@ -1,13 +1,14 @@
 import type { Metadata } from 'next';
+import { pageMeta } from '@/lib/seo';
 import { getSiteData, landingFaq } from '@/lib/site-data';
 import { DISCORD_FAQ, ROBTIC_FAQ } from '@/lib/faqs';
 import Faq from '../Faq';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
     title: 'FAQ · Robtic',
     description: 'Common questions about Robtic and your account, Robtic Hosting (bots, apps, plans, databases) and the Robtic Discord bots.',
-    alternates: { canonical: '/faq' },
-};
+    path: '/faq',
+});
 
 export default async function FaqPage() {
     const groups = [

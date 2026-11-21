@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { ORIGIN } from '@/lib/site';
+import { pageMeta, SHARE } from '@/lib/seo';
 import { getSiteData, landingFaq, priceMap } from '@/lib/site-data';
 import { PLANS, limitRows } from '@/lib/plans';
 import { SERVICES } from '@/lib/services';
@@ -11,14 +12,16 @@ import Faq from '../Faq';
 
 const S = SERVICES.hosting;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
     title: 'Robtic Hosting: host Discord bots, websites and APIs',
+    shareTitle: 'Robtic Hosting',
     description:
         'Robtic Hosting runs your Discord bots (discord.js, discord.py, TypeScript), websites and APIs from the browser: ' +
         'workspaces, live console, code editor, MongoDB and Redis, backups, GitHub and your own domain. First month free.',
-    alternates: { canonical: '/hosting' },
-    openGraph: { title: 'Robtic Hosting', url: `${ORIGIN}/hosting` },
-};
+    path: '/hosting',
+    share: SHARE.hosting,
+    keywords: ['Robtic Hosting', 'Robtic', 'Discord bot hosting', 'host discord.js bot', 'host discord.py bot', 'free Discord bot hosting'],
+});
 
 
 export default async function HostingPage() {

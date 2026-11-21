@@ -65,12 +65,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         '@context': 'https://schema.org',
         '@graph': [
             {
-                '@type': 'Organization', '@id': `${ORIGIN}/#organization`, name: 'Robtic', url: `${ORIGIN}/`,
+                '@type': 'Organization', '@id': `${ORIGIN}/#organization`, name: 'Robtic', alternateName: 'RobTic', url: `${ORIGIN}/`,
                 logo: IMAGE, email: contact, description: DESCRIPTION,
                 ...(socials.length ? { sameAs: socials.map(([, url]) => url) } : {}),
             },
             {
-                '@type': 'WebSite', '@id': `${ORIGIN}/#website`, name: 'Robtic', url: `${ORIGIN}/`,
+                '@type': 'WebSite', '@id': `${ORIGIN}/#website`, name: 'Robtic', alternateName: 'RobTic', url: `${ORIGIN}/`,
                 publisher: { '@id': `${ORIGIN}/#organization` }, inLanguage: 'en',
             },
         ],

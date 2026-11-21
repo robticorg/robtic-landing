@@ -2,23 +2,19 @@ import type { MetadataRoute } from 'next';
 import { ORIGIN } from '@/lib/site';
 import { getSiteData, legalPages } from '@/lib/site-data';
 
-// Robtic's own pages, for search engines: the home page, the FAQ, the account pages and the account's legal pages.
-// Each service has its own sitemap with its landing page and its own terms (/hosting/sitemap.xml,
-// /discord/sitemap.xml); their landing pages are listed here too.
-const SERVICE_PAGE = /^(terms|privacy)\/(hosting|teams|discord|[a-z]+-bot)$/;
+// Robtic's own pages, for search engines: the home page, the FAQ and the account's own terms and privacy. Each
+// service has its own sitemap with its landing page and its own legal pages (/hosting/sitemap.xml from here,
+// /discord/sitemap.xml from robtic-discord), so "Robtic Hosting" and "Robtic Discord" each lead to their own page.
+// Sign-in pages aren't listed: a search for Robtic should never land on a login screen.
+const ACCOUNT_LEGAL = ['terms-robtic', 'privacy-account'];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const now = new Date();
     const site = await getSiteData();
     return [
         { url: `${ORIGIN}/`, lastModified: now, changeFrequency: 'weekly', priority: 1.0 },
-        // The services' landing pages, here as well as in their own sitemaps: the home page links to both.
-        { url: `${ORIGIN}/hosting`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
-        { url: `${ORIGIN}/discord`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
         { url: `${ORIGIN}/faq`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
-        { url: `${ORIGIN}/auth/register`, lastModified: now, changeFrequency: 'yearly', priority: 0.5 },
-        { url: `${ORIGIN}/auth/login`, lastModified: now, changeFrequency: 'yearly', priority: 0.4 },
-        ...legalPages(site).filter((p) => !SERVICE_PAGE.test(p.path)).map((p) => ({
+        ...legalPages(site).filter((p) => ACCOUNT_LEGAL.includes(p.key)).map((p) => ({
             url: `${ORIGIN}/${p.path}`,
             lastModified: validDate(p.updated) ?? now,
             changeFrequency: 'yearly' as const,

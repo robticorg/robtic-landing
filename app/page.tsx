@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import { ORIGIN } from '@/lib/site';
+import { getSiteData } from '@/lib/site-data';
+import { pageMeta, SHARE } from '@/lib/seo';
 import { ROBTIC_FAQ } from '@/lib/faqs';
 import { SERVICES, SERVICE_ORDER } from '@/lib/services';
 import HomeLanding from './HomeLanding';
@@ -8,13 +10,24 @@ import Faq from './Faq';
 // The home page is about Robtic itself: who we are and what we make. Each service has its own landing page
 // (/hosting, /discord) with its own words, plans and terms; this page only introduces them.
 
-export const metadata: Metadata = {
-    title: 'Robtic: software for Discord builders and communities',
-    description:
+const HOME_DESCRIPTION =
         'Robtic makes tools for people who build and run Discord communities: Robtic Hosting for your own bots and apps, ' +
-        'and Robtic Discord, ready-made bots set up from a web dashboard. One account for every service.',
-    alternates: { canonical: '/' },
-};
+        'and Robtic Discord, ready-made bots set up from a web dashboard. One account for every service.';
+
+// Robtic's own page: "Robtic" in a search finds this one. The admin console's share picture (Landing -> Images) wins
+// when one is set; otherwise the home card.
+export async function generateMetadata(): Promise<Metadata> {
+    const og = (await getSiteData())?.landing?.images?.og;
+    const custom = og?.url?.trim();
+    return pageMeta({
+        title: 'Robtic: hosting and ready-made bots for Discord builders',
+        shareTitle: 'Robtic',
+        description: HOME_DESCRIPTION,
+        path: '/',
+        share: custom ? { url: custom, alt: og?.alt?.trim() || 'Robtic' } : SHARE.home,
+        keywords: ['Robtic', 'RobTic', 'Discord bot hosting', 'Discord bots', 'Robtic Hosting', 'Robtic Discord'],
+    });
+}
 
 
 export default function Home() {

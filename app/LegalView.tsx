@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageMeta, SHARE } from '@/lib/seo';
 import { notFound } from 'next/navigation';
 import { marked } from 'marked';
 import { ORIGIN } from '@/lib/site';
@@ -58,7 +59,8 @@ export async function legalMetadata(group: LegalGroup, slug: string): Promise<Me
     const path = `${group}/${slug}`;
     const page = await getLegalPage(path);
     if (!page) return {};
-    return { title: `${page.title} · Robtic`, alternates: { canonical: `/${path}` } };
+    const share = /(hosting|teams)$/.test(slug) ? SHARE.hosting : /(discord|-bot|scam-guard)$/.test(slug) ? SHARE.discord : SHARE.home;
+    return pageMeta({ title: `${page.title} · Robtic`, description: `${page.title}: what applies when you use Robtic.`, path: `/${path}`, share });
 }
 
 export default async function LegalView({ group, slug }: { group: LegalGroup; slug: string }) {

@@ -1,15 +1,17 @@
 import type { Metadata } from 'next';
+import { pageMeta, SHARE } from '@/lib/seo';
 import { ORIGIN } from '@/lib/site';
 import { getSiteData, priceMap } from '@/lib/site-data';
 import PlansView from './PlansView';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
     title: 'Robtic Hosting plans and pricing',
     description:
         'Robtic plans and prices: Personal (free for the first month), Developers, Servers, Communities, Team ' +
         'and Org, with their memory, CPU, storage and databases.',
-    alternates: { canonical: '/hosting/plans' },
-};
+    path: '/hosting/plans',
+    share: SHARE.hosting,
+});
 
 export default async function PlansPage() {
     const site = await getSiteData();
