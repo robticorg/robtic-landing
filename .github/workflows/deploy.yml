@@ -20,6 +20,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'skip deploy')"
     steps:
       - uses: actions/checkout@v4
 
@@ -56,16 +57,52 @@ jobs:
     needs: build
     runs-on: [self-hosted, robtic-deploy]
     steps:
-      - name: Call the Portainer stack webhook
+      # Pulls the new images and recreates the containers straight from the runner (it sits on the server), with the
+      # same stack files Portainer deploys from. Portainer's webhook said "success" without pulling, or pulled minutes
+      # later. The job succeeds only when every service runs the image it just pulled.
+      - name: Pull the new images and recreate the containers
         env:
-          WEBHOOK: ${{ secrets.PORTAINER_WEBHOOK }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ACTOR: ${{ github.actor }}
+          STACK_DIR: /data/compose/5/v1
+          PROJECT: robtic-landing
+          # service=image, space separated
+          SERVICES: "robtic-landing=ghcr.io/robticorg/robtic-landing:production"
         run: |
-          if [ -z "$WEBHOOK" ]; then
-            echo "::error::PORTAINER_WEBHOOK is not set — image pushed, nothing redeployed."
+          set -euo pipefail
+          if ! docker info >/dev/null 2>&1; then
+            echo "::error::The runner's user can't use Docker. On the server: sudo usermod -aG docker github && sudo systemctl restart 'actions.runner.*'"
             exit 1
           fi
-          # Portainer serves a self-signed certificate on :9443.
-          curl --fail-with-body -sSk -X POST --max-time 300 "$WEBHOOK"
+          # A login that lives only for this job.
+          export DOCKER_CONFIG="$(mktemp -d)"
+          trap 'docker logout ghcr.io >/dev/null 2>&1 || true; rm -rf "$DOCKER_CONFIG"' EXIT
+          echo "$GH_TOKEN" | docker login ghcr.io -u "$ACTOR" --password-stdin >/dev/null
+          names=""
+          for pair in $SERVICES; do
+            docker pull -q "${pair#*=}" >/dev/null
+            names="$names ${pair%%=*}"
+          done
+          # The stack's files live in Portainer's volume; compose runs in a container that can read it.
+          compose() {
+            docker run --rm -v portainer_data:/data:ro -v /var/run/docker.sock:/var/run/docker.sock -w "$STACK_DIR" \
+              docker:27-cli sh -c 'ef=""; [ -f stack.env ] && ef="--env-file stack.env"; exec docker compose -p "$0" -f docker-compose.yml $ef "$@"' "$PROJECT" "$@"
+          }
+          compose up -d --no-deps --pull never $names
+          for pair in $SERVICES; do
+            svc="${pair%%=*}"; want="$(docker image inspect -f '{{.Id}}' "${pair#*=}")"
+            for i in $(seq 1 60); do
+              id="$(docker ps -q --filter "label=com.docker.compose.project=$PROJECT" --filter "label=com.docker.compose.service=$svc" | head -1)"
+              if [ -n "$id" ]; then
+                img="$(docker inspect -f '{{.Image}}' "$id")"
+                health="$(docker inspect -f '{{if .State.Health}}{{.State.Health.Status}}{{else}}{{.State.Status}}{{end}}' "$id")"
+                if [ "$img" = "$want" ] && { [ "$health" = healthy ] || [ "$health" = running ]; }; then echo "$svc is running the new image ($health)"; continue 2; fi
+              fi
+              sleep 3
+            done
+            echo "::error::$svc is not running the new image after 3 minutes"
+            exit 1
+          done
 
   notify:
     name: Deploy notification
