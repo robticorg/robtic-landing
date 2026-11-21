@@ -1,7 +1,7 @@
 // The Settings popup as one script for every Robtic place (built by scripts/build-settings.ts to
 // /rl/robtic/settings/settings.js). A page loads it and calls:
 //
-//     window.RobticSettings.open({ theme: 'discord' | 'hosting', section: 'profile' | 'account' | … })
+//     window.RobticSettings.open({ theme: 'discord' | 'hosting', section: 'account' | 'security' | … })
 //
 // An address with ?settings=<section> opens it on load (old /settings links, a sign-in round trip, the email link),
 // and the parameter is then taken out of the address. With no theme given, the page's own look decides (Robtic Hosting's
@@ -9,7 +9,6 @@
 import { createRoot, type Root } from 'react-dom/client';
 import SettingsPopup, { SECTIONS, type Section } from './Popup';
 import css from './settings.css' with { type: 'text' };
-import PublicProfileSettings from './sections/Profile';
 import AccountSettings from './sections/Account';
 import NotificationSettings from './sections/Notifications';
 import SecuritySettings from './sections/Security';
@@ -21,7 +20,6 @@ type Theme = 'discord' | 'hosting';
 type Options = { theme?: Theme; section?: Section | string; params?: Record<string, string> };
 
 const RENDER: Record<Section, () => React.ReactNode> = {
-    profile: () => <PublicProfileSettings />,
     account: () => <AccountSettings />,
     notifications: () => <NotificationSettings />,
     security: () => <SecuritySettings />,
@@ -51,7 +49,7 @@ function close() {
 }
 
 function open(options: Options = {}) {
-    const section = (SECTIONS as string[]).includes(String(options.section)) ? (options.section as Section) : 'profile';
+    const section = (SECTIONS as string[]).includes(String(options.section)) ? (options.section as Section) : 'account';
     const theme = options.theme ?? guessTheme();
     if (root) close();
     restoreFocus = document.activeElement as HTMLElement | null;
@@ -89,7 +87,7 @@ const q = new URLSearchParams(window.location.search);
 if (q.has('settings')) {
     const params: Record<string, string> = {};
     for (const key of ['connection', 'github']) { const v = q.get(key); if (v) { params[key] = v; q.delete(key); } }
-    const section = q.get('settings') ?? 'profile';
+    const section = q.get('settings') ?? 'account';
     q.delete('settings');
     window.history.replaceState(window.history.state, '', window.location.pathname + (q.toString() ? `?${q}` : '') + window.location.hash);
     const go = () => open({ section, params });

@@ -5,7 +5,7 @@
 // right-click (profile, settings, dashboard, log out); signed out (or while checking) -> Sign in / Get started, so the
 // bar is never empty. While signed in it also sends the ping that counts time on Robtic.
 import { useState, useEffect, useRef } from 'react';
-import { User, SlidersHorizontal, ArrowLeftRight, LogOut, Shield } from 'lucide-react';
+import { SlidersHorizontal, ArrowLeftRight, LogOut, Shield } from 'lucide-react';
 import { logout as signOut } from '@/lib/account';
 import { ADMIN_URL } from '@/lib/site';
 import { openSettings } from '@/lib/settings-popup';
@@ -86,10 +86,6 @@ export default function AuthActions({ panelRoot }: { panelRoot: string }) {
                             <b>{me.username}</b>
                             {me.email ? <span>{me.email}</span> : null}
                         </div>
-                        <a role="menuitem" href={`/u/${me.username}`}>
-                            <User aria-hidden="true" />
-                            Profile
-                        </a>
                         <a role="menuitem" href="/settings" onClick={(e) => { e.preventDefault(); setOpen(false); openSettings(); }}>
                             <SlidersHorizontal aria-hidden="true" />
                             Settings

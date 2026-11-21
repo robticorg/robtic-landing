@@ -5,6 +5,6 @@ const SECTIONS = ['account', 'notifications', 'security', 'connections', 'device
 
 export default async function OldSettings({ params }: { params: Promise<{ rest: string[] }> }) {
     const { rest } = await params;
-    const wanted = [...rest].reverse().find((part) => SECTIONS.includes(part)) ?? (rest[0] === 'linked' ? 'connections' : 'profile');
+    const wanted = [...rest].reverse().find((part) => SECTIONS.includes(part)) ?? (rest[0] === 'linked' ? 'connections' : 'account');
     redirect(`/?settings=${wanted}`);
 }

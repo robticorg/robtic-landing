@@ -22,7 +22,7 @@ export default function AccountSettings() {
         <>
             <header className="st-head">
                 <h1>Account</h1>
-                <p>Your name, sign-in username, panel name and email, and how the panel looks.</p>
+                <p>Your name, sign-in username, panel name and email.</p>
             </header>
             <section className="st-card">
                 <Row value title="Name" desc={me ? `${me.name.first} ${me.name.last}`.trim() : '…'}>
@@ -38,7 +38,6 @@ export default function AccountSettings() {
                     <Change what="email" onClick={() => setPopup('email')} />
                 </Row>
             </section>
-            <PanelView />
             {popup === 'username' && me ? <UsernamePopup current={me.username} onClose={close} /> : null}
             {popup === 'panel' ? <PanelNamePopup onClose={close} /> : null}
             {popup === 'name' && me ? <NamePopup first={me.name.first} last={me.name.last} onClose={close} /> : null}
@@ -53,33 +52,6 @@ function Change({ what, verb = 'Change', onClick }: { what: string; verb?: strin
         <button type="button" className="btn btn-ghost" aria-label={`${verb} ${what}`} onClick={onClick}>
             {verb}<span className="st-noun">{what}</span>
         </button>
-    );
-}
-
-// How the panel's home opens: workspaces (the canvas) or the classic list of apps.
-function PanelView() {
-    const { profile, setProfile } = useSettings();
-    const { run, pending } = useRun();
-
-    const choose = async (enabled: boolean) => {
-        if (enabled === profile.workspace_ui) return;
-        if (await run(() => request('PUT', '/api/client/robtic/interface', { enabled }), enabled ? 'Workspaces it is.' : 'The classic view it is.')) {
-            setProfile({ ...profile, workspace_ui: enabled });
-        }
-    };
-
-    return (
-        <section className="st-card">
-            <Row title="Panel view" desc="How your panel’s home opens.">
-                <div className="st-seg" role="radiogroup" aria-label="Panel view">
-                    {([[true, 'Workspaces'], [false, 'Classic']] as Array<[boolean, string]>).map(([on, label]) => (
-                        <button key={label} type="button" role="radio" aria-checked={on === profile.workspace_ui} className={on === profile.workspace_ui ? 'on' : ''} disabled={pending} onClick={() => choose(on)}>
-                            {label}
-                        </button>
-                    ))}
-                </div>
-            </Row>
-        </section>
     );
 }
 

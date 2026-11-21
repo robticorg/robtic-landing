@@ -8,11 +8,11 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { ApiError, errorText, getProfile, type Profile } from '@/lib/account';
 
-export type Section = 'profile' | 'account' | 'notifications' | 'security' | 'connections' | 'devices' | 'plan';
-export const SECTIONS: Section[] = ['profile', 'account', 'notifications', 'security', 'connections', 'devices', 'plan'];
+export type Section = 'account' | 'notifications' | 'security' | 'connections' | 'devices' | 'plan';
+export const SECTIONS: Section[] = ['account', 'notifications', 'security', 'connections', 'devices', 'plan'];
 
 const NAV: Array<{ group: string; items: Array<{ id: Section; label: string }> }> = [
-    { group: 'You', items: [{ id: 'profile', label: 'Public profile' }, { id: 'account', label: 'Account' }] },
+    { group: 'You', items: [{ id: 'account', label: 'Account' }] },
     { group: 'Preferences', items: [{ id: 'notifications', label: 'Notifications' }] },
     { group: 'Access', items: [{ id: 'security', label: 'Security' }, { id: 'connections', label: 'Connections' }, { id: 'devices', label: 'Devices' }] },
     { group: 'Billing', items: [{ id: 'plan', label: 'Plan' }] },
@@ -38,7 +38,7 @@ export function useSettings(): Ctx {
 }
 
 /** The section the popup shows now, kept for a sign-in round trip (see needsSignIn). */
-let current: Section = 'profile';
+let current: Section = 'account';
 
 /** The address to come back to with the popup open on a section. */
 export function returnTo(section: Section = current): string {
@@ -192,13 +192,13 @@ export default function SettingsPopup({ section: first, params, onClose, render 
             <SettingsContext.Provider value={{ profile, setProfile, reload: load, toast, go: setSection, params }}>
                 <div className="st-app">
                     <aside className="st-side">
-                        <a className="st-me" href={`/u/${profile.username}`} title="View your public profile">
+                        <div className="st-me">
                             {profile.avatar_url ? <img src={profile.avatar_url} alt="" /> : <span>{profile.username.charAt(0).toUpperCase()}</span>}
                             <div>
                                 <b>{profile.username}</b>
-                                <small>View public profile</small>
+                                <small>{profile.email}</small>
                             </div>
-                        </a>
+                        </div>
                         <div className="st-tabs">
                             {NAV.map((g) => (
                                 <nav key={g.group} aria-label={g.group}>
