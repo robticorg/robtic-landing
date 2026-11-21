@@ -5,7 +5,7 @@ This page explains what **Robtic System** keeps about the servers it is in and t
 ## What we collect
 
 - **Server settings** chosen by administrators: channels, roles, rates, rewards, shortcuts and log channels.
-- **Activity, per member and server:** how many messages counted (not their content), XP and level, voice time, streaks, combo scores, points and RC balances and their history.
+- **Activity, per member and server:** how many messages counted (not their content), XP and level, voice time, streaks, combo scores, points and their history.
 - **Moderation records:** punishments, their reasons, the moderator, and the evidence attached.
 - **Ids:** Discord user, server, channel and role ids, needed to link all of the above.
 

@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { ORIGIN } from '@/lib/site';
-import { pageMeta, SHARE } from '@/lib/seo';
+import { faqLd, pageMeta, SHARE } from '@/lib/seo';
 import { DISCORD_FAQ } from '@/lib/faqs';
-import { DISCORD_BOTS, SERVICES } from '@/lib/services';
+import { DISCORD_BOTS, DISCORD_STEPS, SERVICES } from '@/lib/services';
 import Faq from '../Faq';
 import DiscordLanding from './DiscordLanding';
 
@@ -18,8 +18,8 @@ export const metadata: Metadata = pageMeta({
     title: 'Robtic Discord: ready-made Discord bots with a web dashboard',
     shareTitle: 'Robtic Discord',
     description:
-        'Robtic Discord bots for your server: Robtic System (levels, points, moderation), Robtic Staff (staff ranks and ' +
-        'reports), Robtic Ticket (ticket panels and transcripts), Robtic Voice and Robtic Guard. Set up every feature from one web dashboard, in English or Arabic.',
+        'Ready-made Discord bots for levels, staff, tickets, voice and raid protection, set up from one web dashboard ' +
+        'in English or Arabic.',
     path: '/discord',
     share: SHARE.discord,
     keywords: ['Robtic Discord', 'Robtic', 'Robtic bots', 'Discord bots', 'Discord leveling bot', 'Discord ticket bot', 'Discord staff bot'],
@@ -42,6 +42,12 @@ export default function DiscordPage() {
             itemListElement: DISCORD_BOTS.map((b) => ({ '@type': 'Offer', itemOffered: { '@type': 'SoftwareApplication', name: b.name, applicationCategory: 'CommunicationApplication', operatingSystem: 'Discord', description: b.text } })),
         },
     };
+    const howTo = {
+        '@context': 'https://schema.org',
+        '@type': 'HowTo',
+        name: 'Add a Robtic Discord bot to your server',
+        step: DISCORD_STEPS.map((s, i) => ({ '@type': 'HowToStep', position: i + 1, name: s.title, text: s.text, url: `${ORIGIN}/discord#dl-steps-title` })),
+    };
     const crumbs = {
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
@@ -53,7 +59,7 @@ export default function DiscordPage() {
 
     return (
         <>
-            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([ld, crumbs]) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([ld, crumbs, howTo, faqLd(DISCORD_FAQ.slice(0, 5))]) }} />
             <DiscordLanding addHref={S.app} discordMark={DISCORD_MARK} />
 
             <section className="block faq-sec" id="faq">

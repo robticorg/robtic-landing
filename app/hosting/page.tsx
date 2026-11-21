@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { ORIGIN } from '@/lib/site';
-import { pageMeta, SHARE } from '@/lib/seo';
+import { faqLd, pageMeta, SHARE } from '@/lib/seo';
 import { getSiteData, landingFaq, priceMap } from '@/lib/site-data';
 import { PLANS, limitRows } from '@/lib/plans';
 import { SERVICES } from '@/lib/services';
@@ -16,8 +16,8 @@ export const metadata: Metadata = pageMeta({
     title: 'Robtic Hosting: host Discord bots, websites and APIs',
     shareTitle: 'Robtic Hosting',
     description:
-        'Robtic Hosting runs your Discord bots (discord.js, discord.py, TypeScript), websites and APIs from the browser: ' +
-        'workspaces, live console, code editor, MongoDB and Redis, backups, GitHub and your own domain. First month free.',
+        'Host Discord bots (discord.js, discord.py), websites and APIs from your browser: live console, code editor, ' +
+        'MongoDB, Redis and backups. First month free.',
     path: '/hosting',
     share: SHARE.hosting,
     keywords: ['Robtic Hosting', 'Robtic', 'Discord bot hosting', 'host discord.js bot', 'host discord.py bot', 'free Discord bot hosting'],
@@ -52,7 +52,7 @@ export default async function HostingPage() {
 
     return (
         <>
-            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([ld, crumbs]) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([ld, crumbs, faqLd(faq.slice(0, 6))]) }} />
 
             <HostingLanding
                 appHref={S.app}

@@ -1,6 +1,7 @@
 'use client';
 
 import { afterBoot } from '../after-boot';
+import { DISCORD_STEPS } from '@/lib/services';
 import { useEffect, useRef } from 'react';
 
 // Robtic Discord's page, told by scrolling and kept minimal: a hero whose dashboard preview lies back and flattens as
@@ -23,12 +24,7 @@ const FEATURES = [
     ['One dashboard', 'Every bot'],
 ] as const;
 
-const STEPS = [
-    { title: 'Sign in', text: 'Use your Robtic account and link Discord.' },
-    { title: 'Turn it on', text: 'Accept the Robtic Discord Terms once.' },
-    { title: 'Pick a server', text: 'Every server you administer is listed.' },
-    { title: 'Add a bot', text: 'Add the bots you want and set each one up.' },
-] as const;
+const STEPS = DISCORD_STEPS;
 
 const CLOSE = ['Set', 'it', 'up', 'once.', 'Your', 'bots', 'handle', 'the', 'rest.'];
 

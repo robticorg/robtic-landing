@@ -19,7 +19,7 @@ export default function robots(): MetadataRoute.Robots {
             // "Robtic Discord" lead to the landing pages.
             allow: [
                 '/', '/auth/llms.txt', '/panel/llms.txt',
-                '/hosting$', '/hosting/plans', '/hosting/sitemap.xml',
+                '/hosting$', '/hosting/plans', '/hosting/sitemap.xml', '/hosting/llms.txt',
                 '/discord$', '/discord/llms.txt', '/discord/sitemap.xml',
             ],
             // Dashboards are private app routes (hosting moved from /panel to /hosting; Discord bot dashboards live

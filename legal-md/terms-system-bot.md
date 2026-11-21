@@ -10,7 +10,7 @@ These terms cover adding and using **Robtic System**, Robtic's community bot (le
 
 ## 2. What the bot does
 
-Robtic System gives members XP and levels for chat and voice, activity points that can be converted to RC, daily streaks, conversation combos and leaderboards. It can moderate with evidence (jail, mute, warn), run shortcuts and post logs to the channels you choose. Features can be switched on or off per server and may change as the bot grows.
+Robtic System gives members XP and levels for chat and voice, activity points, daily streaks, conversation combos and leaderboards. It can moderate with evidence (jail, mute, warn), run shortcuts and post logs to the channels you choose. Features can be switched on or off per server and may change as the bot grows.
 
 ## 3. Your responsibilities
 
@@ -18,9 +18,9 @@ Robtic System gives members XP and levels for chat and voice, activity points th
 - Tell your members that the bot records activity (messages counted, voice time, streaks) for levels and points.
 - Don't use the bot to harass members, to punish people unfairly, or to break the [acceptable use rules](/terms/robtic#3-acceptable-use).
 
-## 4. Points and RC
+## 4. Points
 
-Points and RC have no cash value and can't be sold or exchanged outside Robtic. We may correct balances that were earned through bugs, spam or abuse. Rates are set by each server.
+Points have no cash value and can't be sold or exchanged outside Robtic. We may correct balances that were earned through bugs, spam or abuse. Rates are set by each server.
 
 ## 5. Availability
 

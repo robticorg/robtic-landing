@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ORIGIN } from '@/lib/site';
 import { getSiteData } from '@/lib/site-data';
-import { pageMeta, SHARE } from '@/lib/seo';
+import { faqLd, pageMeta, SHARE } from '@/lib/seo';
 import { ROBTIC_FAQ } from '@/lib/faqs';
 import { SERVICES, SERVICE_ORDER } from '@/lib/services';
 import HomeLanding from './HomeLanding';
@@ -11,8 +11,8 @@ import Faq from './Faq';
 // (/hosting, /discord) with its own words, plans and terms; this page only introduces them.
 
 const HOME_DESCRIPTION =
-        'Robtic makes tools for people who build and run Discord communities: Robtic Hosting for your own bots and apps, ' +
-        'and Robtic Discord, ready-made bots set up from a web dashboard. One account for every service.';
+        'Robtic makes tools for Discord builders: Robtic Hosting runs your bots and apps, Robtic Discord adds ' +
+        'ready-made bots with a web dashboard. One account.';
 
 // Robtic's own page: "Robtic" in a search finds this one. The admin console's share picture (Landing -> Images) wins
 // when one is set; otherwise the home card.
@@ -42,7 +42,7 @@ export default function Home() {
     };
     return (
         <>
-            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([ld, faqLd(ROBTIC_FAQ.slice(0, 6))]) }} />
             <HomeLanding
                 services={SERVICE_ORDER.map((k) => {
                     const s = SERVICES[k];

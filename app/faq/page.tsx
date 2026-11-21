@@ -5,7 +5,7 @@ import { DISCORD_FAQ, ROBTIC_FAQ } from '@/lib/faqs';
 import Faq from '../Faq';
 
 export const metadata: Metadata = pageMeta({
-    title: 'FAQ · Robtic',
+    title: 'Robtic FAQ: hosting, Discord bots and your account',
     description: 'Common questions about Robtic and your account, Robtic Hosting (bots, apps, plans, databases) and the Robtic Discord bots.',
     path: '/faq',
 });

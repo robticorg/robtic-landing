@@ -14,9 +14,10 @@ export const AI_GUIDE_PATH = '/rl/ai/robtic.md';
 export const NOINDEX = { 'X-Robots-Tag': 'noindex' };
 
 const SUMMARY =
-    'Robtic is the platform for Discord builders: host bots and small apps, run game and app servers, and add ' +
-    `ready-made public bots — all from one account in the browser, with a live console, a code editor, databases, ` +
-    `backups and teams. The Personal plan is free for the first ${TRIAL_DAYS} days.`;
+    'Robtic makes tools for people who build and run Discord communities, under one account: Robtic Hosting runs your own ' +
+    'Discord bots (discord.js, discord.py, TypeScript), websites and APIs from the browser, with a live console, a code ' +
+    'editor, databases, backups and teams; Robtic Discord adds ready-made bots to your server and sets them up from a web ' +
+    `dashboard, in English or Arabic. The Personal hosting plan is free for the first ${TRIAL_DAYS} days.`;
 
 function features(site: SiteData | null): Array<{ title: string; text: string }> {
     const fromPanel = site?.landing?.features;
@@ -43,28 +44,29 @@ export function llmsIndex(site: SiteData | null): string {
         '',
         '## Site',
         '',
-        `- [Home](${ORIGIN}/): what Robtic does and its features`,
-        `- [Plans and pricing](${ORIGIN}/plans): every plan with its limits and price`,
+        `- [Home](${ORIGIN}/): what Robtic is: Robtic Hosting and Robtic Discord`,
+        `- [Robtic Hosting for AI tools](${ORIGIN}/hosting/llms.txt): hosting features, plans and getting started`,
+        `- [Robtic Hosting](${ORIGIN}/hosting): host Discord bots, websites and APIs from the browser`,
+        `- [Robtic Discord](${ORIGIN}/discord): ready-made Discord bots with a web dashboard`,
+        `- [Plans and pricing](${ORIGIN}/hosting/plans): every hosting plan with its limits and price`,
         `- [FAQ](${ORIGIN}/faq): common questions about hosting, bots, plans and getting started`,
-        `- [Create an account](${ORIGIN}/auth/register): sign up and start on the Personal plan, free for ${TRIAL_DAYS} days`,
-        `- [Sign in](${ORIGIN}/auth/login): open the panel`,
+        `- [Documentation](https://docs.robtic.org): guides for Robtic Hosting and the Robtic Discord bots`,
         `- [Everything about Robtic](${ORIGIN}${AI_GUIDE_PATH}): features, plans, limits and contacts in one Markdown file`,
         '',
         '## Platforms',
         '',
-        `- [Hosting](${ORIGIN}/hosting/dashboard): host Discord bots, websites and APIs from the browser`,
+        `- [Hosting panel](${ORIGIN}/hosting/dashboard): where your apps run (sign-in required)`,
         `- [Discord bots dashboard](${ORIGIN}/discord/public): server administrators add and configure Robtic’s public Discord bots (rolling out to allowlisted servers)`,
-        '- Servers (game and app servers) and private bots you host are in development.',
         '',
         '## Discord bots',
         '',
-        `- [Robtic System](${ORIGIN}${BOT_GUIDES.system.path}): community bot with XP and levels, activity points and RC, daily streaks, leaderboards, moderation with evidence, shortcuts and log channels`,
+        `- [Robtic System](${ORIGIN}${BOT_GUIDES.system.path}): community bot with XP and levels, activity points, daily streaks, leaderboards, moderation with evidence, shortcuts and log channels`,
         `- [Robtic Staff](${ORIGIN}${BOT_GUIDES.staff.path}): staff management bot with a rank ladder, staff points and promotions, warnings, reports, appeals, vacations and staff applications`,
         `- [Every public bot and how to add it](${ORIGIN}/discord/llms.txt): Robtic System, Staff, Music and Ticket, from the Discord platform itself`,
         '',
         '## Plans',
         '',
-        ...PLANS.map((p) => `- [${p.name}](${ORIGIN}/plans#plan-${p.key}): ${planPrice(p, prices)}`),
+        ...PLANS.map((p) => `- [${p.name}](${ORIGIN}/hosting/plans#plan-${p.key}): ${planPrice(p, prices)}`),
         '',
         '## Optional',
         '',
@@ -105,8 +107,7 @@ export function aiGuide(site: SiteData | null): string {
         '',
         '- **Hosting** — Discord bots (discord.js, discord.py, TypeScript), websites and APIs. Add an app by ' +
             'uploading files, starting from a ready Discord bot, or cloning a GitHub repository; there is no server to set up.',
-        '- **Servers** — game and app servers (in development).',
-        '- **Discord bots** — ready-made public bots to add to your own server, and private bots you host and run on Robtic (in development).',
+        '- **Discord bots** — ready-made public bots to add to your own server, set up from a web dashboard in English or Arabic.',
         '',
         '## Features',
         '',
@@ -114,7 +115,7 @@ export function aiGuide(site: SiteData | null): string {
         '',
         '## Plans',
         '',
-        `All plans are listed at ${ORIGIN}/plans. Individual plans: ${PLANS.filter((p) => p.group === 'individual').map((p) => p.name).join(', ')}. ` +
+        `All plans are listed at ${ORIGIN}/hosting/plans. Individual plans: ${PLANS.filter((p) => p.group === 'individual').map((p) => p.name).join(', ')}. ` +
             `Business plans: ${PLANS.filter((p) => p.group === 'business').map((p) => p.name).join(', ')}.`,
         '',
         ...PLANS.flatMap((p) => planDetails(p, prices)),
@@ -125,7 +126,7 @@ export function aiGuide(site: SiteData | null): string {
         ...landingFaq(site).flatMap((f) => [`### ${f.q}`, '', f.a, '']),
         '## Getting started',
         '',
-        `1. Create an account at ${ORIGIN}/auth/register.`,
+        `1. Create an account from ${ORIGIN}/hosting (Get started).`,
         '2. Choose a plan and add an app: upload files, start from a ready Discord bot, or clone from GitHub.',
         '3. Run it from the browser and watch its console.',
         '',
@@ -137,6 +138,39 @@ export function aiGuide(site: SiteData | null): string {
         '## Terms and privacy',
         '',
         ...legalLinks(site),
+        '',
+    ].join('\n');
+}
+
+/** /hosting/llms.txt: Robtic Hosting on its own, for AI tools asked about hosting a Discord bot. */
+export function hostingLlms(site: SiteData | null): string {
+    const prices = priceMap(site);
+    return [
+        '# Robtic Hosting',
+        '',
+        '> Robtic Hosting runs Discord bots (discord.js, discord.py, TypeScript), websites and APIs from the browser, with no ' +
+            `server to set up. Part of Robtic (${ORIGIN}). The Personal plan is free for the first ${TRIAL_DAYS} days.`,
+        '',
+        `- Landing page: ${ORIGIN}/hosting`,
+        `- Plans and pricing: ${ORIGIN}/hosting/plans`,
+        `- Panel (sign-in required): ${ORIGIN}/hosting/dashboard`,
+        '- Documentation: https://docs.robtic.org',
+        `- Terms: ${ORIGIN}/terms/hosting · Privacy: ${ORIGIN}/privacy/hosting`,
+        `- Contact: ${resolveContact(site)}`,
+        '',
+        '## Features',
+        '',
+        ...features(site).map((f) => `- **${f.title}:** ${f.text}`),
+        '',
+        '## Plans',
+        '',
+        ...PLANS.map((p) => `- [${p.name}](${ORIGIN}/hosting/plans#plan-${p.key}): ${planPrice(p, prices)}`),
+        '',
+        '## Getting started',
+        '',
+        `1. Open ${ORIGIN}/hosting and choose Get started; sign in or create a Robtic account.`,
+        '2. Add an app: upload files, start from a ready Discord bot, or clone a GitHub repository.',
+        '3. Start it from the browser and watch its live console.',
         '',
     ].join('\n');
 }

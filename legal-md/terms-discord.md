@@ -23,9 +23,9 @@ Ready-made bots you add to your servers and configure from the dashboard: levels
 - We may remove or turn off a plugin that breaks these terms, harms servers, or overloads the bots.
 - Robtic's official plugins are public: anyone can read their code.
 
-## 5. Points and RC
+## 5. Points
 
-Points and RC have no cash value and can't be sold or exchanged outside Robtic. We may correct balances that were earned through bugs, spam or abuse.
+Points have no cash value and can't be sold or exchanged outside Robtic. We may correct balances that were earned through bugs, spam or abuse.
 
 ## 6. Availability
 

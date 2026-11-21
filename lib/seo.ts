@@ -40,3 +40,21 @@ export function pageMeta({
         twitter: { card: 'summary_large_image', title: shareTitle ?? title, description, images: [image.url] },
     };
 }
+
+/** FAQPage JSON-LD for the questions a page shows (the same ones, in the same words). */
+export function faqLd(items: ReadonlyArray<{ q: string; a: string }>) {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: items.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+    };
+}
+
+/** A legal page's description: its first paragraph, cut at a word to fit a search result (about 155 characters). */
+export function excerpt(markdown: string, max = 155): string | undefined {
+    const para = markdown.split(/\n\s*\n/).map((p) => p.trim()).find((p) => p && !/^(#|[-*>|]|\d+\.)/.test(p));
+    if (!para) return undefined;
+    const text = para.replace(/\[([^\]]+)\]\([^)]*\)/g, '$1').replace(/[*_`]/g, '').replace(/\s+/g, ' ');
+    if (text.length <= max) return text;
+    return text.slice(0, text.lastIndexOf(' ', max - 1)).replace(/[,;:]$/, '') + '…';
+}

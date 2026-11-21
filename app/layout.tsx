@@ -9,8 +9,8 @@ import { asset } from '@/lib/asset';
 
 import { SignInLink } from './SignInLink';
 const DESCRIPTION =
-    'Robtic is the platform for Discord builders: host bots and small apps, run game and app servers, and add ' +
-    'our public bots — all from one account, in the browser, with a live console, code editor, databases and teams.';
+    'Robtic makes tools for people who build and run Discord communities: Robtic Hosting runs your own Discord bots, ' +
+    'websites and APIs from the browser, and Robtic Discord adds ready-made bots with a web dashboard. One account for both.';
 const IMAGE = `${ORIGIN}/rl/robtic/icon-512.png`;
 
 const BASE_METADATA: Metadata = {
@@ -157,7 +157,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                             </div>
                             <div className="foot-col">
                                 <h4>Community</h4>
-                                <a href="#" data-soon="Docs — coming soon">Docs</a>
+                                <a href="https://docs.robtic.org">Docs</a>
                                 <a href="#" data-soon="Status — coming soon">Status</a>
                                 <a href={navDiscord} target="_blank" rel="noopener">Discord</a>
                                 <a href={navGithub} target="_blank" rel="noopener">GitHub</a>

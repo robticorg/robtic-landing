@@ -19,7 +19,7 @@ export function systemBotGuide(): string {
     return [
         '# Robtic System: Discord community bot',
         '',
-        '> An all-in-one Discord bot for community servers: XP and levels for chat and voice, activity points and the RC currency, daily message streaks, conversation combos, leaderboards, moderation with evidence, custom shortcuts and log channels. Configured per server from a web dashboard.',
+        '> An all-in-one Discord bot for community servers: XP and levels for chat and voice, activity points, daily message streaks, conversation combos, leaderboards, moderation with evidence, custom shortcuts and log channels. Configured per server from a web dashboard.',
         '',
         `- Made by Robtic (${ORIGIN}), the platform for Discord builders.`,
         `- Dashboard: ${DASHBOARD}`,
@@ -29,7 +29,7 @@ export function systemBotGuide(): string {
         '## Features',
         '',
         '- **Levels and XP**: 5–15 XP per message (one per minute) and for active voice time; level n costs 100 × 1.2ⁿ XP; role rewards per chat or voice level; level-up announcements; optional XP decay for inactive members.',
-        '- **Points and RC**: points from messages, combos, voice minutes and streaks at rates each server sets; convert points to RC, the premium currency.',
+        '- **Points**: points from messages, combos, voice minutes and streaks at rates each server sets.',
         '- **Voice activity**: voice time earns XP and points; AFK detection; tracked and excluded channels; reduced rate when alone.',
         '- **Streaks**: daily message streaks with rewards, milestone announcements, reminders, and staff can return a lost streak.',
         '- **Combo**: scores two-person conversations (Bronze, Silver, Gold, Diamond, Legendary) with a champion role.',

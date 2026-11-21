@@ -66,3 +66,11 @@ export const DISCORD_BOTS = [
         text: 'Up to ten music bots per server: each stays in its own voice channel or follows the music, with a control panel and text commands.',
     },
 ] as const;
+
+/** Getting a Robtic Discord bot running, as /discord shows it (and marks it up as a HowTo). */
+export const DISCORD_STEPS = [
+    { title: 'Sign in', text: 'Use your Robtic account and link Discord.' },
+    { title: 'Turn it on', text: 'Accept the Robtic Discord Terms once.' },
+    { title: 'Pick a server', text: 'Every server you administer is listed.' },
+    { title: 'Add a bot', text: 'Add the bots you want and set each one up.' },
+] as const;
