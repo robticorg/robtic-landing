@@ -11,6 +11,7 @@
     if ((!nav || nav.type !== 'reload') && !transit && from && from.origin === location.origin
         && !/^\/(panel|auth|admin)(\/|$)/.test(from.pathname)) {
         boot.style.display = 'none'; // React owns this element: hide it, never delete it.
+        document.documentElement.setAttribute('data-booted', '1');
         return;
     }
     var video = boot.querySelector('video');
@@ -20,7 +21,8 @@
         if (!ready || !blinked || boot.className) return;
         boot.className = 'done';
         document.documentElement.style.overflow = '';
-        setTimeout(function () { boot.style.display = 'none'; }, 450);
+        // A flag on <html> React never touches: the eyes stay gone even if React re-renders the layout.
+        setTimeout(function () { boot.style.display = 'none'; document.documentElement.setAttribute('data-booted', '1'); }, 450);
     };
     var watch = function () {
         if (video.currentTime >= 0.95) { blinked = true; video.removeEventListener('timeupdate', watch); hide(); }
