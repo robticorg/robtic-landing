@@ -248,7 +248,7 @@ export default function HostingLanding({ appHref, plans }: { appHref: string; pl
                     <h2 id="rh-plans-title" className="rh-h2">Start free. <em>Grow when your bots do.</em></h2>
                     <div className="rh-plans">
                         {plans.map((p) => (
-                            <a className={`rh-plan${p.free ? ' free' : ''}`} href={`/hosting/plans#${p.key}`} key={p.key}>
+                            <a className={`rh-plan${p.free ? ' free' : ''}`} href={`/hosting/plans#plan-${p.key}`} key={p.key}>
                                 <b>{p.name}</b>
                                 <span className="rh-price">{p.price}</span>
                                 <ul>{p.rows.map(([l, v]) => <li key={l}><span>{l}</span><span>{v}</span></li>)}</ul>
