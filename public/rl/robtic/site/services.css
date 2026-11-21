@@ -768,6 +768,34 @@ img.rx-ds-inv-ic { width: 72px; height: 72px; padding: 0; border-radius: 22px; o
 
 /* The whole hosting page sits on black (the bar, the FAQ and the footer's wave follow it). */
 :root:has(.rh) { --bg: #060607; --bg-2: #09090b; }
+/* The footer on the hosting pages joins their black: same ground, the light white instead of blue. */
+:root:has(.rh) { --foot: #060607; }
+:root:has(.rh) footer.foot { background: radial-gradient(900px 400px at 50% 120%, rgba(255, 255, 255, .07), transparent 70%), var(--foot); }
+:root:has(.rh) .wave .wl { stroke: rgba(255, 255, 255, .16); }
+:root:has(.rh) .mark, :root:has(.rh) .mark .t { background-image: linear-gradient(180deg, rgba(244, 244, 245, .85), rgba(244, 244, 245, .18) 70%, rgba(244, 244, 245, 0)); }
+/* The bar, its menus, the loader, back-to-top and the scrollbar join the hosting world too: black glass, white for
+   what's active or pressable (the white pill), greys for the rest. No Robtic blue on these pages. */
+:root:has(.rh) { scrollbar-color: #3f3f46 #060607; }
+:root:has(.rh) ::-webkit-scrollbar-track { background: #060607; }
+:root:has(.rh) ::-webkit-scrollbar-thumb { border-color: #060607; background: #3f3f46; }
+:root:has(.rh) ::-webkit-scrollbar-thumb:hover { background: #71717a; }
+:root:has(.rh) ::selection { background: rgba(255, 255, 255, .22); color: #fff; }
+:root:has(.rh) .nav-links { border-color: rgba(255, 255, 255, .08); background: rgba(9, 9, 11, .6); }
+:root:has(.rh) .bar .btn-primary { background: #f4f4f5; color: #09090b; }
+:root:has(.rh) .bar .btn-primary:hover { background: #fff; }
+:root:has(.rh) .btn-ghost, :root:has(.rh) .m-kebab { border-color: rgba(255, 255, 255, .1); background: rgba(9, 9, 11, .5); }
+:root:has(.rh) .mega-in, :root:has(.rh) .me-menu, :root:has(.rh) .toast { border-color: rgba(255, 255, 255, .08); background: rgba(12, 12, 14, .9); }
+:root:has(.rh) .mega-h, :root:has(.rh) .m-sub-h { color: #a1a1aa; }
+:root:has(.rh) .mega-item:hover .mega-ic { color: #fff; border-color: rgba(255, 255, 255, .3); }
+:root:has(.rh) .mega-card { border-color: rgba(255, 255, 255, .1); background: radial-gradient(340px 150px at 50% 0%, rgba(255, 255, 255, .08), transparent), #0b0b0d; }
+:root:has(.rh) .m-panel { background: #09090b; border-color: rgba(255, 255, 255, .08); }
+:root:has(.rh) .m-scrim { background: rgba(0, 0, 0, .7); }
+:root:has(.rh) .top-progress::after { background: #f4f4f5; box-shadow: 0 0 10px rgba(255, 255, 255, .5); }
+:root:has(.rh) .to-top { background: rgba(18, 18, 20, .8); }
+:root:has(.rh) .to-top:hover { background: #f4f4f5; color: #09090b; }
+:root:has(.rh) .to-top .ring .fill { stroke: #f4f4f5; }
+:root:has(.rh) .to-top:hover .ring .fill { stroke: #09090b; }
+:root:has(.rh) .to-top:focus-visible, :root:has(.rh) :focus-visible { outline-color: #f4f4f5; }
 .rh {
     --rh-line: rgba(255, 255, 255, .08); --rh-mute: #8b9099; --rh-card: #0b0b0d; --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
     color: #f4f4f5;
