@@ -500,3 +500,11 @@ img.rx-ds-inv-ic { width: 72px; height: 72px; padding: 0; border-radius: 22px; o
     .dl-ctas a { width: 100%; }
     .dl-words b { white-space: normal; text-align: center; line-height: 1.02; }
 }
+
+/* The FAQ after the Discord page carries the closing glow on: the same ellipse, mirrored at the seam, so the light
+   fades down into it instead of stopping at the section's edge. */
+.dl + .faq-sec {
+    background:
+        radial-gradient(72% 59.5vh at 50% 0%, rgba(23, 147, 255, .6), rgba(23, 147, 255, .16) 48%, transparent 74%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg) 55%, var(--bg-2) 100%);
+}
