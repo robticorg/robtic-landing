@@ -95,6 +95,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 />
             </head>
             <body>
+                {/* The eyes while the page loads: they blink once, then fade out once the page is there (landing-boot.js:
+                    a first visit or a refresh only; moving between the site's own pages goes straight to the page). */}
+                <div id="robtic-boot" aria-hidden="true">
+                    <video autoPlay muted loop playsInline disablePictureInPicture preload="auto" poster="/rl/robtic/loading.jpg">
+                        <source src="/rl/robtic/loading.webm" type="video/webm" />
+                        <source src="/rl/robtic/loading.mp4" type="video/mp4" />
+                    </video>
+                </div>
                 <TopProgress />
 
                 <header className="bar" id="bar">
@@ -188,6 +196,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 {/* The enhancement scripts load after the app becomes interactive (so they run post-hydration and
                     don't fight React over the DOM). On modern browsers this is all that runs. */}
                 <Script src={asset('/rl/robtic/site/landing-ui.js')} strategy="afterInteractive" />
+                <Script src={asset('/rl/robtic/site/landing-boot.js')} strategy="afterInteractive" />
 
                 {/* Resilience net for old / very slow browsers: if the app never finishes hydrating, the
                     afterInteractive scripts above never load, and the page (whose reveal content starts hidden)

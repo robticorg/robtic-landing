@@ -37,7 +37,7 @@ export const SERVICES: Record<ServiceKey, Service> = {
         path: '/discord',
         app: '/discord/public',
         tagline: 'Ready-made bots for your Discord server',
-        text: 'Add Robtic’s bots to your server and set up every feature from a web dashboard: levels and moderation, staff, tickets and music.',
+        text: 'Add Robtic’s bots to your server and set up every feature from a web dashboard: levels, staff, tickets, voice and raid protection.',
         image: '/rl/robtic/site/discord-dashboard.webp',
         imageAlt: 'The Robtic Discord dashboard: a ticket panel being designed, with its channels and options beside it',
         terms: '/terms/discord',

@@ -405,10 +405,10 @@ img.rx-ds-inv-ic { width: 72px; height: 72px; padding: 0; border-radius: 22px; o
 .dl-frame img { width: 100%; height: auto; }
 
 /* Load: the words, then the dashboard, once (a short blur hides the crossfade). */
-.dl[data-motion] .dl-hero-txt > * { animation: dl-rise 800ms var(--ease-out) both; }
-.dl[data-motion] .dl-hero-txt > :nth-child(2) { animation-delay: 70ms; }
-.dl[data-motion] .dl-hero-txt > :nth-child(3) { animation-delay: 130ms; }
-.dl[data-motion] .dl-stage { animation: dl-rise 1000ms 200ms var(--ease-out) both; }
+.dl[data-entered] .dl-hero-txt > * { animation: dl-rise 800ms var(--ease-out) both; }
+.dl[data-entered] .dl-hero-txt > :nth-child(2) { animation-delay: 70ms; }
+.dl[data-entered] .dl-hero-txt > :nth-child(3) { animation-delay: 130ms; }
+.dl[data-entered] .dl-stage { animation: dl-rise 1000ms 200ms var(--ease-out) both; }
 @keyframes dl-rise { from { opacity: 0; transform: translateY(16px); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
 
 /* Shared pin: the section is tall, its content stays on screen while it scrolls. */
@@ -507,4 +507,252 @@ img.rx-ds-inv-ic { width: 72px; height: 72px; padding: 0; border-radius: 22px; o
     background:
         radial-gradient(72% 59.5vh at 50% 0%, rgba(23, 147, 255, .6), rgba(23, 147, 255, .16) 48%, transparent 74%),
         linear-gradient(180deg, var(--bg) 0%, var(--bg) 55%, var(--bg-2) 100%);
+}
+
+/* ========================================================================================================== home (hl)
+   Minimal and scroll-told (app/HomeLanding.tsx), in the same language as the Discord page (.dl). Scrolling sets
+   --spread, --fill and data-i; each has a resting default (the finished state) for no JavaScript or reduced motion. */
+.hl { --ease-out: cubic-bezier(0.23, 1, 0.32, 1); }
+.hl h1, .hl h2 { letter-spacing: -0.025em; }
+.hl-pin { position: sticky; top: 0; height: 100vh; height: 100svh; display: grid; place-items: center; overflow: hidden; }
+
+/* Buttons: one white pill (the main action), one quiet ghost. Press shrinks; hover lifts on a mouse only. */
+.hl-ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 34px; }
+.hl-ctas .btn-primary, .hl-solid, .hl-ghost {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 50px; padding: 0 24px; border-radius: 999px;
+    font-weight: 700; font-size: 16px; border: 0; transition: transform 160ms var(--ease-out), background-color 200ms ease, box-shadow 200ms ease;
+}
+.hl-ctas .btn-primary, .hl-solid { background: #fff; color: #070b14; box-shadow: 0 10px 30px -12px rgba(23, 147, 255, .7); }
+.hl-ghost { border: 1px solid var(--line); color: var(--text); background: rgba(255, 255, 255, .03); }
+@media (hover: hover) and (pointer: fine) {
+    .hl-ctas .btn-primary:hover, .hl-solid:hover { transform: translateY(-2px); box-shadow: 0 16px 36px -14px rgba(23, 147, 255, .85); }
+    .hl-ghost:hover { transform: translateY(-2px); background: rgba(255, 255, 255, .07); }
+}
+.hl-ctas .btn-primary:active, .hl-solid:active, .hl-ghost:active { transform: scale(0.97); }
+
+/* Hero: the line, then both products as two stacked screens that fan out and settle side by side. */
+.hl-hero { --spread: 1; position: relative; padding: calc(var(--bar) + 92px) 20px 120px; text-align: center; overflow: clip; }
+.hl[data-motion] .hl-hero { --spread: 0; }
+.hl-glow { position: absolute; inset: -20% -10% auto; height: 120vh; background: radial-gradient(58% 52% at 50% 0%, rgba(23, 147, 255, .4), rgba(23, 147, 255, .08) 55%, transparent 76%); pointer-events: none; }
+.hl-hero-txt { position: relative; max-width: 860px; margin: 0 auto; }
+.hl-hero h1 { margin: 0; font-size: clamp(42px, 6.6vw, 88px); line-height: 1.02; font-weight: 800; text-wrap: balance; }
+.hl-hero h1 span { color: var(--blue); }
+.hl-hero-txt > p { max-width: 560px; margin: 22px auto 0; color: var(--muted); font-size: clamp(17px, 1.6vw, 20px); line-height: 1.5; text-wrap: balance; }
+.hl-stage { position: relative; max-width: 1180px; aspect-ratio: 1180 / 560; margin: 34px auto 0; perspective: 1800px; }
+.hl-screen {
+    position: absolute; top: 0; left: 19%; width: 62%; border: 1px solid rgba(255, 255, 255, .12); border-radius: 16px; overflow: hidden;
+    background: #0a0e17; box-shadow: 0 50px 110px -40px rgba(23, 147, 255, .45), 0 30px 60px -30px rgba(0, 0, 0, .85);
+    transform-origin: 50% 0%; will-change: transform;
+}
+.hl-screen img { width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: top left; }
+.hl-screen.is-back {
+    transform: translateX(calc(var(--spread) * -42%)) translateY(calc((1 - var(--spread)) * -26px))
+        rotateX(calc((1 - var(--spread)) * 18deg)) rotateZ(calc((1 - var(--spread)) * -5deg)) scale(calc(0.94 - var(--spread) * 0.16));
+}
+.hl-screen.is-front {
+    z-index: 1;
+    transform: translateX(calc(var(--spread) * 42%)) translateY(calc((1 - var(--spread)) * 34px))
+        rotateX(calc((1 - var(--spread)) * 18deg)) rotateZ(calc((1 - var(--spread)) * 4deg)) scale(calc(1 - var(--spread) * 0.22));
+}
+.hl-stage.swapping .hl-screen { transition: transform 520ms cubic-bezier(0.77, 0, 0.175, 1); }
+.hl-fact { margin: 18px auto 0 !important; font-size: 14px !important; color: var(--muted); }
+.hl-tabs { position: relative; display: inline-flex; gap: 4px; margin-top: 44px; padding: 4px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255, 255, 255, .03); }
+.hl-tabs button { min-height: 36px; padding: 0 18px; border: 0; border-radius: 999px; background: transparent; color: var(--muted); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: background-color 200ms ease, color 200ms ease, transform 160ms var(--ease-out); }
+.hl-tabs button.on { background: rgba(255, 255, 255, .1); color: var(--text); }
+.hl-tabs button:active { transform: scale(0.97); }
+@media (hover: hover) and (pointer: fine) { .hl-tabs button:not(.on):hover { color: var(--text); } }
+.hl[data-entered] .hl-hero-txt > * { animation: hl-rise 800ms var(--ease-out) both; }
+.hl[data-entered] .hl-hero-txt > :nth-child(2) { animation-delay: 70ms; }
+.hl[data-entered] .hl-hero-txt > :nth-child(3) { animation-delay: 130ms; }
+.hl[data-entered] .hl-tabs { animation: hl-rise 900ms 160ms var(--ease-out) both; }
+.hl[data-entered] .hl-stage { animation: hl-rise 1000ms 200ms var(--ease-out) both; }
+@keyframes hl-rise { from { opacity: 0; transform: translateY(16px); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+
+/* Services: one pinned chapter per product, the words on the left, its screen on the right. */
+.hl-svc { height: calc(var(--n) * 90vh + 100vh); }
+.hl-svc-in { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: 64px; align-items: center; }
+.hl-svc-txt, .hl-svc-shot { display: grid; }
+.hl-chap, .hl-svc-frame { grid-area: 1 / 1; }
+.hl-chap { opacity: 0; transform: translateY(14px); filter: blur(4px); pointer-events: none; transition: opacity 320ms var(--ease-out), transform 320ms var(--ease-out), filter 320ms var(--ease-out); }
+.hl-svc-n { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; letter-spacing: .06em; }
+.hl-chap h2 { margin: 12px 0 0; font-size: clamp(40px, 4.8vw, 66px); line-height: 1; font-weight: 800; }
+.hl-svc-tag { margin: 14px 0 0; font-size: 20px; font-weight: 600; color: var(--blue); }
+.hl-chap > p:not(.hl-svc-tag) { margin: 12px 0 0; max-width: 460px; color: var(--muted); font-size: 17px; line-height: 1.55; }
+.hl-svc-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+.hl-svc-frame {
+    border: 1px solid rgba(255, 255, 255, .12); border-radius: 16px; overflow: hidden; background: #0a0e17;
+    box-shadow: 0 40px 90px -40px rgba(23, 147, 255, .4), 0 24px 50px -30px rgba(0, 0, 0, .8);
+    opacity: 0; transform: scale(0.96) translateY(12px); transition: opacity 360ms var(--ease-out), transform 360ms var(--ease-out);
+}
+.hl-svc-frame img { width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: top left; }
+.hl-svc[data-i="0"] .hl-chap:nth-child(1), .hl-svc[data-i="1"] .hl-chap:nth-child(2), .hl-svc[data-i="2"] .hl-chap:nth-child(3) { opacity: 1; transform: none; filter: none; pointer-events: auto; }
+.hl-svc[data-i="0"] .hl-svc-frame:nth-child(1), .hl-svc[data-i="1"] .hl-svc-frame:nth-child(2), .hl-svc[data-i="2"] .hl-svc-frame:nth-child(3) { opacity: 1; transform: none; }
+
+/* Account: one line fills in word by word; the four points arrive under it once it's read. */
+.hl-acc { --fill: 1; height: 210vh; }
+.hl[data-motion] .hl-acc { --fill: 0; }
+.hl-acc .hl-pin { align-content: center; gap: 56px; padding: 0 20px; text-align: center; }
+.hl-acc h2 { position: relative; max-width: 1000px; margin: 0; font-size: clamp(44px, 7.4vw, 104px); line-height: 1.02; font-weight: 800; text-wrap: balance; }
+.hl-acc h2 span { color: color-mix(in srgb, #fff calc(clamp(0, (var(--fill) * 1.6 - var(--k)) * 7, 1) * 100%), rgba(255, 255, 255, .12)); }
+.hl-points { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; max-width: 1040px; margin: 0; padding: 0; list-style: none; text-align: start; }
+.hl-points li {
+    display: grid; gap: 4px; padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, .16);
+    opacity: clamp(0, calc((var(--fill) - 0.62 - var(--k) * 0.04) * 6), 1);
+    transform: translateY(calc((1 - clamp(0, calc((var(--fill) - 0.62 - var(--k) * 0.04) * 6), 1)) * 12px));
+}
+.hl-points b { font-size: 16px; }
+.hl-points span { color: var(--muted); font-size: 14.5px; line-height: 1.45; }
+
+/* The FAQ after the home page carries the account's glow on, with no seam. */
+.hl + .faq-sec {
+    background:
+        radial-gradient(72% 59.5vh at 50% 0%, rgba(23, 147, 255, .6), rgba(23, 147, 255, .16) 48%, transparent 74%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg) 55%, var(--bg-2) 100%);
+}
+
+/* Resting state: no JavaScript, or reduced motion. Everything shows, nothing is pinned or moves. */
+.hl:not([data-motion]) .hl-svc, .hl:not([data-motion]) .hl-acc { height: auto; }
+.hl:not([data-motion]) .hl-pin { position: relative; height: auto; padding: 96px 0; }
+.hl:not([data-motion]) .hl-svc-txt, .hl:not([data-motion]) .hl-svc-shot { gap: 64px; }
+.hl:not([data-motion]) .hl-chap, .hl:not([data-motion]) .hl-svc-frame { grid-area: auto; opacity: 1; transform: none; filter: none; pointer-events: auto; }
+
+@media (max-width: 860px) {
+    .hl-hero { padding-top: calc(var(--bar) + 52px); padding-bottom: 72px; }
+    .hl-stage { aspect-ratio: 16 / 10.6; margin-top: 44px; perspective: 1000px; }
+    .hl-screen { left: 0; width: 100%; border-radius: 12px; }
+    .hl-screen.is-back { opacity: 0; }
+    .hl-screen.is-front { transform: translateY(calc((1 - var(--spread)) * 20px)) rotateX(calc((1 - var(--spread)) * 18deg)) scale(calc(0.94 + var(--spread) * 0.06)); }
+    .hl-svc-in { grid-template-columns: 1fr; gap: 28px; }
+    .hl-svc-shot { order: -1; }
+    .hl-chap h2 { font-size: 40px; }
+    .hl-svc-tag { font-size: 18px; }
+    .hl-points { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+}
+@media (max-width: 520px) {
+    .hl-ctas a { width: 100%; }
+    .hl-points { grid-template-columns: 1fr; }
+}
+
+/* The Discord chapter shows its bots. */
+.hl-bots { display: flex; gap: 10px; margin: 22px 0 0; padding: 0; list-style: none; }
+.hl-bots img { width: 44px; height: 44px; border-radius: 14px; box-shadow: 0 0 0 1px rgba(255, 255, 255, .1); transition: transform 160ms var(--ease-out); }
+@media (hover: hover) and (pointer: fine) { .hl-bots img:hover { transform: translateY(-2px); } }
+
+/* Tour: one framed Discord channel per bot; the list beside it marks where you are. */
+.hl-tour { height: calc(var(--n) * 75vh + 100vh); }
+.hl-tour-in { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: 72px; align-items: center; }
+.hl-tour h2, .hl-lang h2 { margin: 0; font-size: clamp(36px, 4.2vw, 58px); line-height: 1.04; font-weight: 800; text-wrap: balance; }
+.hl-tour-list { display: grid; gap: 4px; margin: 30px 0 0; padding: 0; list-style: none; }
+.hl-tour-list li { display: grid; gap: 2px; padding: 10px 0 10px 18px; border-left: 2px solid var(--line); opacity: .4; transition: opacity 250ms ease, border-color 250ms ease; }
+.hl-tour-list b { font-size: 18px; }
+.hl-tour-list span { color: var(--muted); font-size: 14.5px; }
+.hl-tour-stage { display: grid; }
+.hl-frame {
+    grid-area: 1 / 1; padding: 10px; border-radius: 22px; background: linear-gradient(160deg, rgba(23, 147, 255, .9), rgba(23, 147, 255, .45));
+    box-shadow: 0 40px 90px -40px rgba(23, 147, 255, .6);
+    opacity: 0; transform: translateY(14px) scale(0.98); transition: opacity 320ms var(--ease-out), transform 320ms var(--ease-out);
+}
+.hl-chat { display: grid; gap: 14px; height: 420px; padding: 16px 20px 22px; border-radius: 14px; background: #313338; align-content: start; overflow: hidden; }
+.hl-chat-head { padding-bottom: 12px; border-bottom: 1px solid rgba(255, 255, 255, .08); color: #f2f3f5; font-weight: 700; }
+.hl-msg { display: grid; grid-template-columns: 40px 1fr; gap: 12px; opacity: 0; transform: translateY(10px); transition: opacity 300ms var(--ease-out), transform 300ms var(--ease-out); }
+.hl-msg img { width: 40px; height: 40px; border-radius: 50%; }
+.hl-msg b { color: #f2f3f5; font-size: 15px; }
+.hl-msg b em { margin-left: 6px; padding: 1px 5px; border-radius: 4px; background: #5865f2; color: #fff; font-size: 10px; font-style: normal; vertical-align: 2px; }
+.hl-msg p { margin: 2px 0 0; color: #dbdee1; }
+.hl-msg strong { color: #f2f3f5; }
+.hl-emb { display: grid; gap: 8px; margin-top: 6px; padding: 12px 14px; max-width: 360px; border-radius: 6px; background: #2b2d31; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06); }
+.hl-emb span { color: #f2f3f5; font-weight: 700; }
+.hl-emb p { margin: 0; }
+.hl-emb i { height: 8px; border-radius: 99px; background: #1e1f22; overflow: hidden; font-style: normal; }
+.hl-emb s { display: block; width: 0; height: 100%; border-radius: 99px; background: var(--blue); transition: width 900ms var(--ease-out) 350ms; }
+.hl-emb small { color: #b5bac1; font-size: 12.5px; }
+.hl-emb-up { background: linear-gradient(135deg, rgba(23, 147, 255, .28), #2b2d31 70%); }
+.hl-emb-warn { background: linear-gradient(135deg, rgba(245, 165, 36, .22), #2b2d31 70%); }
+.hl-btns { display: flex; flex-wrap: wrap; gap: 6px; }
+.hl-btns i { height: auto; padding: 5px 10px; border-radius: 4px; background: #4e5058; color: #fff; font-size: 13px; font-style: normal; }
+/* The current step: its frame shows, its messages arrive one after another, its line in the list is lit. */
+.hl-tour[data-i="0"] .hl-frame:nth-child(1), .hl-tour[data-i="1"] .hl-frame:nth-child(2), .hl-tour[data-i="2"] .hl-frame:nth-child(3),
+.hl-tour[data-i="3"] .hl-frame:nth-child(4), .hl-tour[data-i="4"] .hl-frame:nth-child(5) { opacity: 1; transform: none; }
+.hl-tour[data-i="0"] .hl-frame:nth-child(1) .hl-msg, .hl-tour[data-i="1"] .hl-frame:nth-child(2) .hl-msg, .hl-tour[data-i="2"] .hl-frame:nth-child(3) .hl-msg,
+.hl-tour[data-i="3"] .hl-frame:nth-child(4) .hl-msg, .hl-tour[data-i="4"] .hl-frame:nth-child(5) .hl-msg { opacity: 1; transform: none; transition-delay: calc(120ms + var(--m) * 220ms); }
+.hl-tour[data-i="0"] .hl-frame:nth-child(1) .hl-emb s, .hl-tour[data-i="4"] .hl-frame:nth-child(5) .hl-emb s { width: 88%; }
+.hl-tour[data-i="0"] .hl-tour-list li:nth-child(1), .hl-tour[data-i="1"] .hl-tour-list li:nth-child(2), .hl-tour[data-i="2"] .hl-tour-list li:nth-child(3),
+.hl-tour[data-i="3"] .hl-tour-list li:nth-child(4), .hl-tour[data-i="4"] .hl-tour-list li:nth-child(5) { opacity: 1; border-color: var(--blue); }
+
+/* Language: the same dashboard in English, then Arabic; the heading's second half arrives with it. */
+.hl-lang { height: 220vh; }
+.hl-lang-in { display: grid; justify-items: center; text-align: center; }
+.hl-lang h2 { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 .35em; }
+.hl-lang h2 .ar { font-family: 'Noto Sans Arabic', 'Segoe UI', sans-serif; color: var(--blue); opacity: .14; transition: opacity 400ms var(--ease-out); }
+.hl-lang[data-ar="1"] h2 .ar { opacity: 1; }
+.hl-lang-in > p { margin-inline: auto; }
+.hl-lang-shot { position: relative; width: min(820px, 100%, calc((100svh - 360px) * 1.6)); margin-top: 34px; border: 1px solid rgba(255, 255, 255, .12); border-radius: 16px; overflow: hidden; box-shadow: 0 40px 90px -40px rgba(23, 147, 255, .45); }
+.hl-lang-imgs { position: relative; aspect-ratio: 16 / 10; }
+.hl-lang-imgs img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; transition: opacity 500ms var(--ease-out), transform 500ms var(--ease-out), filter 500ms var(--ease-out); }
+.hl-lang-imgs .ar { opacity: 0; transform: scale(1.02); filter: blur(4px); }
+.hl-lang[data-ar="1"] .hl-lang-imgs .ar { opacity: 1; transform: none; filter: none; }
+.hl-lang[data-ar="1"] .hl-lang-imgs .en { opacity: 0; transform: scale(0.98); filter: blur(4px); }
+
+/* Close: one line and the actions, in the light that leads into the FAQ. */
+.hl-close { position: relative; display: grid; place-content: center; justify-items: center; gap: 8px; min-height: 100vh; min-height: 100svh; padding: 0 20px; text-align: center; overflow: hidden; }
+.hl-close-glow { position: absolute; inset: auto -10% 0; height: 85%; background: radial-gradient(60% 70% at 50% 100%, rgba(23, 147, 255, .6), rgba(23, 147, 255, .16) 48%, transparent 74%); pointer-events: none; }
+.hl-close h2 { position: relative; margin: 0; font-size: clamp(44px, 7vw, 100px); line-height: 1.02; font-weight: 800; letter-spacing: -0.03em; text-wrap: balance; }
+.hl-close .hl-ctas { position: relative; }
+
+/* Resting state for the new sections. */
+.hl:not([data-motion]) .hl-tour, .hl:not([data-motion]) .hl-lang { height: auto; }
+.hl:not([data-motion]) .hl-tour-list li { opacity: 1; }
+.hl:not([data-motion]) .hl-frame:nth-child(1), .hl:not([data-motion]) .hl-frame:nth-child(1) .hl-msg { opacity: 1; transform: none; }
+.hl:not([data-motion]) .hl-lang h2 .ar { opacity: 1; }
+
+@media (max-width: 860px) {
+    .hl-tour-in { grid-template-columns: 1fr; gap: 20px; }
+    .hl-tour-list { grid-template-columns: repeat(5, auto); gap: 0; margin-top: 18px; overflow-x: auto; }
+    .hl-tour-list li { padding: 8px 12px; border-left: 0; border-bottom: 2px solid var(--line); }
+    .hl-tour-list span { display: none; }
+    .hl-chat { height: 400px; }
+    .hl-tabs { margin-top: 32px; }
+}
+
+/* Before the entrance (eyes still showing) the hero waits invisible, so it never flashes in twice. */
+.hl[data-motion]:not([data-entered]) .hl-hero-txt > *, .hl[data-motion]:not([data-entered]) .hl-tabs, .hl[data-motion]:not([data-entered]) .hl-stage,
+.dl[data-motion]:not([data-entered]) .dl-hero-txt > *, .dl[data-motion]:not([data-entered]) .dl-stage { opacity: 0; }
+
+/* ---- Cards: a window bar, a light under the pointer, a living border on the tour, icon tiles on the account. */
+.hl-win { display: flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; background: #0d1322; border-bottom: 1px solid rgba(255, 255, 255, .07); }
+.hl-win i { width: 9px; height: 9px; border-radius: 50%; background: rgba(255, 255, 255, .16); }
+.hl-win i:first-child { background: #ff5f57; } .hl-win i:nth-child(2) { background: #febc2e; } .hl-win i:nth-child(3) { background: #28c840; }
+.hl-win span { margin: 0 auto; padding: 3px 14px; border-radius: 999px; background: rgba(255, 255, 255, .06); color: var(--muted); font-size: 11.5px; letter-spacing: .01em; transform: translateX(-21px); }
+
+[data-spot] { position: relative; }
+[data-spot]::after {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 2;
+    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), rgba(23, 147, 255, .16), transparent 60%);
+    opacity: 0; transition: opacity 250ms ease;
+}
+@media (hover: hover) and (pointer: fine) { [data-spot]:hover::after { opacity: 1; } }
+
+/* The tour frame: a light that slowly travels round its edge. */
+@property --hl-a { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+.hl-frame {
+    background: conic-gradient(from var(--hl-a), rgba(23, 147, 255, .25), #1793ff 18%, rgba(23, 147, 255, .25) 36%, rgba(23, 147, 255, .25) 64%, #8cc8ff 82%, rgba(23, 147, 255, .25));
+    animation: hl-spin 9s linear infinite;
+}
+@keyframes hl-spin { to { --hl-a: 360deg; } }
+
+.hl-points li { position: relative; gap: 6px; padding: 18px 16px 18px; border: 1px solid rgba(255, 255, 255, .08); border-radius: 14px; background: rgba(255, 255, 255, .02); }
+.hl-points .hl-pt-ic { display: grid; place-items: center; width: 36px; height: 36px; margin-bottom: 6px; border-radius: 10px; background: rgba(23, 147, 255, .14); color: #6cb8ff; }
+.hl-points li > span:last-child { color: var(--muted); font-size: 14.5px; line-height: 1.45; }
+
+@media (prefers-reduced-motion: reduce) { .hl-frame { animation: none; } }
+
+/* Phones: grid children may shrink (the tour frame stays on screen), the account cards sit two by two. */
+.hl-tour-in > *, .hl-tour-stage, .hl-frame { min-width: 0; }
+@media (max-width: 520px) {
+    .hl-points { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .hl-points li { padding: 12px; }
+    .hl-points .hl-pt-ic { width: 30px; height: 30px; margin-bottom: 2px; }
+    .hl-points li > span:last-child { font-size: 13px; }
+    .hl-acc .hl-pin { gap: 28px; }
+    .hl-acc h2 { font-size: 40px; }
 }

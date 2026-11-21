@@ -1,5 +1,6 @@
 'use client';
 
+import { afterBoot } from '../after-boot';
 import { useEffect, useRef } from 'react';
 
 // Robtic Discord's page, told by scrolling and kept minimal: a hero whose dashboard preview lies back and flattens as
@@ -45,6 +46,8 @@ export default function DiscordLanding({ addHref, discordMark }: { addHref: stri
         const el = root.current;
         if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
         el.dataset.motion = 'on';
+        // The hero's entrance plays once the eye loading screen has gone, so it's seen.
+        const stopBoot = afterBoot(() => { el.dataset.entered = 'on'; });
         const hero = el.querySelector<HTMLElement>('.dl-hero')!;
         const list = el.querySelector<HTMLElement>('.dl-list')!;
         const steps = el.querySelector<HTMLElement>('.dl-steps')!;
@@ -76,7 +79,7 @@ export default function DiscordLanding({ addHref, discordMark }: { addHref: stri
         tick();
         window.addEventListener('scroll', onScroll, { passive: true });
         window.addEventListener('resize', onScroll);
-        return () => { cancelAnimationFrame(frame); window.removeEventListener('scroll', onScroll); window.removeEventListener('resize', onScroll); };
+        return () => { stopBoot(); cancelAnimationFrame(frame); window.removeEventListener('scroll', onScroll); window.removeEventListener('resize', onScroll); };
     }, []);
 
     return (

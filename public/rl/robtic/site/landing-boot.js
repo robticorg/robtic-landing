@@ -27,6 +27,9 @@
     };
     video.addEventListener('timeupdate', watch);
     setTimeout(function () { blinked = true; hide(); }, 2500);
-    window.addEventListener('load', function () { ready = true; hide(); });
-    setTimeout(function () { ready = blinked = true; hide(); }, 10000);
+    // The script can start after the page has already loaded: then it is ready now.
+    if (document.readyState === 'complete') ready = true;
+    else window.addEventListener('load', function () { ready = true; hide(); });
+    // Never stay over the page: at most 4 seconds, whatever happens.
+    setTimeout(function () { ready = blinked = true; hide(); }, 4000);
 })();
