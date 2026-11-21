@@ -8,6 +8,7 @@ import { useState, useEffect, useRef } from 'react';
 import { User, SlidersHorizontal, ArrowLeftRight, LogOut, Shield } from 'lucide-react';
 import { logout as signOut } from '@/lib/account';
 import { ADMIN_URL } from '@/lib/site';
+import { openSettings } from '@/lib/settings-popup';
 import SwitchAccount from './SwitchAccount';
 import { useHeartbeat } from './useHeartbeat';
 
@@ -89,7 +90,7 @@ export default function AuthActions({ panelRoot }: { panelRoot: string }) {
                             <User aria-hidden="true" />
                             Profile
                         </a>
-                        <a role="menuitem" href="/settings">
+                        <a role="menuitem" href="/settings" onClick={(e) => { e.preventDefault(); setOpen(false); openSettings(); }}>
                             <SlidersHorizontal aria-hidden="true" />
                             Settings
                         </a>

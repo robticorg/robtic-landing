@@ -1,8 +1,6 @@
-'use client';
-
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { identity, IDENTITY, request, type Identity, type Profile } from '@/lib/account';
-import { CodeField, Field, Modal, Row, useAct, useRun, useSettings } from '../SettingsShell';
+import { CodeField, Field, Modal, Row, useAct, useRun, useSettings } from '../Popup';
 
 // Settings -> Account: each setting shows what it is now, and its change opens in a popup.
 type Popup = 'name' | 'username' | 'panel' | 'email';

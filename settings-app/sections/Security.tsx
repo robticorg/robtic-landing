@@ -1,9 +1,7 @@
-'use client';
-
 import { useCallback, useEffect, useState } from 'react';
 import QRCode from 'qrcode';
 import { errorText, identity, IDENTITY, request, type Identity } from '@/lib/account';
-import { CodeField, Field, Modal, Row, useAct, useRun, useSettings } from '../SettingsShell';
+import { CodeField, Field, Modal, Row, useAct, useRun, useSettings } from '../Popup';
 
 // Settings -> Security: password, passkeys, two-factor and recovery codes (all kept in Robtic Auth), and SSH keys.
 type Popup = 'password' | 'authenticator' | 'passkey' | null;

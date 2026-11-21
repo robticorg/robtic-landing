@@ -1,9 +1,6 @@
-'use client';
-
 import { useCallback, useEffect, useState } from 'react';
-import Link from 'next/link';
 import { errorText, request } from '@/lib/account';
-import { useRun, useSettings } from '../SettingsShell';
+import { useRun, useSettings } from '../Popup';
 
 // Settings -> Security -> Devices: everywhere the account is signed in, one card each.
 type Device = { id: number; device: string; kind: 'desktop' | 'phone' | 'tablet'; ip: string; current: boolean; last_seen_at: string; first_seen_at: string };
@@ -18,6 +15,7 @@ const KINDS: Record<Device['kind'], string> = { desktop: 'Computer', phone: 'Pho
 const when = (v: string) => new Date(v).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
 
 export default function DevicesPage() {
+    const { go } = useSettings();
     const { toast } = useSettings();
     const { run, pending } = useRun();
     const [devices, setDevices] = useState<Device[] | null>(null);
@@ -40,7 +38,7 @@ export default function DevicesPage() {
     return (
         <>
             <header className="st-head">
-                <Link className="st-crumb" href="/settings/security">Security</Link>
+                <button type="button" className="st-crumb" onClick={() => go('security')}>Security</button>
                 <h1>Signed-in devices</h1>
                 <p>Don’t recognise one? Sign it out, then change your password.</p>
             </header>

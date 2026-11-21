@@ -215,6 +215,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
                 {/* Google Analytics (gtag.js) */}
                 <Script src="https://www.googletagmanager.com/gtag/js?id=G-MEX3YG8YG3" strategy="afterInteractive" />
+                {/* Settings is a popup (settings-app/): an address with ?settings=<section> opens it. */}
+                <Script id="robtic-settings" strategy="afterInteractive">{`if(/[?&]settings=/.test(location.search)){var s=document.createElement('script');s.src='/rl/robtic/settings-open.js';s.dataset.robticSettings='';document.head.appendChild(s);}`}</Script>
                 <Script id="gtag-init" strategy="afterInteractive">
                     {`window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}

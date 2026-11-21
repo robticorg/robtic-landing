@@ -1,8 +1,6 @@
-'use client';
-
 import { useEffect, useState } from 'react';
 import { errorText, request } from '@/lib/account';
-import { useRun, useSettings } from '../SettingsShell';
+import { useRun, useSettings } from '../Popup';
 
 // Settings -> Notifications: the optional emails. Important ones (sign-in codes, invitations, billing) always go out.
 type Pref = { key: string; label: string; enabled: boolean };

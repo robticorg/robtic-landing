@@ -28,7 +28,7 @@ export default function ConfirmEmail() {
             <div className="st-state">
                 <h1>Your email is changed</h1>
                 <p>Your account now uses {email}.</p>
-                <a className="btn btn-primary" href="/settings/account">Open your account</a>
+                <a className="btn btn-primary" href="/?settings=account">Open your account</a>
             </div>
         );
     }

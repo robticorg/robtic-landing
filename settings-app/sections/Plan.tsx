@@ -1,8 +1,6 @@
-'use client';
-
 import { useEffect, useState } from 'react';
 import { errorText, request } from '@/lib/account';
-import { useSettings } from '../SettingsShell';
+import { useSettings } from '../Popup';
 
 // Settings -> Plan: the plan you're on, how long it has left, and your subscription history.
 type Plan = { name: string; ends_at: string | null; ended: boolean };
@@ -27,7 +25,7 @@ function TimeLeft({ plan }: { plan: Plan }) {
     if (plan.ended || left === 0) {
         return (
             <p className="st-sub">
-                Ended {date(plan.ends_at)}. <a href="/plans">Choose a plan</a>
+                Ended {date(plan.ends_at)}. <a href="/hosting/plans">Choose a plan</a>
             </p>
         );
     }
@@ -89,7 +87,7 @@ export default function PlanSettings() {
                                 <small>{owned ? 'Team plan' : 'Personal plan'}</small>
                                 <h2>{plan.name}</h2>
                             </div>
-                            <a className="btn btn-ghost" href="/plans">See plans</a>
+                            <a className="btn btn-ghost" href="/hosting/plans">See plans</a>
                         </div>
                         <TimeLeft plan={plan} />
                     </section>
