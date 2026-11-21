@@ -63,6 +63,7 @@ jobs:
       - name: Pull the new images and recreate the containers
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WEBHOOK: ${{ secrets.PORTAINER_WEBHOOK }}
           ACTOR: ${{ github.actor }}
           STACK_DIR: /data/compose/5/v1
           PROJECT: robtic-landing
@@ -71,8 +72,11 @@ jobs:
         run: |
           set -euo pipefail
           if ! docker info >/dev/null 2>&1; then
-            echo "::error::The runner's user can't use Docker. On the server: sudo usermod -aG docker github && sudo systemctl restart 'actions.runner.*'"
-            exit 1
+            # Until the runner's user may use Docker, fall back to Portainer's webhook (it may pull late).
+            echo "::warning::The runner can't use Docker yet (sudo usermod -aG docker github && sudo systemctl restart 'actions.runner.*'); calling Portainer's webhook instead."
+            if [ -z "$WEBHOOK" ]; then echo "::error::PORTAINER_WEBHOOK is not set — image pushed, nothing redeployed."; exit 1; fi
+            curl --fail-with-body -sSk -X POST --max-time 300 "$WEBHOOK"
+            exit 0
           fi
           # A login that lives only for this job.
           export DOCKER_CONFIG="$(mktemp -d)"
