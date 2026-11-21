@@ -1,10 +1,9 @@
 import type { Metadata } from 'next';
-import { Languages, LayoutDashboard, LogIn, MousePointerClick, ScrollText, Server, SlashSquare, UserCog } from 'lucide-react';
 import { ORIGIN } from '@/lib/site';
 import { DISCORD_FAQ } from '@/lib/faqs';
 import { DISCORD_BOTS, SERVICES } from '@/lib/services';
 import Faq from '../Faq';
-import DiscordStory from './DiscordStory';
+import DiscordLanding from './DiscordLanding';
 
 // Robtic Discord's own page, with a hero of its own: a Discord channel where the bots work, in Discord's blurple. The dashboard itself is /discord/public (robtic-discord):
 // sign-in with Discord linked, then Robtic Discord's terms the first time.
@@ -18,23 +17,11 @@ export const metadata: Metadata = {
     title: 'Robtic Discord: ready-made Discord bots with a web dashboard',
     description:
         'Robtic Discord bots for your server: Robtic System (levels, points, moderation), Robtic Staff (staff ranks and ' +
-        'reports), Robtic Ticket (ticket panels and transcripts) and Robtic Music. Set up every feature from a web dashboard, in English or Arabic.',
+        'reports), Robtic Ticket (ticket panels and transcripts), Robtic Voice and Robtic Guard. Set up every feature from one web dashboard, in English or Arabic.',
     alternates: { canonical: '/discord' },
     openGraph: { title: 'Robtic Discord', url: `${ORIGIN}/discord` },
 };
 
-const STEPS = [
-    { icon: LogIn, title: 'Sign in', text: 'Sign in with your Robtic account, link Discord, and accept Robtic Discord’s terms.' },
-    { icon: Server, title: 'Pick a server', text: 'Every server where you are an Administrator is listed. Choose one.' },
-    { icon: MousePointerClick, title: 'Add a bot', text: 'Add the bots you want, then set each feature up on its own page.' },
-];
-
-const EVERY_BOT = [
-    { icon: Languages, title: 'English or Arabic', text: 'Each server picks its language; the bots answer in it.' },
-    { icon: SlashSquare, title: 'Slash and typed commands', text: 'Slash commands, plus typed ones with a prefix the server chooses.' },
-    { icon: UserCog, title: 'Your server’s own bot', text: 'A nickname, avatar, banner and bio per server.' },
-    { icon: ScrollText, title: 'An activity log', text: 'See who changed what on the dashboard, and when.' },
-];
 
 export default function DiscordPage() {
     const ld = {
@@ -64,40 +51,7 @@ export default function DiscordPage() {
     return (
         <>
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([ld, crumbs]) }} />
-            <DiscordStory addHref={S.app} discordMark={DISCORD_MARK} />
-
-            <div className="wave" data-wave style={{ ['--from' as string]: 'var(--bg)', ['--to' as string]: 'var(--bg)' }} aria-hidden="true">
-                <svg viewBox="0 0 1440 110" preserveAspectRatio="none"><path className="w2" /><path className="w1" /><path className="wl" /></svg>
-            </div>
-
-            <section className="block" id="how">
-                <div className="wrap reveal">
-                    <span className="pill">How to add one</span>
-                    <h2>In your server in three steps</h2>
-                    <ol className="rx-steps">
-                        {STEPS.map(({ icon: Icon, title, text }, i) => (
-                            <li className="rx-step" key={title}>
-                                <span className="rx-step-n">{i + 1}</span>
-                                <span className="rx-point-ic"><Icon size={20} aria-hidden="true" /></span>
-                                <h3>{title}</h3>
-                                <p>{text}</p>
-                            </li>
-                        ))}
-                    </ol>
-                    <div className="rx-points rx-points-4">
-                        {EVERY_BOT.map(({ icon: Icon, title, text }) => (
-                            <div className="rx-point" key={title}>
-                                <span className="rx-point-ic"><Icon size={20} aria-hidden="true" /></span>
-                                <h3>{title}</h3>
-                                <p>{text}</p>
-                            </div>
-                        ))}
-                    </div>
-                    <p className="rx-center">
-                        <a className="btn btn-primary btn-lg" href={S.app}><LayoutDashboard size={18} aria-hidden="true" /> Open the dashboard</a>
-                    </p>
-                </div>
-            </section>
+            <DiscordLanding addHref={S.app} discordMark={DISCORD_MARK} />
 
             <section className="block faq-sec" id="faq">
                 <div className="wrap reveal">
