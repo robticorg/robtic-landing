@@ -3,6 +3,7 @@
 import { Fragment, useEffect, useState } from 'react';
 import { ArrowRight, Check, Minus } from 'lucide-react';
 import { PANEL_URL } from '@/lib/site';
+import TypeOnce from '../../TypeOnce';
 import { PLANS, PLAN_FEATURE_LABELS, limitRows, featureDetail, type Plan } from '@/lib/plans';
 
 // Robtic Hosting's plans, in the hosting page's own world (services.css .rh): calm black, the serif voice, thin rules,
@@ -148,13 +149,12 @@ export default function PlansView({ prices = {} }: { prices?: Record<string, str
                 </div>
             </section>
 
-            <section className="rh-close" aria-labelledby="rhp-close-title">
-                <h2 id="rhp-close-title">Not sure yet? <em>Start free, pick later.</em></h2>
+            <TypeOnce className="rh-close" id="rhp-close-title" plain="Not sure yet?" em="Start free, pick later.">
                 <div className="rh-ctas">
                     <a className="btn btn-primary" href={`${panelRoot}/plans?plan=personal`}>Start hosting free</a>
                     <a className="rh-link" href="/hosting">Back to Robtic Hosting <ArrowRight size={15} aria-hidden="true" /></a>
                 </div>
-            </section>
+            </TypeOnce>
         </div>
     );
 }

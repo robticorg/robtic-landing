@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { ArrowRight, Boxes, Database, FolderUp, Globe2, KeyRound, Users } from 'lucide-react';
+import { Archive, ArrowLeftRight, ArrowRight, Bot, Boxes, Database, FolderUp, Globe2, KeyRound, Users } from 'lucide-react';
 import HeroCta from '../HeroCta';
 import { afterBoot } from '../after-boot';
+import TypeOnce from '../TypeOnce';
 
 // Robtic Hosting, in a world of its own: calm black, a serif voice for the headlines, and the product itself (its
 // console, its code, its panel) as the pictures. Code first, few words. Loops are short (2.5 to 4 s) and rest under
@@ -80,6 +81,69 @@ const GRID = [
 
 function WinBar({ title }: { title: string }) {
     return <div className="rh-win" aria-hidden="true"><i /><i /><i /><span>{title}</span></div>;
+}
+
+/* The Workspaces tab: a live workspace, the way the panel draws it. Apps are cards on a dotted canvas, linked to their
+   backups, database and SFTP; running apps tick their CPU and memory, and moderation starts while you watch. */
+type AppState = 'Running' | 'Starting…' | 'Stopped';
+const APPS: { name: string; kind: string; mem: number }[] = [
+    { name: 'music-bot', kind: 'Node.js Discord bot', mem: 256 },
+    { name: 'shop-bot', kind: 'Python Discord bot', mem: 512 },
+    { name: 'moderation', kind: 'Node.js Discord bot', mem: 256 },
+];
+const NODES = [
+    { icon: Archive, title: 'Backups', sub: 'music-bot · 3 kept' },
+    { icon: Database, title: 'MongoDB', sub: 'shop-bot · 48 MB' },
+    { icon: ArrowLeftRight, title: 'SFTP', sub: 'moderation' },
+];
+function Workspace() {
+    const [state, setState] = useState<AppState[]>(['Running', 'Running', 'Stopped']);
+    const [load, setLoad] = useState<number[]>([22, 9, 0]);
+    useEffect(() => {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { setState(['Running', 'Running', 'Running']); setLoad([22, 9, 14]); return; }
+        const a = window.setTimeout(() => setState((s) => [s[0]!, s[1]!, 'Starting…']), 1400);
+        const b = window.setTimeout(() => setState((s) => [s[0]!, s[1]!, 'Running']), 3000);
+        const t = window.setInterval(() => setLoad((l) => l.map((v) => Math.max(4, Math.min(64, Math.round(v + (Math.random() - 0.5) * 12))))), 1100);
+        return () => { window.clearTimeout(a); window.clearTimeout(b); window.clearInterval(t); };
+    }, []);
+    const running = state.filter((x) => x === 'Running').length;
+    return (
+        <div className="rh-ws">
+            <div className="rh-ws-head">
+                <img src="/rl/robtic/icon-128.png" alt="" width={30} height={30} />
+                <div><small>Workspaces</small><b>Robtic Bots</b></div>
+                <span className="rh-ws-sum">{`${APPS.length} apps · ${running} running`}</span>
+                <span className="rh-ws-new">+ New app</span>
+            </div>
+            <div className="rh-ws-canvas">
+                <svg className="rh-ws-links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                    <path d="M14 44 C14 58 12 62 12 72" /><path d="M41 44 C41 58 40 62 40 72" /><path d="M68 44 C68 58 70 62 70 72" />
+                </svg>
+                <div className="rh-ws-apps">
+                    {APPS.map((a, i) => {
+                        const st = state[i]!;
+                        const on = st === 'Running';
+                        const cpu = on ? load[i]! : 0;
+                        const ram = on ? Math.round(a.mem * (cpu / 100 + 0.3)) : 0;
+                        return (
+                            <div key={a.name} className={`rh-app${on ? ' on' : st === 'Stopped' ? ' off' : ' busy'}`}>
+                                <div className="rh-app-top"><Bot size={18} aria-hidden="true" /><b>{a.name}</b><span className="rh-app-st"><i />{st}</span></div>
+                                <div className="rh-app-meters">
+                                    <span>CPU</span><em><i style={{ width: `${cpu}%` }} /></em><small>{on ? `${cpu}%` : '–'}</small>
+                                    <span>RAM</span><em><i style={{ width: `${on ? Math.round((ram / a.mem) * 100) : 0}%` }} /></em><small>{on ? `${ram} MB` : '–'}</small>
+                                </div>
+                                <div className="rh-app-foot"><span>{a.kind}</span><span>{`${a.mem} MB`}</span></div>
+                            </div>
+                        );
+                    })}
+                    <div className="rh-app rh-app-add"><span>+</span>New app</div>
+                </div>
+                <div className="rh-ws-nodes">
+                    {NODES.map(({ icon: Icon, title, sub }) => <div key={title} className="rh-node"><Icon size={26} aria-hidden="true" /><b>{title}</b><small>{sub}</small></div>)}
+                </div>
+            </div>
+        </div>
+    );
 }
 
 export default function HostingLanding({ appHref, plans }: { appHref: string; plans: HostingPlanCard[] }) {
@@ -201,7 +265,7 @@ export default function HostingLanding({ appHref, plans }: { appHref: string; pl
                         <WinBar title="robtic.org/hosting/dashboard" />
                         <div className="rh-panel-body" key={tab}>
                             {tab === 'Workspaces' ? (
-                                <img src="/rl/robtic/site/panel.webp" alt="A Robtic Hosting workspace: three Discord bots with their backups and SFTP" width={1600} height={645} loading="lazy" />
+                                <Workspace />
                             ) : tab === 'Console' ? (
                                 <pre className="rh-pconsole">
                                     <span className="dim">[robtic] starting index.js</span>{'\n'}
@@ -260,13 +324,12 @@ export default function HostingLanding({ appHref, plans }: { appHref: string; pl
             </section>
 
             {/* ------------------------------------------------------------------------------------------- close */}
-            <section className="rh-close" aria-labelledby="rh-close-title">
-                <h2 id="rh-close-title">Your bot is ready. <em>Give it a home.</em></h2>
+            <TypeOnce className="rh-close" id="rh-close-title" plain="Your bot is ready." em="Give it a home.">
                 <div className="rh-ctas">
                     <HeroCta label="Start hosting free" href={appHref} signedInLabel="Open Hosting" signedInHref={appHref} />
                     <a className="rh-link" href="/hosting/plans">See the plans <ArrowRight size={15} aria-hidden="true" /></a>
                 </div>
-            </section>
+            </TypeOnce>
         </div>
     );
 }

@@ -1052,6 +1052,64 @@ img.rx-ds-inv-ic { width: 72px; height: 72px; padding: 0; border-radius: 22px; o
 }
 @media (prefers-reduced-motion: reduce) { .rhp-card { animation: none; } }
 
+/* Closing sections that hold still and type with the scroll (app/TypeOnce.tsx). Without the script (or with reduced
+   motion) the section is ordinary; with it, the section is several screens tall and its content stays pinned in the
+   middle while the scroll types the heading. Letters keep their place, hidden until typed; the actions appear when the
+   sentence is whole (and whenever they hold keyboard focus). */
+.tw-c { position: relative; }
+.tw-off { visibility: hidden; }
+.tw-caret { position: absolute; right: -0.06em; top: 0.12em; width: 0.06em; height: 0.82em; background: currentColor; }
+.tw-caret-start { position: relative; display: inline-block; right: auto; vertical-align: -0.05em; }
+.tw-pin[data-pin] { height: 300vh; padding: 0; }
+.tw-pin[data-pin] .tw-stick { position: sticky; top: 0; height: 100vh; height: 100svh; display: grid; align-content: center; justify-items: center; padding: 0 20px; }
+.tw-pin[data-pin] .rh-ctas { opacity: 0; transform: translateY(10px); pointer-events: none; transition: opacity .5s var(--ease-out), transform .5s var(--ease-out); }
+.tw-pin[data-pin][data-done] .rh-ctas, .tw-pin[data-pin] .rh-ctas:focus-within { opacity: 1; transform: none; pointer-events: auto; }
+.tw-stick { display: grid; justify-items: center; }
+@media (max-width: 600px) { .tw-pin[data-pin] { height: 240vh; } }
+
+/* The Workspaces tab (HostingLanding.tsx Workspace): a live workspace on a dotted canvas. */
+.rh-ws { min-height: 440px; display: flex; flex-direction: column; }
+.rh-ws-head { display: flex; align-items: center; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--rh-line); }
+.rh-panel-body .rh-ws-head img { flex: none; width: 30px; height: 30px; }
+.rh-ws-head div { display: grid; line-height: 1.25; }
+.rh-ws-head small { color: var(--rh-mute); font-size: 12px; }
+.rh-ws-head b { font-size: 15px; }
+.rh-ws-sum { margin-left: auto; color: var(--rh-mute); font-size: 13px; }
+.rh-ws-new { padding: 6px 12px; border-radius: 999px; background: #f4f4f5; color: #09090b; font-size: 13px; font-weight: 700; }
+.rh-ws-canvas { position: relative; flex: 1; padding: 26px 24px 22px; background: radial-gradient(rgba(255, 255, 255, .07) 1px, transparent 1.2px) 0 0 / 18px 18px; }
+.rh-ws-links { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.rh-ws-links path { fill: none; stroke: rgba(255, 255, 255, .22); stroke-width: 1.5; stroke-dasharray: 5 5; vector-effect: non-scaling-stroke; animation: rh-flow 1.2s linear infinite; }
+@keyframes rh-flow { to { stroke-dashoffset: -20; } }
+.rh-ws-apps { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.rh-app { display: grid; gap: 12px; padding: 14px 14px 12px; border: 1px solid var(--rh-line); border-radius: 12px; background: #0e0e11; font-size: 13px; transition: border-color .3s ease; }
+.rh-app.on { border-color: rgba(74, 222, 128, .28); }
+.rh-app-top { display: flex; align-items: center; gap: 8px; }
+.rh-app-top svg { color: #a1a1aa; }
+.rh-app-top b { font-size: 14px; }
+.rh-app-st { display: inline-flex; align-items: center; gap: 6px; margin-left: auto; color: var(--rh-mute); font-size: 12px; }
+.rh-app-st i { width: 7px; height: 7px; border-radius: 50%; background: #52525b; }
+.rh-app.on .rh-app-st { color: #4ade80; }
+.rh-app.on .rh-app-st i { background: #4ade80; animation: rh-pulse 1.8s ease-out infinite; }
+.rh-app.busy .rh-app-st { color: #fbbf24; }
+.rh-app.busy .rh-app-st i { background: #fbbf24; }
+@keyframes rh-pulse { 0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, .5); } 70%, 100% { box-shadow: 0 0 0 6px rgba(74, 222, 128, 0); } }
+.rh-app-meters { display: grid; grid-template-columns: 30px 1fr 54px; align-items: center; gap: 6px 8px; color: var(--rh-mute); font-size: 11.5px; }
+.rh-app-meters em { height: 4px; border-radius: 2px; background: rgba(255, 255, 255, .06); overflow: hidden; }
+.rh-app-meters em i { display: block; height: 100%; border-radius: 2px; background: #e4e4e7; transition: width .9s var(--ease-out); }
+.rh-app-meters small { color: #d4d4d8; text-align: right; font-variant-numeric: tabular-nums; }
+.rh-app-foot { display: flex; justify-content: space-between; padding-top: 10px; border-top: 1px solid var(--rh-line); color: var(--rh-mute); font-size: 11.5px; }
+.rh-app-add { place-content: center; justify-items: center; border-style: dashed; background: transparent; color: var(--rh-mute); }
+.rh-app-add span { font-size: 26px; line-height: 1; color: #a1a1aa; }
+.rh-ws-nodes { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 90px; }
+.rh-node { display: grid; justify-items: center; gap: 4px; color: #a1a1aa; text-align: center; }
+.rh-node b { color: #e4e4e7; font-size: 13.5px; }
+.rh-node small { font-size: 11.5px; color: var(--rh-mute); }
+@media (max-width: 900px) {
+    .rh-ws-apps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .rh-ws-links, .rh-ws-nodes, .rh-ws-sum { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .rh-ws-links path, .rh-app.on .rh-app-st i { animation: none; } }
+
 /* The FAQ under the hosting page speaks in the page's voice. */
 .rh + .faq-sec .faq-head h2 { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: clamp(40px, 5.2vw, 64px); letter-spacing: -0.015em; }
 .rh + .faq-sec .pill { background: rgba(255, 255, 255, .08); color: #d4d4d8; }
