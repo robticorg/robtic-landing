@@ -1,11 +1,11 @@
-> **Draft.** These terms are a first version for review and may change before Robtic Music opens to everyone.
+> **Draft.** These terms are a first version for review and may change before Robtic Voice opens to everyone.
 
-These terms cover adding and using **Robtic Music**, Robtic's music bots for voice channels, and their dashboard at robtic.org/discord/public. They add to the [Robtic Discord Terms](/terms/discord) and the [Robtic Terms](/terms/robtic), which cover your Robtic account. What the bots keep, and why, is in [Robtic Music Privacy](/privacy/music-bot).
+These terms cover adding and using **Robtic Voice**, Robtic's music bots for voice channels, and their dashboard at robtic.org/discord/public. They add to the [Robtic Discord Terms](/terms/discord) and the [Robtic Terms](/terms/robtic), which cover your Robtic account. What the bots keep, and why, is in [Robtic Voice Privacy](/privacy/music-bot).
 
 ## 1. Who can add and configure it
 
-- Only a server **Administrator** can add the music bots or open their dashboard for a server. Robtic Music runs alongside Robtic System, which must be in the server.
-- While Robtic Music is not open to everyone, it only works in servers on its allowlist.
+- Only a server **Administrator** can add the music bots or open their dashboard for a server. Robtic Voice runs alongside Robtic System, which must be in the server.
+- While Robtic Voice is not open to everyone, it only works in servers on its allowlist.
 - To use the dashboard you need a Robtic account with your Discord account linked; see [Account Privacy](/privacy/account).
 
 ## 2. What the bots do

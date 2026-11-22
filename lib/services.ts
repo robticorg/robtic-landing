@@ -62,7 +62,7 @@ export const DISCORD_BOTS = [
         text: 'Ticket panels you design yourself. Each ticket opens a private channel with its own form, staff controls and a full transcript when it closes.',
     },
     {
-        key: 'music', name: 'Robtic Music', accent: '#f43f5e', tagline: 'Music bots for your voice channels',
+        key: 'music', name: 'Robtic Voice', accent: '#f43f5e', tagline: 'Music bots for your voice channels',
         text: 'Up to ten music bots per server: each stays in its own voice channel or follows the music, with a control panel and text commands.',
     },
 ] as const;

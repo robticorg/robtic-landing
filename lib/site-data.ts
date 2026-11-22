@@ -67,9 +67,9 @@ export const BUILTIN_LEGAL: LegalPage[] = [
     { key: 'privacy-system-bot', title: 'Robtic System Privacy', path: 'privacy/system-bot', related: ['terms-system-bot', 'privacy-account'] },
     { key: 'privacy-staff-bot', title: 'Robtic Staff Privacy', path: 'privacy/staff-bot', related: ['terms-staff-bot', 'privacy-account'] },
     { key: 'terms-ticket-bot', title: 'Robtic Ticket Terms', path: 'terms/ticket-bot', related: ['privacy-ticket-bot', 'terms-hosting', 'privacy-account'] },
-    { key: 'terms-music-bot', title: 'Robtic Music Terms', path: 'terms/music-bot', related: ['privacy-music-bot', 'terms-hosting', 'privacy-account'] },
+    { key: 'terms-music-bot', title: 'Robtic Voice Terms', path: 'terms/music-bot', related: ['privacy-music-bot', 'terms-hosting', 'privacy-account'] },
     { key: 'privacy-ticket-bot', title: 'Robtic Ticket Privacy', path: 'privacy/ticket-bot', related: ['terms-ticket-bot', 'privacy-account'] },
-    { key: 'privacy-music-bot', title: 'Robtic Music Privacy', path: 'privacy/music-bot', related: ['terms-music-bot', 'privacy-account'] },
+    { key: 'privacy-music-bot', title: 'Robtic Voice Privacy', path: 'privacy/music-bot', related: ['terms-music-bot', 'privacy-account'] },
     { key: 'terms-scam-guard', title: 'Scam Guard Terms', path: 'terms/scam-guard', related: ['privacy-scam-guard', 'terms-hosting', 'privacy-account'] },
     { key: 'privacy-scam-guard', title: 'Scam Guard Privacy', path: 'privacy/scam-guard', related: ['terms-scam-guard', 'privacy-account'] },
 ];

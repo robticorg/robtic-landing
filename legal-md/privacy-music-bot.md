@@ -1,6 +1,6 @@
-> **Draft.** This page is a first version for review and may change before Robtic Music opens to everyone.
+> **Draft.** This page is a first version for review and may change before Robtic Voice opens to everyone.
 
-This page explains what **Robtic Music** keeps about the servers it is in and their members, why, and what you can do about it. Using the bots follows the [Robtic Music Terms](/terms/music-bot); your Robtic account itself is covered in [Account Privacy](/privacy/account).
+This page explains what **Robtic Voice** keeps about the servers it is in and their members, why, and what you can do about it. Using the bots follows the [Robtic Voice Terms](/terms/music-bot); your Robtic account itself is covered in [Account Privacy](/privacy/account).
 
 ## What we collect
 
