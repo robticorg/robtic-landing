@@ -107,24 +107,51 @@ function PasswordPopup({ has, onClose }: { has: boolean; onClose: () => void }) 
     const [current, setCurrent] = useState('');
     const [password, setPassword] = useState('');
     const [confirm, setConfirm] = useState('');
+    // A first password (an account made with Discord or GitHub) needs the code we email: null until it's sent.
+    const [sent, setSent] = useState<{ to: string } | null>(null);
+    const [noMail, setNoMail] = useState(false);
+    const [code, setCode] = useState('');
+
+    const sendCode = () => act(async () => {
+        const r = await request<{ sent: boolean; to?: string }>('POST', `${IDENTITY}/password/code`);
+        if (r.sent) setSent({ to: r.to ?? 'your email' });
+        else setNoMail(true);
+    });
 
     const submit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const body = { current: has ? current : undefined, password, password_confirmation: confirm };
+        const body = { current: has ? current : undefined, code: !has && sent ? code : undefined, password, password_confirmation: confirm };
         if (await act(() => request('PUT', `${IDENTITY}/password`, body))) {
-            toast('ok', 'Password changed.');
+            toast('ok', has ? 'Password changed.' : 'Password set. You can sign in with your email too.');
             onClose();
         }
     };
 
+    if (!has && !sent && !noMail) {
+        return (
+            <Modal title="Set a password" onClose={onClose}>
+                <p className="st-sub">So you can also sign in with your email. First we email you a code to confirm it’s you.</p>
+                {error ? <p className="st-error">{error}</p> : null}
+                <button type="button" className="btn btn-primary" disabled={busy} onClick={() => void sendCode()}>{busy ? 'Sending…' : 'Email me a code'}</button>
+            </Modal>
+        );
+    }
+
     return (
         <Modal title={has ? 'Change your password' : 'Set a password'} onClose={onClose}>
             <form onSubmit={submit}>
+                {!has && sent ? (
+                    <>
+                        <p className="st-sub">We sent a code to <b>{sent.to}</b>.</p>
+                        <CodeField label="Code from the email" value={code} onChange={setCode} />
+                        <button type="button" className="st-link" disabled={busy} onClick={() => void sendCode()}>Send a new code</button>
+                    </>
+                ) : null}
                 {has ? <Field label="Current password" type="password" value={current} onChange={setCurrent} autoComplete="current-password" /> : null}
                 <Field label="New password" type="password" value={password} onChange={setPassword} autoComplete="new-password" />
                 <Field label="Confirm new password" type="password" value={confirm} onChange={setConfirm} autoComplete="new-password" />
                 {error ? <p className="st-error">{error}</p> : null}
-                <button type="submit" className="btn btn-primary" disabled={busy || !password || password !== confirm || (has && !current)}>Save</button>
+                <button type="submit" className="btn btn-primary" disabled={busy || !password || password !== confirm || (has && !current) || (!has && !!sent && code.length < 6)}>Save</button>
             </form>
         </Modal>
     );

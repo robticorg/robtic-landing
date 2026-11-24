@@ -60,7 +60,8 @@ export default function DiscordPage() {
     return (
         <>
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([ld, crumbs, howTo, faqLd(DISCORD_FAQ.slice(0, 5))]) }} />
-            <DiscordLanding addHref={S.app} discordMark={DISCORD_MARK} />
+            {/* Signed out, the dashboard sends this straight to Discord's sign-in (no Robtic page in between). */}
+            <DiscordLanding addHref={`${S.app}?signin=discord`} discordMark={DISCORD_MARK} />
 
             <section className="block faq-sec" id="faq">
                 <div className="wrap reveal">
