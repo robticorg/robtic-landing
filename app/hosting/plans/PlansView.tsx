@@ -33,7 +33,8 @@ function Price({ plan, prices, signedIn }: { plan: Plan; prices: Record<string, 
 
 export default function PlansView({ prices = {} }: { prices?: Record<string, string> }) {
     const [group, setGroup] = useState<Group>('individual');
-    const [myPlans, setMyPlans] = useState<Set<string>>(new Set());
+    // Plan key → whose it is: the visitor's own plan, or a team they own.
+    const [myPlans, setMyPlans] = useState<Map<string, 'own' | 'team'>>(new Map());
     const [signedIn, setSignedIn] = useState(false);
 
     // A link to one plan (/hosting/plans#plan-team) opens its group.
@@ -47,10 +48,10 @@ export default function PlansView({ prices = {} }: { prices?: Record<string, str
         fetch(`${panelRoot}/api/client/robtic/account/plan`, { credentials: 'include', headers: { Accept: 'application/json' } })
             .then((r) => (r.ok ? r.json() : null))
             .then((d) => {
-                const keys = new Set<string>();
-                if (d?.plan?.key) { keys.add(d.plan.key as string); setSignedIn(true); }
+                const keys = new Map<string, 'own' | 'team'>();
+                if (d?.plan?.key) { keys.set(d.plan.key as string, 'own'); setSignedIn(true); }
                 // A team's plan is the visitor's too when they own the team.
-                (d?.teams || []).forEach((t: { owner?: boolean; plan?: { key?: string } }) => { if (t?.owner && t?.plan?.key) keys.add(t.plan.key); });
+                (d?.teams || []).forEach((t: { owner?: boolean; plan?: { key?: string } }) => { if (t?.owner && t?.plan?.key && !keys.has(t.plan.key)) keys.set(t.plan.key, 'team'); });
                 if (keys.size) setMyPlans(keys);
             })
             .catch(() => { /* signed out or offline: the plans, unmarked */ });
@@ -77,13 +78,13 @@ export default function PlansView({ prices = {} }: { prices?: Record<string, str
             <section className="wrap" aria-label={`${group === 'individual' ? 'Individual' : 'Business'} plans`}>
                 <div className={`rhp-cards n${plans.length}`} key={group}>
                     {plans.map((plan, i) => {
-                        const mine = myPlans.has(plan.key);
+                        const mine = myPlans.get(plan.key);
                         const recommended = plan.key === 'developers';
                         return (
-                            <article key={plan.key} id={`plan-${plan.key}`} className={`rhp-card${recommended ? ' pick' : ''}${mine ? ' mine' : ''}`} style={{ ['--i' as string]: i }}>
+                            <article key={plan.key} id={`plan-${plan.key}`} className={`rhp-card${recommended ? ' pick' : ''}${mine ? ' is-mine' : ''}`} style={{ ['--i' as string]: i }}>
                                 <header>
                                     <h2>{plan.name}</h2>
-                                    {mine ? <span className="rhp-tag mine">Your plan</span> : recommended ? <span className="rhp-tag">Most picked</span> : null}
+                                    {mine ? <span className="rhp-tag is-mine">{mine === 'team' ? 'Your team’s plan' : 'Your plan'}</span> : recommended ? <span className="rhp-tag">Most picked</span> : null}
                                 </header>
                                 <p className="rhp-price"><Price plan={plan} prices={prices} signedIn={signedIn} /></p>
                                 {mine ? (
