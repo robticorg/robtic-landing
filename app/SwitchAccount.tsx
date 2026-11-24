@@ -35,7 +35,7 @@ export default function SwitchAccount({ onClose }: { onClose: () => void }) {
         dialog?.showModal();
         fetch('/auth/signedin-accounts', { credentials: 'same-origin' })
             .then((r) => (r.ok ? r.json() : { accounts: [] }))
-            .then((r) => setAccounts(r.accounts))
+            .then((r) => setAccounts((r.accounts ?? []).slice(0, 5)))
             .catch(() => setAccounts([]));
         fetch('/api/client/account', { headers: { Accept: 'application/json' }, credentials: 'same-origin' })
             .then((r) => (r.ok ? r.json() : null))
@@ -88,14 +88,15 @@ export default function SwitchAccount({ onClose }: { onClose: () => void }) {
                     })}
                     <button
                         type="button"
-                        disabled={!!going}
+                        disabled={!!going || accounts.length >= 5}
+                        title={accounts.length >= 5 ? 'Up to 5 accounts. Sign one out to add another.' : undefined}
                         onClick={() => {
                             setGoing('+');
                             signIn({ prompt: 'login' });
                         }}
                     >
                         <i aria-hidden="true">+</i>
-                        <span><b>Add another account</b></span>
+                        <span><b>Add another account</b>{accounts.length >= 5 ? <small>Up to 5 accounts. Sign one out to add another.</small> : null}</span>
                         {going === '+' ? <em><span className="st-spin st-spin-sm" /></em> : null}
                     </button>
                 </div>
