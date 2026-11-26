@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { BILLING, brandName, brandShort, call, money, planName, withTax, type BillingDetails, type BillingOverview, type Card, type Checkout, type PublicLink, type Tax } from './api';
-import { appearance, stripeFor, type Theme } from './stripe';
+import { appearance, cardOnly, stripeFor, type Theme } from './stripe';
 
 export type PayOptions =
     | { kind: 'plan'; plan: string; theme?: Theme }
@@ -124,7 +124,7 @@ export default function PayPopup({ options, onClose }: { options: PayOptions; on
             mode,
             currency: info.currency,
             ...(mode === 'setup' ? { setupFutureUsage: 'off_session' } : { amount: info.amount }),
-            paymentMethodTypes: ['card'],
+            ...cardOnly(),
             appearance: appearance(theme),
         });
         const card = els.create('payment', { layout: 'tabs', fields: { billingDetails: { name: 'never', address: 'never' } }, terms: { card: 'never' } });
