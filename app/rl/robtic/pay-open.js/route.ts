@@ -6,5 +6,5 @@ import { asset } from '@/lib/asset';
 export function GET() {
     const src = asset('/rl/robtic/pay/pay.js');
     const js = `(function(){if(window.RobticPay)return;var q=window.__robticPayQueue=window.__robticPayQueue||[];window.RobticPay={stub:true,open:function(o){return new Promise(function(r){q.push([o,r]);});}};var s=document.createElement('script');s.src=${JSON.stringify(src)};s.async=true;document.head.appendChild(s);})();`;
-    return new Response(js, { headers: { 'Content-Type': 'text/javascript; charset=utf-8', 'Cache-Control': 'no-cache' } });
+    return new Response(js, { headers: { 'Content-Type': 'text/javascript; charset=utf-8', 'Cache-Control': 'private, no-store, max-age=0' } });
 }
