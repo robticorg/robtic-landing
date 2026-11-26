@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { errorText, request } from '@/lib/account';
 import { useSettings } from '../Popup';
+import Subscription from './Subscription';
 
 // Settings -> Plan: the plan you're on, how long it has left, and your subscription history.
 type Plan = { name: string; ends_at: string | null; ended: boolean };
@@ -91,6 +92,8 @@ export default function PlanSettings() {
                         </div>
                         <TimeLeft plan={plan} />
                     </section>
+
+                    {owned ? null : <Subscription />}
 
                     <section className="st-card">
                         <h2>Subscription history</h2>

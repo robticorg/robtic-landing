@@ -139,7 +139,12 @@ export default function PayPopup({ options, onClose }: { options: PayOptions; on
     // ---- Esc closes; Tab stays inside the window
     useEffect(() => {
         const onKey = (e: KeyboardEvent) => {
-            if (e.key === 'Escape') close();
+            if (e.key === 'Escape') {
+                // Settings may be open underneath: only this window closes.
+                e.preventDefault();
+                e.stopPropagation();
+                close();
+            }
             if (e.key !== 'Tab' || !dialog.current) return;
             const items = [...dialog.current.querySelectorAll<HTMLElement>('button:not([disabled]), input:not([disabled]), a[href], select, [tabindex="0"]')].filter((x) => x.offsetParent !== null);
             if (!items.length) return;
