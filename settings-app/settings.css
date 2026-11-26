@@ -298,3 +298,28 @@
 .st-popup .st-popup-err { color: #ff8a95; max-width: 360px; margin: 0; }
 @keyframes me-in { from { opacity: 0; transform: translateY(-6px); } }
 @keyframes st-spin { to { transform: rotate(360deg); } }
+
+/* ---------------------------------------------------------------- billing (Plan's subscription, Payment methods) */
+.st-pm { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 12px 0; border-top: 1px solid var(--line); }
+.st-card > .st-pm:first-child { border-top: 0; padding-top: 0; }
+.st-brand { flex: none; display: grid; place-items: center; width: 46px; height: 30px; border-radius: 6px; border: 1px solid var(--line); background: rgba(255, 255, 255, 0.04); font-size: 9.5px; font-weight: 700; letter-spacing: 0.04em; color: var(--muted); }
+.st-brand-visa { color: #c7d2fe; } .st-brand-mastercard { color: #fdba74; } .st-brand-amex { color: #93c5fd; }
+.st-pm-meta { flex: 1; min-width: 160px; }
+.st-pm-meta b { display: block; font-weight: 600; font-size: 14.5px; }
+.st-pm-meta small { color: var(--muted); font-size: 13px; }
+.st-pm-acts { display: flex; align-items: center; gap: 14px; }
+.st-pm-add { padding-top: 14px; border-top: 1px solid var(--line); }
+.st-card > .st-pm-add:first-child, .st-card > p + .st-pm-add { border-top: 0; }
+.st-pm-note { margin: 14px 0 0; font-size: 13px; }
+.st-warn { display: flex; flex-direction: column; gap: 6px; margin: 4px 0 18px; padding: 12px 14px; border: 1px solid rgba(251, 191, 36, 0.3); border-radius: 12px; background: rgba(251, 191, 36, 0.06); font-size: 14px; }
+.st-warn span { color: var(--muted); }
+.st-pill.warn { background: rgba(251, 191, 36, 0.12); color: #fbbf24; }
+.st-root .btn-danger { background: #f87171; color: #1a0606; }
+.st-root .btn-danger:hover { background: #fca5a5; }
+.st-inv { display: inline-flex; align-items: center; gap: 10px; }
+.st-inv .btn { padding: 6px 14px; font-size: 13px; }
+.st-choices { display: grid; gap: 8px; margin: 6px 0 14px; }
+.st-choice { display: flex; flex-direction: column; gap: 2px; padding: 11px 14px; border: 1px solid var(--line); border-radius: 12px; background: transparent; color: var(--text); text-align: left; font: inherit; cursor: pointer; }
+.st-choice small { color: var(--muted); font-size: 13px; }
+.st-choice.on { border-color: var(--blue); background: rgba(255, 255, 255, 0.04); }
+.st-choice:disabled { opacity: 0.45; cursor: default; }

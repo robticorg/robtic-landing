@@ -1,0 +1,42 @@
+/* robtic.org/pay/<id>: one centred request, in the look the link was made with (Robtic Hosting or Robtic Discord). */
+.pl-root {
+    --pl-bg: #060607; --pl-card: #0b0b0d; --pl-text: #f4f4f5; --pl-muted: #8b9099; --pl-faint: #71717a;
+    --pl-line: rgba(255, 255, 255, 0.08); --pl-accent: #f4f4f5; --pl-accent-hi: #ffffff; --pl-on-accent: #09090b;
+    --pl-head: "Instrument Serif", Georgia, serif; --pl-head-w: 400;
+    display: grid; place-items: center; min-height: 78vh;
+    padding-block: 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+    background: var(--pl-bg); color: var(--pl-text);
+}
+.pl-root.pl-discord {
+    --pl-bg: #070b14; --pl-card: #0b1222; --pl-text: #e8eefb; --pl-muted: #93a1ba; --pl-faint: #66748f;
+    --pl-line: rgba(255, 255, 255, 0.1); --pl-accent: #1793ff; --pl-accent-hi: #3aa3ff; --pl-on-accent: #ffffff;
+    --pl-head: inherit; --pl-head-w: 700;
+}
+.pl-card {
+    display: flex; flex-direction: column; align-items: center; gap: 12px; width: min(520px, 100%); padding: 40px 32px;
+    border: 1px solid var(--pl-line); border-radius: 20px; background: var(--pl-card); text-align: center;
+}
+.pl-from { color: var(--pl-muted); font-size: 13px; }
+.pl-card h1 { margin: 0; font: var(--pl-head-w) clamp(30px, 6vw, 42px) / 1.1 var(--pl-head); letter-spacing: -0.01em; text-wrap: balance; overflow-wrap: anywhere; }
+.pl-discord .pl-card h1 { font-size: clamp(24px, 5vw, 32px); }
+.pl-amount { font: var(--pl-head-w) clamp(44px, 10vw, 60px) / 1 var(--pl-head); font-variant-numeric: tabular-nums; margin-top: 6px; }
+.pl-tax, .pl-sub { margin: 0; color: var(--pl-muted); font-size: 14px; }
+.pl-note { margin: 4px 0 0; max-width: 40ch; color: var(--pl-text); font-size: 15px; overflow-wrap: anywhere; }
+.pl-btn {
+    margin-top: 10px; padding: 13px 32px; border: 0; border-radius: 999px; background: var(--pl-accent); color: var(--pl-on-accent);
+    font: 600 15px/1 inherit; font-family: inherit; cursor: pointer; transition: background 0.15s, transform 0.1s;
+}
+.pl-btn:hover:not([disabled]) { background: var(--pl-accent-hi); }
+.pl-btn:active:not([disabled]) { transform: scale(0.98); }
+.pl-btn[disabled] { opacity: 0.6; cursor: default; }
+.pl-btn:focus-visible { outline: 2px solid var(--pl-accent); outline-offset: 3px; }
+.pl-err { margin: 0; color: #f87171; font-size: 13.5px; }
+.pl-done, .pl-closed { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-top: 10px; font-size: 14px; }
+.pl-done span:not(.pl-tick), .pl-closed span { color: var(--pl-muted); }
+.pl-tick { display: grid; place-items: center; width: 48px; height: 48px; margin-bottom: 4px; border-radius: 999px; border: 1.5px solid #4ade80; color: #4ade80; }
+.pl-foot { margin: 14px 0 0; color: var(--pl-faint); font-size: 12.5px; }
+.pl-foot a { color: var(--pl-text); }
+.pl-spin { width: 22px; height: 22px; border: 2px solid var(--pl-line); border-top-color: var(--pl-text); border-radius: 999px; animation: pl-sp 0.7s linear infinite; }
+@keyframes pl-sp { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .pl-spin { animation-duration: 2s; } }
+@media (max-width: 520px) { .pl-card { padding: 32px 20px; } }

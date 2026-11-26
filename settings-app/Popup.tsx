@@ -8,14 +8,14 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { ApiError, errorText, getProfile, type Profile } from '@/lib/account';
 
-export type Section = 'account' | 'notifications' | 'security' | 'connections' | 'devices' | 'plan';
-export const SECTIONS: Section[] = ['account', 'notifications', 'security', 'connections', 'devices', 'plan'];
+export type Section = 'account' | 'notifications' | 'security' | 'connections' | 'devices' | 'plan' | 'cards';
+export const SECTIONS: Section[] = ['account', 'notifications', 'security', 'connections', 'devices', 'plan', 'cards'];
 
 const NAV: Array<{ group: string; items: Array<{ id: Section; label: string }> }> = [
     { group: 'You', items: [{ id: 'account', label: 'Account' }] },
     { group: 'Preferences', items: [{ id: 'notifications', label: 'Notifications' }] },
     { group: 'Access', items: [{ id: 'security', label: 'Security' }, { id: 'connections', label: 'Connections' }, { id: 'devices', label: 'Devices' }] },
-    { group: 'Billing', items: [{ id: 'plan', label: 'Plan' }] },
+    { group: 'Billing', items: [{ id: 'plan', label: 'Plan' }, { id: 'cards', label: 'Payment methods' }] },
 ];
 
 type Ctx = {

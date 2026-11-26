@@ -15,6 +15,7 @@ import SecuritySettings from './sections/Security';
 import Connections from './sections/Connections';
 import DevicesPage from './sections/Devices';
 import PlanSettings from './sections/Plan';
+import CardsSettings from './sections/Cards';
 
 type Theme = 'discord' | 'hosting';
 type Options = { theme?: Theme; section?: Section | string; params?: Record<string, string> };
@@ -26,6 +27,7 @@ const RENDER: Record<Section, () => React.ReactNode> = {
     connections: () => <Connections />,
     devices: () => <DevicesPage />,
     plan: () => <PlanSettings />,
+    cards: () => <CardsSettings />,
 };
 
 let host: HTMLElement | null = null;
