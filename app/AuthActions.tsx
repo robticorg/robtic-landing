@@ -5,6 +5,7 @@
 // right-click (profile, settings, dashboard, log out); signed out (or while checking) -> Sign in / Get started, so the
 // bar is never empty. While signed in it also sends the ping that counts time on Robtic.
 import { useState, useEffect, useRef } from 'react';
+import { usePathname } from 'next/navigation';
 import { SlidersHorizontal, ArrowLeftRight, LogOut, Shield } from 'lucide-react';
 import { logout as signOut } from '@/lib/account';
 import { ADMIN_URL } from '@/lib/site';
@@ -23,6 +24,8 @@ export default function AuthActions({ panelRoot }: { panelRoot: string }) {
     const [leaving, setLeaving] = useState(false);
     const wrap = useRef<HTMLDivElement>(null);
     useHeartbeat(!!me);
+    // A payment link is for anyone: signed out, the bar shows no sign-in buttons there.
+    const payPage = usePathname()?.startsWith('/pay/') ?? false;
 
     useEffect(() => {
         let alive = true;
@@ -111,6 +114,8 @@ export default function AuthActions({ panelRoot }: { panelRoot: string }) {
             </div>
         );
     }
+
+    if (payPage) return null;
 
     return (
         <>

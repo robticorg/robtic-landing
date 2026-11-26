@@ -3,8 +3,8 @@
     --pl-bg: #060607; --pl-card: #0b0b0d; --pl-text: #f4f4f5; --pl-muted: #8b9099; --pl-faint: #71717a;
     --pl-line: rgba(255, 255, 255, 0.08); --pl-accent: #f4f4f5; --pl-accent-hi: #ffffff; --pl-on-accent: #09090b;
     --pl-head: "Instrument Serif", Georgia, serif; --pl-head-w: 400;
-    display: grid; place-items: center; min-height: 78vh;
-    padding-block: 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+    display: grid; place-items: center; min-height: 100vh; min-height: 100svh;
+    padding-block: calc(var(--bar, 64px) + 24px) 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
     background: var(--pl-bg); color: var(--pl-text);
 }
 .pl-root.pl-discord {
@@ -14,7 +14,7 @@
 }
 .pl-card {
     display: flex; flex-direction: column; align-items: center; gap: 12px; width: min(520px, 100%); padding: 40px 32px;
-    border: 1px solid var(--pl-line); border-radius: 20px; background: var(--pl-card); text-align: center;
+    border-radius: 20px; background: var(--pl-card); text-align: center;
 }
 .pl-from { color: var(--pl-muted); font-size: 13px; }
 .pl-card h1 { margin: 0; font: var(--pl-head-w) clamp(30px, 6vw, 42px) / 1.1 var(--pl-head); letter-spacing: -0.01em; text-wrap: balance; overflow-wrap: anywhere; }
@@ -40,3 +40,12 @@
 @keyframes pl-sp { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .pl-spin { animation-duration: 2s; } }
 @media (max-width: 520px) { .pl-card { padding: 32px 20px; } }
+
+/* The page fills the screen; the footer follows below in the link's look. */
+body:has(.pl-root) main { min-height: 0; }
+body:has(.pl-hosting) .foot-wave { --from: #060607 !important; --to: #040405 !important; margin-top: 0; }
+body:has(.pl-hosting) .foot-wave .wl { stroke: rgba(255, 255, 255, 0.22); }
+body:has(.pl-hosting) footer.foot { background: radial-gradient(900px 400px at 50% 120%, rgba(255, 255, 255, 0.07), transparent 70%), #040405; }
+body:has(.pl-discord) .foot-wave { --from: #070b14 !important; margin-top: 0; }
+body:has(.pl-hosting) .socials a:hover { border-color: rgba(255, 255, 255, 0.35); }
+body:has(.pl-hosting) .mark, body:has(.pl-hosting) .mark .t { background-image: linear-gradient(180deg, rgba(244, 244, 245, 0.9), rgba(244, 244, 245, 0.25) 70%, rgba(244, 244, 245, 0)); }

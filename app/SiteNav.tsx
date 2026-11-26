@@ -130,7 +130,8 @@ export default function SiteNav({
 
     // On the FAQ page the bar is stripped back to just the logo and the account/sign-in buttons — no centre nav.
     const pathname = usePathname();
-    const minimal = pathname === '/faq' || pathname?.startsWith('/faq/');
+    // The FAQ and payment links show only the brand (and the account picture) in the bar.
+    const minimal = pathname === '/faq' || pathname?.startsWith('/faq/') || pathname?.startsWith('/pay/');
 
     const [open, setOpen] = useState<string | null>(null);
     // The mobile sheet (opened by the ⋮ button) — a separate piece of state from the desktop hover menus.
