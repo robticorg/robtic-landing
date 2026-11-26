@@ -12,6 +12,8 @@ const VERSIONED = 'https://js.stripe.com/endive/stripe.js';
 const FALLBACK = 'https://js.stripe.com/v3/';
 
 let script: Promise<void> | null = null;
+/** Which script loaded: the versioned one names card-only fields differently from v3. */
+let versioned = true;
 const clients = new Map<string, any>();
 
 function load(src: string): Promise<void> {
@@ -31,7 +33,10 @@ function load(src: string): Promise<void> {
 /** The Stripe client for this publishable key. */
 export async function stripeFor(publishableKey: string): Promise<any> {
     if (!window.Stripe) {
-        script ??= load(VERSIONED).catch(() => load(FALLBACK));
+        script ??= load(VERSIONED).then(
+            () => { versioned = true; },
+            () => load(FALLBACK).then(() => { versioned = false; })
+        );
         try {
             await script;
         } catch (e) {
@@ -42,6 +47,9 @@ export async function stripeFor(publishableKey: string): Promise<any> {
     if (!clients.has(publishableKey)) clients.set(publishableKey, window.Stripe!(publishableKey));
     return clients.get(publishableKey);
 }
+
+/** Card only: endive and later take allowedPaymentMethodTypes; the v3 fallback still takes paymentMethodTypes. */
+export const cardOnly = () => (versioned ? { allowedPaymentMethodTypes: ['card'] } : { paymentMethodTypes: ['card'] });
 
 export type Theme = 'hosting' | 'discord';
 
