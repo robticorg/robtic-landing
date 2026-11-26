@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { money, type PublicLink } from '@/pay-app/api';
+import { openPay } from '@/lib/pay-popup';
 import './paylink.css';
 
-// window.RobticPay is declared with the pay popup (pay-app/entry.tsx).
 type State = { kind: 'loading' } | { kind: 'missing' } | { kind: 'down' } | { kind: 'ready'; link: PublicLink };
 
 const CLOSED: Record<NonNullable<PublicLink['reason']>, string> = {
@@ -13,16 +13,6 @@ const CLOSED: Record<NonNullable<PublicLink['reason']>, string> = {
     off: 'It was turned off.',
 };
 
-function loadPay(): Promise<void> {
-    if (window.RobticPay) return Promise.resolve();
-    return new Promise((resolve, reject) => {
-        const s = document.createElement('script');
-        s.src = '/rl/robtic/pay-open.js';
-        s.onload = () => resolve();
-        s.onerror = () => reject(new Error('The payment window could not load. Try again.'));
-        document.head.appendChild(s);
-    });
-}
 
 export default function PayLinkView({ id }: { id: string }) {
     const [state, setState] = useState<State>({ kind: 'loading' });
@@ -47,8 +37,7 @@ export default function PayLinkView({ id }: { id: string }) {
         setBusy(true);
         setError('');
         try {
-            await loadPay();
-            if ((await window.RobticPay!.open({ kind: 'link', link: state.link, theme: state.link.style })) === 'paid') setPaid(true);
+            if ((await openPay({ kind: 'link', link: state.link, theme: state.link.style })) === 'paid') setPaid(true);
         } catch (e) {
             setError((e as Error).message);
         } finally {

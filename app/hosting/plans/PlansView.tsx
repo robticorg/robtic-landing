@@ -3,6 +3,8 @@
 import { Fragment, useEffect, useState } from 'react';
 import { ArrowRight, Check, Minus } from 'lucide-react';
 import { PANEL_URL } from '@/lib/site';
+import { openPay } from '@/lib/pay-popup';
+import { openSettings } from '@/lib/settings-popup';
 import TypeOnce from '../../TypeOnce';
 import { PLANS, PLAN_FEATURE_LABELS, limitRows, featureDetail, type Plan } from '@/lib/plans';
 
@@ -10,10 +12,17 @@ import { PLANS, PLAN_FEATURE_LABELS, limitRows, featureDetail, type Plan } from 
 // one white pill. Cards first (price, limits, what's included), then every plan of the group side by side. Prices are
 // the panel's live ones; a signed-in visitor sees their own plan marked and no free-month offer (that's for new
 // visitors).
+//
+// Buying: the four account plans are paid by card in the pay popup, right here. Signed out, the button signs in first
+// and comes back with ?buy=<plan>, which opens the popup. Someone already paying by card changes plan in Settings → Plan.
+// Team and Org keep their own flow.
 
 const panelRoot = PANEL_URL.replace(/\/panel$/, '');
 type Group = 'individual' | 'business';
 const GROUPS: Array<[Group, string]> = [['individual', 'Individual'], ['business', 'Business']];
+const CARD_PLANS = ['personal', 'developers', 'servers', 'communities'];
+const LIVE = ['active', 'trialing', 'past_due'];
+const signIn = (back: string) => `/oidc/login?return=${encodeURIComponent(back)}`;
 
 function cta(plan: Plan, signedIn: boolean): string {
     if (plan.key === 'org') return 'Ask for an offer';
@@ -36,6 +45,12 @@ export default function PlansView({ prices = {} }: { prices?: Record<string, str
     // Plan key → whose it is: the visitor's own plan, or a team they own.
     const [myPlans, setMyPlans] = useState<Map<string, 'own' | 'team'>>(new Map());
     const [signedIn, setSignedIn] = useState(false);
+    // The visitor's own plan: whether it ran out, and whether a card subscription pays it.
+    const [own, setOwn] = useState<{ key: string; ended: boolean } | null>(null);
+    const [subscribed, setSubscribed] = useState(false);
+    const [busy, setBusy] = useState<string | null>(null);
+    const [payError, setPayError] = useState('');
+    const [loaded, setLoaded] = useState(0);
 
     // A link to one plan (/hosting/plans#plan-team) opens its group.
     useEffect(() => {
@@ -49,13 +64,70 @@ export default function PlansView({ prices = {} }: { prices?: Record<string, str
             .then((r) => (r.ok ? r.json() : null))
             .then((d) => {
                 const keys = new Map<string, 'own' | 'team'>();
-                if (d?.plan?.key) { keys.set(d.plan.key as string, 'own'); setSignedIn(true); }
+                if (d?.plan?.key) { keys.set(d.plan.key as string, 'own'); setSignedIn(true); setOwn({ key: d.plan.key, ended: Boolean(d.plan.ended) }); }
                 // A team's plan is the visitor's too when they own the team.
                 (d?.teams || []).forEach((t: { owner?: boolean; plan?: { key?: string } }) => { if (t?.owner && t?.plan?.key && !keys.has(t.plan.key)) keys.set(t.plan.key, 'team'); });
                 if (keys.size) setMyPlans(keys);
             })
             .catch(() => { /* signed out or offline: the plans, unmarked */ });
-    }, []);
+        fetch(`${panelRoot}/api/client/robtic/billing`, { credentials: 'include', headers: { Accept: 'application/json' } })
+            .then((r) => (r.ok ? r.json() : null))
+            .then((d) => setSubscribed(Boolean(d?.account?.subscription && LIVE.includes(d.account.subscription.status))))
+            .catch(() => { /* billing not set up: the popup says so when used */ });
+    }, [loaded]);
+
+    const buy = async (key: string) => {
+        if (busy) return;
+        setPayError('');
+        setBusy(key);
+        try {
+            const r = await openPay({ kind: 'plan', plan: key, theme: 'hosting' });
+            if (r === 'paid' || r === 'saved') setLoaded((n) => n + 1);
+        } catch (e) {
+            setPayError((e as Error).message || 'Payments are unavailable right now. Try again in a few minutes.');
+        } finally {
+            setBusy(null);
+        }
+    };
+
+    // Back from signing in to buy: open the popup for that plan once.
+    useEffect(() => {
+        if (!signedIn) return;
+        const url = new URL(window.location.href);
+        const key = url.searchParams.get('buy');
+        if (!key) return;
+        url.searchParams.delete('buy');
+        window.history.replaceState(null, '', url.pathname + url.search + url.hash);
+        if (CARD_PLANS.includes(key) && !subscribed) void buy(key);
+        else if (CARD_PLANS.includes(key)) openSettings({ theme: 'hosting', section: 'plan' });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [signedIn]);
+
+    /** The button for one plan card. */
+    const action = (plan: Plan, recommended: boolean) => {
+        const cls = `rhp-btn${recommended ? ' main' : ''}`;
+        const card = CARD_PLANS.includes(plan.key);
+        const mine = myPlans.get(plan.key);
+        if (!card) {
+            return mine ? <span className="rhp-btn current" aria-disabled="true">Current plan</span> : <a className={cls} href={`${panelRoot}/plans?plan=${plan.key}`}>{cta(plan, signedIn)}</a>;
+        }
+        if (!signedIn) {
+            // A new visitor's Personal starts with the free month: sign in and go to the dashboard.
+            const back = plan.trialDays ? '/hosting/dashboard' : `/hosting/plans?buy=${plan.key}`;
+            return <a className={cls} href={signIn(back)}>{cta(plan, signedIn)}</a>;
+        }
+        const isOwn = own?.key === plan.key;
+        if (isOwn && subscribed) return <span className="rhp-btn current" aria-disabled="true">Current plan</span>;
+        if (!isOwn && subscribed) {
+            return <button type="button" className={cls} onClick={() => openSettings({ theme: 'hosting', section: 'plan' })}>Switch to {plan.name}</button>;
+        }
+        const label = isOwn ? (own?.ended ? `Renew ${plan.name}` : `Keep ${plan.name}`) : `Choose ${plan.name}`;
+        return (
+            <button type="button" className={`${cls}${isOwn && own?.ended ? ' main' : ''}`} onClick={() => buy(plan.key)} disabled={busy !== null} aria-busy={busy === plan.key}>
+                {busy === plan.key ? 'Opening…' : label}
+            </button>
+        );
+    };
 
     const plans = PLANS.filter((p) => p.group === group);
     const limits = plans[0] ? limitRows(plans[0]).map(([label]) => label) : [];
@@ -87,11 +159,7 @@ export default function PlansView({ prices = {} }: { prices?: Record<string, str
                                     {mine ? <span className="rhp-tag is-mine">{mine === 'team' ? 'Your team’s plan' : 'Your plan'}</span> : recommended ? <span className="rhp-tag">Most picked</span> : null}
                                 </header>
                                 <p className="rhp-price"><Price plan={plan} prices={prices} signedIn={signedIn} /></p>
-                                {mine ? (
-                                    <span className="rhp-btn current" aria-disabled="true">Current plan</span>
-                                ) : (
-                                    <a className={`rhp-btn${recommended ? ' main' : ''}`} href={`${panelRoot}/plans?plan=${plan.key}`}>{cta(plan, signedIn)}</a>
-                                )}
+                                {action(plan, recommended)}
                                 <ul className="rhp-limits">
                                     {limitRows(plan).map(([label, value]) => <li key={label}><span>{label}</span><b>{value}</b></li>)}
                                 </ul>
@@ -110,6 +178,7 @@ export default function PlansView({ prices = {} }: { prices?: Record<string, str
                         );
                     })}
                 </div>
+                {payError ? <p className="rhp-pay-err" role="alert">{payError}</p> : null}
             </section>
 
             {/* Every plan of the group, line by line. */}
@@ -152,7 +221,7 @@ export default function PlansView({ prices = {} }: { prices?: Record<string, str
 
             <TypeOnce className="rh-close" id="rhp-close-title" plain="Not sure yet?" em="Start free, pick later.">
                 <div className="rh-ctas">
-                    <a className="btn btn-primary" href={`${panelRoot}/plans?plan=personal`}>Start hosting free</a>
+                    <a className="btn btn-primary" href={signedIn ? '/hosting/dashboard' : signIn('/hosting/dashboard')}>Start hosting free</a>
                     <a className="rh-link" href="/hosting">Back to Robtic Hosting <ArrowRight size={15} aria-hidden="true" /></a>
                 </div>
             </TypeOnce>

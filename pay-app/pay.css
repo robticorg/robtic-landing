@@ -114,3 +114,29 @@
     .rp-pay { width: 100%; max-height: 94dvh; border-radius: 20px 20px 0 0; padding-bottom: env(safe-area-inset-bottom, 0px); }
     .rp-body { padding: 16px 16px 20px; }
 }
+
+/* Billing details: our own fields, two side by side where they fit. */
+.rp-two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+.rp-opt-t { font-style: normal; font-weight: 400; color: var(--rp-faint); }
+@media (max-width: 380px) { .rp-two { grid-template-columns: minmax(0, 1fr); } }
+
+/* The country picker: a button like the other fields; its list opens in place, below it (the window scrolls). */
+.rp-cp { display: flex; flex-direction: column; gap: 6px; }
+.rp-cp-btn { display: flex; align-items: center; justify-content: space-between; gap: 10px; text-align: left; color: var(--rp-text); font-weight: 400; }
+.rp-cp-btn > span { display: flex; align-items: center; gap: 10px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rp-cp-ph { color: var(--rp-faint); }
+.rp-cp-chev { flex: none; color: var(--rp-muted); transition: transform 0.15s; }
+.rp-cp.open .rp-cp-btn { border-color: var(--rp-accent); }
+.rp-cp.open .rp-cp-chev { transform: rotate(180deg); }
+.rp-cp-code { flex: none; display: inline-grid; place-items: center; min-width: 30px; padding: 2px 6px; border: 1px solid var(--rp-line-2); border-radius: 6px; font: 600 11px/1.3 ui-monospace, "SF Mono", Menlo, Consolas, monospace; letter-spacing: 0.04em; color: var(--rp-muted); }
+.rp-cp-pop { display: flex; flex-direction: column; border: 1px solid var(--rp-line-2); border-radius: 12px; background: var(--rp-field); overflow: hidden; animation: rp-fade 0.12s ease-out; }
+.rp-cp-search { width: 100%; padding: 10px 12px; border: 0; border-bottom: 1px solid var(--rp-line); background: transparent; color: var(--rp-text); outline: none; font-weight: 400; }
+.rp-cp-search::placeholder { color: var(--rp-faint); }
+.rp-cp-list { margin: 0; padding: 4px; list-style: none; max-height: 220px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--rp-line-2) transparent; }
+.rp-cp-list li { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; color: var(--rp-text); font-weight: 400; font-size: 14px; cursor: pointer; }
+.rp-cp-list li.act { background: var(--rp-glass); background: color-mix(in srgb, var(--rp-accent) 10%, transparent); }
+.rp-cp-list li.sel { color: var(--rp-accent-hi); }
+.rp-cp-list li.sel .rp-cp-code { border-color: var(--rp-accent); color: var(--rp-text); }
+.rp-cp-list li svg { margin-left: auto; flex: none; color: var(--rp-accent); }
+.rp-cp-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rp-cp-list .rp-cp-none { justify-content: center; color: var(--rp-muted); cursor: default; }

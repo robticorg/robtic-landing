@@ -56,3 +56,30 @@ html:has(.pl-hosting)::-webkit-scrollbar-track { background: #060607; }
 html:has(.pl-hosting)::-webkit-scrollbar-thumb { border-color: #060607; background: #3f3f46; }
 html:has(.pl-hosting)::-webkit-scrollbar-thumb:hover { background: #71717a; }
 @media (max-width: 520px) { .pl-card { padding: 24px 8px; } .pl-btn { width: 100%; max-width: 320px; } }
+
+/* Robtic Discord look, as on /discord: navy under a blue spotlight, heavy white type, the amount in Robtic blue,
+   a white pill button and a small blue tag. */
+.pl-root.pl-discord {
+    background:
+        radial-gradient(60% 55% at 50% 0%, rgba(23, 147, 255, 0.22), transparent 70%),
+        radial-gradient(35% 40% at 50% 38%, rgba(23, 147, 255, 0.08), transparent 75%),
+        var(--pl-bg);
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+.pl-discord .pl-card { gap: 14px; }
+.pl-discord .pl-from {
+    display: inline-flex; align-items: center; gap: 7px; padding: 5px 12px; border: 1px solid rgba(23, 147, 255, 0.35);
+    border-radius: 999px; background: rgba(23, 147, 255, 0.1); color: #8fc8ff; font-size: 12.5px; font-weight: 600;
+}
+.pl-discord .pl-from::before { content: ''; width: 6px; height: 6px; border-radius: 999px; background: #1793ff; box-shadow: 0 0 10px #1793ff; }
+.pl-discord .pl-card h1 { font: 800 clamp(30px, 6vw, 44px) / 1.08 Inter, system-ui, sans-serif; letter-spacing: -0.025em; color: #ffffff; }
+.pl-discord .pl-amount {
+    font: 800 clamp(48px, 11vw, 68px) / 1 Inter, system-ui, sans-serif; letter-spacing: -0.03em; color: #1793ff;
+    text-shadow: 0 0 40px rgba(23, 147, 255, 0.35);
+}
+.pl-discord .pl-btn { background: #ffffff; color: #070b14; font-weight: 700; padding: 14px 34px; box-shadow: 0 10px 40px -10px rgba(23, 147, 255, 0.6); }
+.pl-discord .pl-btn:hover:not([disabled]) { background: #e8f2ff; }
+.pl-discord .pl-btn:focus-visible { outline-color: #1793ff; }
+.pl-discord .pl-note { padding: 10px 14px; border-radius: 12px; background: rgba(255, 255, 255, 0.04); color: #c9d6ee; }
+.pl-discord .pl-foot a { color: #8fc8ff; }
+.pl-discord .pl-tick { border-color: #1793ff; color: #1793ff; box-shadow: 0 0 24px rgba(23, 147, 255, 0.35); }
