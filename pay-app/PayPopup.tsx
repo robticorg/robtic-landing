@@ -1,10 +1,11 @@
 // The Robtic pay popup: one window for every payment (a plan, a saved card, a payment link). Saved cards to pick
-// from, or a new card in three steps: the card (Stripe's field), billing details (Stripe's address field), review.
+// from, or a new card in three steps: the card (Stripe's field), billing details (our own form), review.
 // Card details go from Stripe's fields straight to Stripe; this code only sees the brand and last 4 digits.
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { BILLING, brandName, brandShort, call, money, planName, withTax, type BillingDetails, type BillingOverview, type Card, type Checkout, type PublicLink, type Tax } from './api';
 import { appearance, cardOnly, stripeFor, type Theme } from './stripe';
+import CountryPicker, { guessCountry } from './CountryPicker';
 
 export type PayOptions =
     | { kind: 'plan'; plan: string; theme?: Theme }
@@ -34,14 +35,19 @@ export default function PayPopup({ options, onClose }: { options: PayOptions; on
     const [cards, setCards] = useState<Card[]>([]);
     const [selected, setSelected] = useState<string | null>(null);
     const [cardDone, setCardDone] = useState(false);
-    const [billing, setBilling] = useState<BillingDetails | null>(null);
+    // Billing details, typed here: name and address (postal code optional; not every country has one).
+    const [form, setForm] = useState({ name: '', line1: '', line2: '', city: '', postal_code: '', country: guessCountry() });
+    const setF = (k: keyof typeof form) => (v: string) => setForm((f) => ({ ...f, [k]: v }));
+    const billing: BillingDetails | null =
+        form.name.trim() && form.line1.trim() && form.city.trim() && form.country
+            ? { name: form.name.trim(), address: { line1: form.line1.trim(), line2: form.line2.trim() || null, city: form.city.trim(), postal_code: form.postal_code.trim(), country: form.country } }
+            : null;
     const [email, setEmail] = useState('');
     const [done, setDone] = useState<{ title: string; text: string; result: PayResult } | null>(null);
 
     const stripe = useRef<any>(null);
     const elements = useRef<any>(null);
     const cardRef = useRef<HTMLDivElement>(null);
-    const addressRef = useRef<HTMLDivElement>(null);
     const dialog = useRef<HTMLDivElement>(null);
     const publishableKey = useRef('');
 
@@ -117,7 +123,7 @@ export default function PayPopup({ options, onClose }: { options: PayOptions; on
     // ---- Stripe's card and address fields, made once the wizard starts and kept while moving between its steps
     const wizard = step === 'card' || step === 'billing' || step === 'review';
     useEffect(() => {
-        if (!wizard || elements.current || !stripe.current || !info || !cardRef.current || !addressRef.current) return;
+        if (!wizard || elements.current || !stripe.current || !info || !cardRef.current) return;
         const theme = options.theme ?? 'hosting';
         const mode = kind === 'card' ? 'setup' : kind === 'plan' ? 'subscription' : 'payment';
         const els = stripe.current.elements({
@@ -130,16 +136,13 @@ export default function PayPopup({ options, onClose }: { options: PayOptions; on
         const card = els.create('payment', { layout: 'tabs', fields: { billingDetails: { name: 'never', address: 'never' } }, terms: { card: 'never' } });
         card.mount(cardRef.current);
         card.on('change', (e: any) => setCardDone(Boolean(e.complete)));
-        const address = els.create('address', { mode: 'billing' });
-        address.mount(addressRef.current);
-        address.on('change', (e: any) => setBilling(e.complete ? toDetails(e.value) : null));
         elements.current = els;
     }, [wizard, info, kind, options.theme]);
 
     // ---- Esc closes; Tab stays inside the window
     useEffect(() => {
         const onKey = (e: KeyboardEvent) => {
-            if (e.key === 'Escape') {
+            if (e.key === 'Escape' && !e.defaultPrevented) {
                 // Settings may be open underneath: only this window closes.
                 e.preventDefault();
                 e.stopPropagation();
@@ -201,7 +204,8 @@ export default function PayPopup({ options, onClose }: { options: PayOptions; on
             const submitted = await elements.current.submit();
             if (submitted?.error) throw new Error(submitted.error.message);
             const b = billing!;
-            const details = { name: b.name, address: { ...b.address, line2: b.address.line2 ?? '' }, ...(kind === 'link' ? { email } : {}) };
+            // The card field leaves name and address to us, so Stripe needs every address part (empty when there's none).
+            const details = { name: b.name, address: { ...b.address, line2: b.address.line2 ?? '', state: '' }, ...(kind === 'link' ? { email } : {}) };
             const confirmParams = { return_url: returnUrl, payment_method_data: { billing_details: details } };
             if (kind === 'plan') {
                 const c = await call<Checkout>('POST', `${BILLING}/subscribe`, { plan: (options as { plan: string }).plan, billing: b });
@@ -320,7 +324,29 @@ export default function PayPopup({ options, onClose }: { options: PayOptions; on
                                         <input className="rp-in" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="name@example.com" />
                                     </label>
                                 ) : null}
-                                <div ref={addressRef} className="rp-stripe" />
+                                <label className="rp-f">
+                                    Full name
+                                    <input className="rp-in" autoComplete="billing name" value={form.name} onChange={(e) => setF('name')(e.target.value)} maxLength={100} />
+                                </label>
+                                <div className="rp-f">
+                                    <span>Country</span>
+                                    <CountryPicker value={form.country} onChange={setF('country')} />
+                                </div>
+                                <label className="rp-f">
+                                    Address
+                                    <input className="rp-in" autoComplete="billing address-line1" placeholder="Street and number" value={form.line1} onChange={(e) => setF('line1')(e.target.value)} maxLength={200} />
+                                </label>
+                                <input className="rp-in" aria-label="Address line 2 (optional)" autoComplete="billing address-line2" placeholder="Apartment, suite, building (optional)" value={form.line2} onChange={(e) => setF('line2')(e.target.value)} maxLength={200} />
+                                <div className="rp-two">
+                                    <label className="rp-f">
+                                        City
+                                        <input className="rp-in" autoComplete="billing address-level2" value={form.city} onChange={(e) => setF('city')(e.target.value)} maxLength={100} />
+                                    </label>
+                                    <label className="rp-f">
+                                        Postal code <i className="rp-opt-t">optional</i>
+                                        <input className="rp-in" autoComplete="billing postal-code" value={form.postal_code} onChange={(e) => setF('postal_code')(e.target.value)} maxLength={20} />
+                                    </label>
+                                </div>
                             </div>
                             {step === 'review' && t && billing ? (
                                 <>
@@ -411,10 +437,6 @@ function Terms({ kind, info, t }: { kind: PayOptions['kind']; info: Info; t: { t
     );
 }
 
-function toDetails(v: any): BillingDetails {
-    const a = v?.address ?? {};
-    return { name: String(v?.name ?? ''), address: { line1: a.line1 ?? '', line2: a.line2 || null, city: a.city ?? '', postal_code: a.postal_code ?? '', country: a.country ?? '' } };
-}
 
 const regions = typeof Intl !== 'undefined' && 'DisplayNames' in Intl ? new Intl.DisplayNames(['en'], { type: 'region' }) : null;
 function addressText(b: BillingDetails): string {
