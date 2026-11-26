@@ -7,5 +7,5 @@ import { asset } from '@/lib/asset';
 export function GET() {
     const src = asset('/rl/robtic/settings/settings.js');
     const js = `(function(){if(window.RobticSettings||window.__robticSettingsLoading)return;window.__robticSettingsLoading=1;var s=document.createElement('script');s.src=${JSON.stringify(src)};s.async=true;document.head.appendChild(s);})();`;
-    return new Response(js, { headers: { 'Content-Type': 'text/javascript; charset=utf-8', 'Cache-Control': 'no-cache' } });
+    return new Response(js, { headers: { 'Content-Type': 'text/javascript; charset=utf-8', 'Cache-Control': 'private, no-store, max-age=0' } });
 }
