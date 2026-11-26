@@ -343,7 +343,7 @@ export default function PayPopup({ options, onClose }: { options: PayOptions; on
                                         <input className="rp-in" autoComplete="billing address-level2" value={form.city} onChange={(e) => setF('city')(e.target.value)} maxLength={100} />
                                     </label>
                                     <label className="rp-f">
-                                        Postal code <i className="rp-opt-t">optional</i>
+                                        <span>Postal code <i className="rp-opt-t">(optional)</i></span>
                                         <input className="rp-in" autoComplete="billing postal-code" value={form.postal_code} onChange={(e) => setF('postal_code')(e.target.value)} maxLength={20} />
                                     </label>
                                 </div>
