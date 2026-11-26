@@ -67,11 +67,6 @@ html:has(.pl-hosting)::-webkit-scrollbar-thumb:hover { background: #71717a; }
     font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 .pl-discord .pl-card { gap: 14px; }
-.pl-discord .pl-from {
-    display: inline-flex; align-items: center; gap: 7px; padding: 5px 12px; border: 1px solid rgba(23, 147, 255, 0.35);
-    border-radius: 999px; background: rgba(23, 147, 255, 0.1); color: #8fc8ff; font-size: 12.5px; font-weight: 600;
-}
-.pl-discord .pl-from::before { content: ''; width: 6px; height: 6px; border-radius: 999px; background: #1793ff; box-shadow: 0 0 10px #1793ff; }
 .pl-discord .pl-card h1 { font: 800 clamp(30px, 6vw, 44px) / 1.08 Inter, system-ui, sans-serif; letter-spacing: -0.025em; color: #ffffff; }
 .pl-discord .pl-amount {
     font: 800 clamp(48px, 11vw, 68px) / 1 Inter, system-ui, sans-serif; letter-spacing: -0.03em; color: #1793ff;
@@ -83,3 +78,18 @@ html:has(.pl-hosting)::-webkit-scrollbar-thumb:hover { background: #71717a; }
 .pl-discord .pl-note { padding: 10px 14px; border-radius: 12px; background: rgba(255, 255, 255, 0.04); color: #c9d6ee; }
 .pl-discord .pl-foot a { color: #8fc8ff; }
 .pl-discord .pl-tick { border-color: #1793ff; color: #1793ff; box-shadow: 0 0 24px rgba(23, 147, 255, 0.35); }
+
+/* Robtic Hosting look: the same page as the Discord one, in Hosting's black and white and its serif type. */
+.pl-root.pl-hosting {
+    background:
+        radial-gradient(60% 55% at 50% 0%, rgba(255, 255, 255, 0.09), transparent 70%),
+        radial-gradient(35% 40% at 50% 38%, rgba(255, 255, 255, 0.03), transparent 75%),
+        var(--pl-bg);
+}
+.pl-hosting .pl-card { gap: 14px; }
+.pl-hosting .pl-card h1 { font: 400 clamp(36px, 7vw, 54px) / 1.05 var(--pl-head); letter-spacing: -0.015em; color: #ffffff; }
+.pl-hosting .pl-amount { font: 400 clamp(56px, 12vw, 80px) / 1 var(--pl-head); letter-spacing: -0.02em; color: #ffffff; text-shadow: 0 0 40px rgba(255, 255, 255, 0.18); }
+.pl-hosting .pl-btn { background: #ffffff; color: #09090b; font-weight: 700; padding: 14px 34px; box-shadow: 0 10px 40px -10px rgba(255, 255, 255, 0.35); }
+.pl-hosting .pl-btn:hover:not([disabled]) { background: #f4f4f5; }
+.pl-hosting .pl-note { padding: 10px 14px; border-radius: 12px; background: rgba(255, 255, 255, 0.04); color: #d4d4d8; }
+.pl-hosting .pl-tick { box-shadow: 0 0 24px rgba(74, 222, 128, 0.25); }

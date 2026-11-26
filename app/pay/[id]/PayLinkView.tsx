@@ -68,7 +68,6 @@ export default function PayLinkView({ id }: { id: string }) {
 
                 {state.kind === 'ready' ? (
                     <>
-                        <span className="pl-from">Payment request from Robtic</span>
                         <h1>{state.link.title}</h1>
                         <div className="pl-amount">{money(state.link.amount.total, state.link.currency)}</div>
                         {state.link.tax ? (
