@@ -10,10 +10,10 @@ Robtic runs apps you give it (such as Discord bots and small Node.js or Python p
 
 ## 3. Plans and payment
 
-- New accounts start on the Personal plan, free for the first month. After that, a plan has to be renewed or chosen to keep creating and starting apps.
-- Paid plans are billed per month at the price shown before you buy. Organisation plans are priced in an offer you accept.
+- Turning on Robtic Hosting starts a free month. After that, a plan has to be chosen to keep creating and starting apps.
+- Paid plans are monthly subscriptions that renew automatically, at the price shown before you buy; we email you 3 days before each renewal. Organisation plans are priced in an offer you accept. Renewals, refunds, cards and invoices are covered by the [Billing Terms](/terms/billing).
 - When a plan ends, your apps and files are kept for a while, but apps cannot be started or created until you renew. We may remove the apps of a plan that ended long ago after telling you by email.
-- Moving to a smaller plan applies at once if your apps fit in it; the time you already paid for stays.
+- Moving to a smaller plan applies at your next renewal, if your apps fit in it; the time you already paid for stays.
 
 ## 4. Acceptable use
 

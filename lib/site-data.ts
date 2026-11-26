@@ -58,7 +58,8 @@ export const LEGAL_GROUP_TITLE: Record<LegalGroup, string> = { terms: 'Terms', p
 export const BUILTIN_LEGAL: LegalPage[] = [
     { key: 'terms-robtic', title: 'Robtic Terms', path: 'terms/robtic', related: ['privacy-account', 'terms-discord', 'terms-hosting'] },
     { key: 'terms-discord', title: 'Robtic Discord Terms', path: 'terms/discord', related: ['terms-robtic', 'privacy-account'] },
-    { key: 'terms-hosting', title: 'Robtic Hosting Terms', path: 'terms/hosting', related: ['privacy-account', 'privacy-hosting', 'terms-teams'] },
+    { key: 'terms-hosting', title: 'Robtic Hosting Terms', path: 'terms/hosting', related: ['terms-billing', 'privacy-account', 'privacy-hosting', 'terms-teams'] },
+    { key: 'terms-billing', title: 'Billing Terms', path: 'terms/billing', related: ['terms-hosting', 'privacy-account'] },
     { key: 'terms-teams', title: "Team's Terms", path: 'terms/teams', related: ['terms-hosting', 'privacy-hosting', 'privacy-account'] },
     { key: 'privacy-account', title: 'Robtic Privacy', path: 'privacy/account', related: ['privacy-hosting', 'terms-hosting'] },
     { key: 'privacy-hosting', title: 'Hosting Privacy', path: 'privacy/hosting', related: ['privacy-account', 'terms-hosting', 'terms-teams'] },
