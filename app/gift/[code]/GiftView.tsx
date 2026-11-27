@@ -148,7 +148,7 @@ export default function GiftView({ code: raw }: { code: string }) {
             ], { duration: 1100, easing: 'cubic-bezier(.22,.9,.3,1)' });
             if (!live) return;
             animate($('.gf-intro'), [{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 420, easing: 'ease-out' });
-            animate($('.gf-plane'), [{ left: '0%' }, { left: '100%' }], { duration: 1400, easing: 'cubic-bezier(.5,0,.3,1)' });
+            animate($('.gf-plane'), [{ left: '18px' }, { left: 'calc(100% - 18px)' }], { duration: 1400, easing: 'cubic-bezier(.5,0,.3,1)' });
             await wait(250);
             const len = t ? (vertical ? t.offsetHeight : t.offsetWidth) : 0;
             animate(sc, [{ opacity: 0 }, { opacity: 1, offset: 0.12 }, { opacity: 1, offset: 0.85 }, { opacity: 0 }], { duration: 900 });
