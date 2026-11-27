@@ -90,7 +90,7 @@
 .gf .gf-claim[disabled] { cursor: progress; }
 .gf-spin { width: 16px; height: 16px; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; animation: gf-spin .7s linear infinite; }
 @keyframes gf-spin { to { transform: rotate(360deg); } }
-.gf-stamp { position: absolute; right: 26px; top: 46px; z-index: 4; padding: 7px 12px 6px; border: 2px solid #fff; border-radius: 8px; font-size: 12px; font-weight: 600; line-height: 1.2; letter-spacing: .08em; text-transform: uppercase; color: #fff; text-align: center; transform: rotate(-8deg); opacity: 0; pointer-events: none; }
+.gf-stamp { position: absolute; right: 24px; bottom: 20px; z-index: 4; padding: 7px 12px 6px; border: 2px solid #fff; border-radius: 8px; font-size: 12px; font-weight: 600; line-height: 1.2; letter-spacing: .08em; text-transform: uppercase; color: #fff; text-align: center; transform: rotate(-8deg); opacity: 0; pointer-events: none; }
 .gf-stamp b { display: block; font: 400 26px/1 var(--gf-serif); letter-spacing: 0; text-transform: none; margin-bottom: 2px; }
 
 .gf-pick { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center; color: var(--gf-text-2); font-size: 14px; opacity: 0; }
@@ -120,9 +120,13 @@
     .gf-scissors { right: auto; left: 0; top: auto; bottom: var(--stub); transform: translate(-50%, 50%); }
     .gf h1 { font-size: clamp(36px, 10vw, 44px); }
     .gf-note { font-size: 16px; }
-    .gf-stamp { right: 18px; top: 52px; }
+    .gf-stamp { right: 18px; bottom: 18px; }
 }
 @media (prefers-reduced-motion: reduce) {
     .gf-idle { animation: none; }
     .gf-box:hover .gf-lid { transform: none; }
 }
+
+/* Already decided (claimed, expired, turned off): no stub, so the ticket is one whole piece, centred. */
+.gf-ticket.is-solo { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; width: min(560px, 100%); }
+.gf-ticket.is-solo .gf-main { border-radius: 18px; -webkit-mask: none; mask: none; }
