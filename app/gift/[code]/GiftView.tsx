@@ -127,7 +127,6 @@ export default function GiftView({ code: raw }: { code: string }) {
             animate($('.gf-body'), [{ transform: 'translateY(0)', opacity: 1 }, { transform: 'translateY(60px) scale(.9)', opacity: 0 }], { duration: 380, easing: 'ease-in' }),
             animate($('.gf-intro'), [{ opacity: 1, transform: 'translateY(0)' }, { opacity: 0, transform: 'translateY(-12px)' }], { duration: 300, easing: 'ease-in' }),
             animate($('.gf-open'), [{ opacity: 1 }, { opacity: 0 }], { duration: 200 }),
-            animate($('.gf-hint'), [{ opacity: 1 }, { opacity: 0 }], { duration: 200 }),
         ]);
         setPhase('ticket');
     }
@@ -231,7 +230,6 @@ export default function GiftView({ code: raw }: { code: string }) {
                 <div className="gf-stage" aria-live="polite">
                     {load.kind === 'loading' ? <span className="gf-spin-page" aria-label="Loading" /> : (
                         <div className="gf-intro">
-                            <span className="gf-eyebrow">Robtic gifts</span>
                             <h1>{load.kind === 'missing' ? 'There’s no gift here' : 'Gifts are unavailable right now'}</h1>
                             <p className="gf-note">{load.kind === 'missing' ? 'Check the link you were sent, or ask whoever sent it.' : 'Try again in a few minutes.'}</p>
                         </div>
@@ -256,9 +254,8 @@ export default function GiftView({ code: raw }: { code: string }) {
                 {phase === 'sealed' ? (
                     <>
                         <div className="gf-intro">
-                            <span className="gf-eyebrow">A gift from {gift.from}</span>
                             <h1>Something’s <em>waiting</em> for you</h1>
-                            <p className="gf-note">{gift.note ? <><b>From the Robtic team:</b> {gift.note}</> : 'Open it to see what’s inside.'}</p>
+                            <p className="gf-note">{gift.note || 'A gift from Robtic. Open it to see what’s inside.'}</p>
                         </div>
                         <div className="gf-box-wrap">
                             <button type="button" className="gf-box gf-idle" aria-label="Open the gift" onClick={open}>
@@ -269,31 +266,28 @@ export default function GiftView({ code: raw }: { code: string }) {
                                 <span className="gf-bits" aria-hidden="true" />
                             </button>
                             <button type="button" className="gf-btn gf-btn-primary gf-open" onClick={open}>Open the gift</button>
-                            <span className="gf-hint">Tap the box or the button</span>
                         </div>
                     </>
                 ) : (
                     <>
                         <div className="gf-intro" style={phase === 'ticket' ? { opacity: 0 } : undefined}>
-                            <span className="gf-eyebrow">{closed ? 'Robtic gift' : 'Your gift'}</span>
                             <h1>{closed ? <>This gift is <em>gone</em></> : mine ? <>It’s <em>yours</em> now</> : <>It’s <em>yours</em> to claim</>}</h1>
                         </div>
                         <div className="gf-area">
                             <div className={`gf-ticket${closed ? ' is-done' : ''}`}>
                                 <div className="gf-part gf-main">
                                     <div className="gf-route">
-                                        <div className="gf-place"><small>From</small><b>{gift.from}</b></div>
-                                        <div className="gf-line"><span className="gf-plane"><Icon d="M20 12 4 5l3 7-3 7 16-7Z" /></span></div>
-                                        <div className="gf-place" style={{ textAlign: 'right' }}><small>To</small><b>{signedIn && gift.name ? gift.name : 'You'}</b></div>
+                                        <span className="gf-place">{gift.from}</span>
+                                        <span className="gf-line"><span className="gf-plane"><Icon d="M20 12 4 5l3 7-3 7 16-7Z" size={18} /></span></span>
+                                        <span className="gf-place">{signedIn && gift.name ? gift.name : 'You'}</span>
                                     </div>
                                     <div className="gf-what">
-                                        <small>Hosting gift</small>
                                         <h2>{gift.title}</h2>
                                         <p>{gift.detail}</p>
                                     </div>
-                                    <div className="gf-facts">
-                                        <div><small>Claim by</small><b>{gift.expires_at ? day(gift.expires_at) : 'Any time'}</b></div>
-                                        <div><small>Gift code</small><code>{gift.code}</code></div>
+                                    <div className="gf-foot">
+                                        <code>{gift.code}</code>
+                                        <span>{gift.expires_at ? `Claim by ${day(gift.expires_at)}` : 'No end date'}</span>
                                     </div>
                                     <div className="gf-stamp" style={phase === 'final' || done ? undefined : { opacity: 0 }}>
                                         <b>{stampText}</b>{stampDate}
