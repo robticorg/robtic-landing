@@ -74,7 +74,7 @@
 .gf-line { flex: 1; position: relative; height: 1.5px; background: rgb(255 255 255 / .35); border-radius: 2px; min-width: 40px; }
 .gf-line::before, .gf-line::after { content: ""; position: absolute; top: 50%; width: 8px; height: 8px; border-radius: 50%; transform: translateY(-50%); border: 2px solid #fff; background: var(--gf-accent); }
 .gf-line::before { left: -4px; } .gf-line::after { right: -4px; background: #fff; }
-.gf-plane { position: absolute; top: 50%; left: 0; width: 22px; height: 22px; transform: translate(-50%, -50%); color: #fff; }
+.gf-plane { position: absolute; top: 50%; left: 18px; width: 22px; height: 22px; transform: translate(-50%, -50%); color: #fff; }
 .gf-what { align-self: center; min-width: 0; }
 .gf-what h2 { font: 400 clamp(34px, 5vw, 46px)/1 var(--gf-serif); margin: 0 0 6px; letter-spacing: -0.005em; overflow-wrap: anywhere; }
 .gf-what p { margin: 0; color: rgb(255 255 255 / .82); font-size: 15px; line-height: 1.45; max-width: 44ch; }
@@ -107,7 +107,7 @@
 @media (max-width: 640px) {
     .gf { --stub: 132px; }
     .gf-ticket { height: auto; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto var(--stub); width: min(380px, 100%); }
-    .gf-main { border-radius: 18px 18px 0 0; padding: 22px 22px 20px; min-height: 300px; gap: 14px;
+    .gf-main { border-radius: 18px 18px 0 0; padding: 22px 22px 20px; min-height: 0; gap: 18px;
         -webkit-mask: radial-gradient(circle var(--notch) at 0 100%, #0000 98%, #000) left / 51% 100% no-repeat, radial-gradient(circle var(--notch) at 100% 100%, #0000 98%, #000) right / 51% 100% no-repeat;
         mask: radial-gradient(circle var(--notch) at 0 100%, #0000 98%, #000) left / 51% 100% no-repeat, radial-gradient(circle var(--notch) at 100% 100%, #0000 98%, #000) right / 51% 100% no-repeat; }
     .gf-stub { border-radius: 0 0 18px 18px; padding: 18px 20px; grid-template-rows: none; grid-template-columns: auto 1fr; grid-template-areas: "kind value" "claim claim"; justify-items: start; text-align: left; align-items: center; column-gap: 14px; row-gap: 12px;
