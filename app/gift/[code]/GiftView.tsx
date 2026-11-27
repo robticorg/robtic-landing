@@ -274,7 +274,7 @@ export default function GiftView({ code: raw }: { code: string }) {
                             <h1>{closed ? <>This gift is <em>gone</em></> : mine ? <>It’s <em>yours</em> now</> : <>It’s <em>yours</em> to claim</>}</h1>
                         </div>
                         <div className="gf-area">
-                            <div className={`gf-ticket${closed ? ' is-done' : ''}`}>
+                            <div className={`gf-ticket${closed ? ' is-done' : ''}${phase === 'final' ? ' is-solo' : ''}`}>
                                 <div className="gf-part gf-main">
                                     <div className="gf-route">
                                         <span className="gf-place">{gift.from}</span>
